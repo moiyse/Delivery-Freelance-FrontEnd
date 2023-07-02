@@ -7,6 +7,7 @@ import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import { Form, InputGroup } from 'react-bootstrap';
 import { PfButton } from '@profabric/react-components';
+import "./login.css"
 
 const RecoverPassword = () => {
   const [t] = useTranslation();
@@ -39,14 +40,13 @@ const RecoverPassword = () => {
       <div className="card card-outline card-primary">
         <div className="card-header text-center">
           <Link to="/" className="h1">
-            <b>Admin</b>
-            <span>LTE</span>
+            <b>Delivery</b>
           </Link>
         </div>
         <div className="card-body">
-          <p className="login-box-msg">{t<string>('recover.oneStepAway')}</p>
+          <p className="login-box-msg">Changer votre mot de passe pour y accéder à la dashboard</p>
           <form onSubmit={handleSubmit}>
-            <div className="mb-3">
+            <div className="mb-3 login-input">
               <InputGroup className="mb-3">
                 <Form.Control
                   id="password"
@@ -71,7 +71,7 @@ const RecoverPassword = () => {
                 )}
               </InputGroup>
             </div>
-            <div className="mb-3">
+            <div className="mb-3 login-input">
               <InputGroup className="mb-3">
                 <Form.Control
                   id="confirmPassword"
@@ -98,18 +98,14 @@ const RecoverPassword = () => {
                 )}
               </InputGroup>
             </div>
-            <div className="row">
+            <div className="row login-button">
               <div className="col-12">
-                <PfButton type="submit" block>
-                  {/* @ts-ignore */}
-                  {t<string>('recover.changePassword')}
-                </PfButton>
+              <button className='btn btn-primary'>
+                  Changer mot de passe
+              </button>
               </div>
             </div>
           </form>
-          <p className="mt-3 mb-1">
-            <Link to="/login">{t<string>('login.button.signIn.label')}</Link>
-          </p>
         </div>
       </div>
     </div>

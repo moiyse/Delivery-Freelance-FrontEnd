@@ -32,6 +32,11 @@ import Commandes from './pages/Admin/tables/Commandes';
 import Payments from './pages/Admin/tables/Payments';
 import AjoutCommandes from './pages/Admin/forms/AjoutCommandes';
 import AjoutUser from './pages/Admin/forms/AjoutUser';
+import ClientCommandes from './pages/Client/tables/ClientCommandes';
+import ClientAjoutCommandes from './pages/Client/forms/ClientAjoutCommandes';
+import ClientProfile from './pages/Client/profile/ClientProfile';
+import LivreurCommandes from './pages/Livreur/tables/LivreurCommandes';
+import LivreurPayments from './pages/Livreur/tables/LivreurPayments';
 
 declare const FB: any;
 
@@ -90,8 +95,8 @@ const App = () => {
         <Route path="/forgot-password" element={<PublicRoute />}>
           <Route path="/forgot-password" element={<ForgetPassword />} />
         </Route>
-        <Route path="/recover-password" element={<PublicRoute />}>
-          <Route path="/recover-password" element={<RecoverPassword />} />
+        <Route path="/changer-mdp" element={<PublicRoute />}>
+          <Route path="/changer-mdp" element={<RecoverPassword />} />
         </Route>
         <Route path="/" element={<PrivateRoute />}>
           <Route path="/" element={<Main />}>
@@ -104,6 +109,11 @@ const App = () => {
             <Route path="/ajoutCommande" element={<AjoutCommandes />} />
             <Route path="/ajoutUser" element={<AjoutUser />} />
             <Route path="/payments" element={<Payments />} />
+            <Route path="/clientCommandes" element={<ClientCommandes />} />
+            <Route path="/clientAjoutCommandes" element={<ClientAjoutCommandes />} />
+            <Route path="/clientProfile" element={<ClientProfile />} />
+            <Route path="/livreurCommandes" element={<LivreurCommandes />} />
+            <Route path="/LivreurPayment" element={<LivreurPayments />} />
             <Route path="/" element={<Dashboard />} />
           </Route>
         </Route>

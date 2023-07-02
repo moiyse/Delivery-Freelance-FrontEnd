@@ -3,7 +3,7 @@ import "./forms.css";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 
-const AjoutCommandes = () => {
+const ClientAjoutCommandes = () => {
   const [selectedDateTime, setSelectedDateTime] = useState(null);
   const [inputFields, setInputFields] = useState([{ value: "" }]);
 
@@ -125,21 +125,6 @@ const AjoutCommandes = () => {
                 </div>
               </div>
             </div>
-            <div className="form-group">
-              <div className="row">
-                <div className="col">
-                  <label>Selectionner Cient</label>
-                  <select className="form-control">
-                    <option>Jane Smith</option>
-                    <option>John Doe</option>
-                    <option>Laura Lee</option>
-                    <option>Mohamed Zgolli</option>
-                    <option>Robert Browne</option>
-                    <option>Sarah Johnson</option>
-                  </select>
-                </div>
-              </div>
-            </div>
           </div>
           {/* /.card-body */}
           <div className="card-footer">
@@ -153,4 +138,4 @@ const AjoutCommandes = () => {
   );
 };
 
-export default AjoutCommandes;
+export default ClientAjoutCommandes;

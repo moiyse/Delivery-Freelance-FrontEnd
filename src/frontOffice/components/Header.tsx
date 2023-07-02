@@ -107,7 +107,9 @@ const Header = () => {
               </li>
               <li>
                 <a className="getstarted scrollto" href="#about">
+                <Link style={{padding:"0"}} to="/login">
                   Se Connecter
+                  </Link>
                 </a>
               </li>
             </ul>
