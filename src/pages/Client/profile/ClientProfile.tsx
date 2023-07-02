@@ -13,7 +13,7 @@ const StyledUserImage = styled(PfImage)`
   --pf-padding: 3px;
 `;
 
-const Profile = () => {
+const ClientProfile = () => {
   const [activeTab, setActiveTab] = useState('ACTIVITY');
   const [t] = useTranslation();
 
@@ -27,7 +27,8 @@ const Profile = () => {
       <section className="content">
         <div className="container-fluid">
           <div className="row">
-            <div className="col-md-3">
+            <div className='col'></div>
+            <div className="col-9">
               <div className="card card-primary card-outline">
                 <div className="card-body box-profile">
                   <div className="text-center">
@@ -110,54 +111,7 @@ const Profile = () => {
                 </div>
               </div>
             </div>
-            <div className="col-md-9">
-              <div className="card">
-                <div className="card-header p-2">
-                  <ul className="nav nav-pills">
-                    <li className="nav-item">
-                      <button
-                        type="button"
-                        className={`nav-link ${
-                          activeTab === 'ACTIVITY' ? 'active' : ''
-                        }`}
-                        onClick={() => toggle('ACTIVITY')}
-                      >
-                        {t<string>('main.label.activity')}
-                      </button>
-                    </li>
-                    <li className="nav-item">
-                      <button
-                        type="button"
-                        className={`nav-link ${
-                          activeTab === 'TIMELINE' ? 'active' : ''
-                        }`}
-                        onClick={() => toggle('TIMELINE')}
-                      >
-                        {t<string>('main.label.timeline')}
-                      </button>
-                    </li>
-                    <li className="nav-item">
-                      <button
-                        type="button"
-                        className={`nav-link ${
-                          activeTab === 'SETTINGS' ? 'active' : ''
-                        }`}
-                        onClick={() => toggle('SETTINGS')}
-                      >
-                        {t<string>('main.label.settings')}
-                      </button>
-                    </li>
-                  </ul>
-                </div>
-                <div className="card-body">
-                  <div className="tab-content">
-                    <ActivityTab isActive={activeTab === 'ACTIVITY'} />
-                    <TimelineTab isActive={activeTab === 'TIMELINE'} />
-                    <SettingsTab isActive={activeTab === 'SETTINGS'} />
-                  </div>
-                </div>
-              </div>
-            </div>
+            <div className='col'></div>
           </div>
         </div>
       </section>
@@ -165,4 +119,4 @@ const Profile = () => {
   );
 };
 
-export default Profile;
+export default ClientProfile;

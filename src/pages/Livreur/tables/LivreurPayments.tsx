@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import "./users.css";
 
-const Payments = () => {
+const LivreurPayments = () => {
   useEffect(() => {
     const script = document.createElement("script");
     script.src = "js/tablePayment.js";
@@ -42,11 +42,8 @@ const Payments = () => {
                       <td className="pill-td">
                         <span className="badge bg-danger">Not payed</span>
                       </td>
-                      <td>
+                      <td className="text-center">
                         <div className="btn-group">
-                          <button type="button" className="btn btn-warning">
-                            <i className="fas fa-pen"></i>
-                          </button>
                           <button
                             type="button"
                             className="btn btn-info"
@@ -78,109 +75,6 @@ const Payments = () => {
                             </li>
                             
                           </ul>
-                          <button type="button" className="btn btn-danger">
-                            <i className="fa fa-trash"></i>
-                          </button>
-                        </div>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>7</td>
-                      <td className="pill-td">
-                        <span className="badge bg-success">Delivered</span>
-                      </td>
-                      <td className="pill-td">
-                        <span className="badge bg-success">Payed</span>
-                      </td>
-                      <td>
-                        <div className="btn-group">
-                          <button type="button" className="btn btn-warning">
-                            <i className="fas fa-pen"></i>
-                          </button>
-                          <button
-                            type="button"
-                            className="btn btn-info"
-                            data-toggle="dropdown"
-                            aria-expanded="true"
-                          >
-                            <i className="fa fa-bars" />
-                          </button>
-                          <ul
-                            className="dropdown-menu "
-                            x-placement="top-start"
-                            style={{
-                              position: "absolute",
-                              willChange: "transform",
-                              top: 0,
-                              left: 0,
-                              transform: "translate3d(-122px, -84px, 0px)",
-                            }}
-                          >
-                            <li>
-                              <a className="dropdown-item" href="#">
-                              payed
-                              </a>
-                            </li>
-                            <li>
-                              <a className="dropdown-item" href="#">
-                              Not paye
-                              </a>
-                            </li>
-                            
-                          </ul>
-                          <button type="button" className="btn btn-danger">
-                            <i className="fa fa-trash"></i>
-                          </button>
-                        </div>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>8</td>
-                      <td className="pill-td">
-                        <span className="badge bg-warning">Waiting Pickup</span>
-                      </td>
-                      <td className="pill-td">
-                        <span className="badge bg-danger">Not payed</span>
-                      </td>
-                      <td>
-                        <div className="btn-group">
-                          <button type="button" className="btn btn-warning">
-                            <i className="fas fa-pen"></i>
-                          </button>
-                          <button
-                            type="button"
-                            className="btn btn-info"
-                            data-toggle="dropdown"
-                            aria-expanded="true"
-                          >
-                            <i className="fa fa-bars" />
-                          </button>
-                          <ul
-                            className="dropdown-menu "
-                            x-placement="top-start"
-                            style={{
-                              position: "absolute",
-                              willChange: "transform",
-                              top: 0,
-                              left: 0,
-                              transform: "translate3d(-122px, -84px, 0px)",
-                            }}
-                          >
-                            <li>
-                              <a className="dropdown-item" href="#">
-                              payed
-                              </a>
-                            </li>
-                            <li>
-                              <a className="dropdown-item" href="#">
-                              Not paye
-                              </a>
-                            </li>
-                            
-                          </ul>
-                          <button type="button" className="btn btn-danger">
-                            <i className="fa fa-trash"></i>
-                          </button>
                         </div>
                       </td>
                     </tr>
@@ -192,11 +86,8 @@ const Payments = () => {
                       <td className="pill-td">
                         <span className="badge bg-danger">Not payed</span>
                       </td>
-                      <td>
+                      <td className="text-center">
                         <div className="btn-group">
-                          <button type="button" className="btn btn-warning">
-                            <i className="fas fa-pen"></i>
-                          </button>
                           <button
                             type="button"
                             className="btn btn-info"
@@ -228,9 +119,6 @@ const Payments = () => {
                             </li>
                             
                           </ul>
-                          <button type="button" className="btn btn-danger">
-                            <i className="fa fa-trash"></i>
-                          </button>
                         </div>
                       </td>
                     </tr>
@@ -242,11 +130,8 @@ const Payments = () => {
                       <td className="pill-td">
                         <span className="badge bg-danger">Not payed</span>
                       </td>
-                      <td>
+                      <td className="text-center">
                         <div className="btn-group">
-                          <button type="button" className="btn btn-warning">
-                            <i className="fas fa-pen"></i>
-                          </button>
                           <button
                             type="button"
                             className="btn btn-info"
@@ -278,9 +163,6 @@ const Payments = () => {
                             </li>
                             
                           </ul>
-                          <button type="button" className="btn btn-danger">
-                            <i className="fa fa-trash"></i>
-                          </button>
                         </div>
                       </td>
                     </tr>
@@ -308,4 +190,4 @@ const Payments = () => {
   );
 };
 
-export default Payments;
+export default LivreurPayments;
