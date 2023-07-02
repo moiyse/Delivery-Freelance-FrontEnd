@@ -1,0 +1,33 @@
+.main-sidebar {
+    background-color: #f3f5fa !important;
+    color: #2b3467 !important;
+}
+
+.brand-link {
+    background-color: #2b3467 !important;
+    border-bottom: 3px solid #e93f47 !important;
+}
+
+.main-sidebar .sidebar a {
+    color:#2b3467 !important
+}
+
+.brand-text {
+    color: white;
+    font-size: 20px;
+    margin-left: 37px;
+    font-weight: 500 !important;
+
+}
+
+.sidebar-dark-primary .nav-sidebar>.nav-item>.nav-link.active{
+    background-color: #d8e3fb !important;
+}
+
+.menu-open .nav-treeview {
+    margin: 0px 0px 0px 13px;
+}
+
+.menu-open .nav-treeview i {
+    margin-right: 3px;
+}

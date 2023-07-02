@@ -1,0 +1,23 @@
+.button-customization{
+    border: 2x solid grey !important;
+
+}
+
+
+.pill-td{
+    text-align: center;
+}
+
+.pill-td span{
+    padding: 8px 10px;
+    font-size: 14px;
+    border-radius: 50px;
+}
+
+.pill-td span a{
+    cursor: pointer;
+}
+
+.bg-warning, .bg-warning > a {
+    color: white !important;
+}

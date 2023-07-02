@@ -1,0 +1,10 @@
+.main-header{
+    background-color: #2b3467 !important;
+    border-bottom: 3px solid #e93f47 !important;
+    color: white !important;
+}
+
+.main-header .navbar-nav .nav-item a, button {
+    color: white !important
+}
+

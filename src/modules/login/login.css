@@ -1,0 +1,34 @@
+.login-input span{
+    background-color: #2b3467;
+    border-color: #2b3467;
+    color: white;
+}
+
+.login-input input {
+    border-color: #2b3467;
+}
+
+.login-body a {
+    color: #007bff !important;
+}
+
+
+.login-button {
+    
+    margin: 36px 92px
+}
+
+.login-button button{
+    
+    background-color: #e93f47;
+    border-color: #e93f47;
+    width: 100%;
+}
+
+.login-button button:hover{
+    
+    background-color: #f5242e;
+    border-color: #f5242e;
+}
+
+
