@@ -1,8 +1,10 @@
+import { ContentHeader } from "@app/components";
 import "./forms.css";
 
 const AjoutUser = () => {
   return (
     <>
+    <ContentHeader title="Ajouter Utilisateur" />
       <div className="card card-primary form-card">
         <div className="card-header">
           <h3 className="card-title">Ajouter User</h3>

@@ -74,12 +74,12 @@ const Header = () => {
             </Link>
           </li>
           <li className="nav-item d-none d-sm-inline-block">
-            <Link to="/users" className="nav-link">
+            <Link to="/livreurCommandes" className="nav-link">
               Mes Commandes
             </Link>
           </li>
           <li className="nav-item d-none d-sm-inline-block">
-            <Link to="/commandes" className="nav-link">
+            <Link to="/livreurPayment" className="nav-link">
               Payment des commandes
             </Link>
           </li>
@@ -89,17 +89,17 @@ const Header = () => {
       return (
         <>
           <li className="nav-item d-none d-sm-inline-block">
-            <Link to="/" className="nav-link">
+            <Link to="/clientProfile" className="nav-link">
               Profile
             </Link>
           </li>
           <li className="nav-item d-none d-sm-inline-block">
-            <Link to="/users" className="nav-link">
+            <Link to="/clientAjoutCommande" className="nav-link">
               Ajouter Commande
             </Link>
           </li>
           <li className="nav-item d-none d-sm-inline-block">
-            <Link to="/commandes" className="nav-link">
+            <Link to="/clientCommandes" className="nav-link">
               Mes Commandes
             </Link>
           </li>

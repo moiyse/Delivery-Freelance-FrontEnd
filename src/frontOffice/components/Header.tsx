@@ -106,10 +106,10 @@ const Header = () => {
                   </a>
               </li>
               <li>
-                <a className="getstarted scrollto" href="#about">
+                <a className="getstarted scrollto">
                 <Link style={{padding:"0"}} to="/login">
                   Se Connecter
-                  </Link>
+                </Link>
                 </a>
               </li>
             </ul>

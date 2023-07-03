@@ -17,7 +17,7 @@ const Users = () => {
             {/* /.card */}
             <div className="card">
               <div className="card-header">
-                <h3 className="card-title">DataTable with default features</h3>
+                <h3 className="card-title">Tous les utilisateurs</h3>
               </div>
               {/* /.card-header */}
               <div className="card-body">
