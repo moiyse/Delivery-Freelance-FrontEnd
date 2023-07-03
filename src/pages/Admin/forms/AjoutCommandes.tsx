@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import "./forms.css";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import { ContentHeader } from "@app/components";
 
 const AjoutCommandes = () => {
   const [selectedDateTime, setSelectedDateTime] = useState(null);
@@ -25,6 +26,7 @@ const AjoutCommandes = () => {
 
   return (
     <>
+    <ContentHeader title="Ajouter Commande" />
       <div className="card card-primary form-card">
         <div className="card-header">
           <h3 className="card-title">Ajouter Commandes</h3>

@@ -99,7 +99,7 @@ const Register = () => {
                       </div>
                     </div>
                     <div className="text-center">
-                      <button type="submit">Send Message</button>
+                      <button type="submit">Envoyer</button>
                     </div>
                   </form>
                 </div>

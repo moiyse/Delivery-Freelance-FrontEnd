@@ -64,7 +64,7 @@ export const MENU_CLIENT: IMenuItem[] = [
   {
     name: "Profile",
     icon: 'fa fa-user nav-icon',
-    path: '/profile'
+    path: '/clientProfile'
   },
   {
     name: "Ajouter Commande",

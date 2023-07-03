@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import "./forms.css";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import { ContentHeader } from "@app/components";
 
 const ClientAjoutCommandes = () => {
   const [selectedDateTime, setSelectedDateTime] = useState(null);
@@ -25,6 +26,7 @@ const ClientAjoutCommandes = () => {
 
   return (
     <>
+    <ContentHeader title="Ajouter Commandes" />
       <div className="card card-primary form-card">
         <div className="card-header">
           <h3 className="card-title">Ajouter Commandes</h3>
@@ -58,7 +60,10 @@ const ClientAjoutCommandes = () => {
                         value={inputField.value}
                         onChange={(event) => handleInputChange(index, event)}
                       />
-                      <div className="input-group-append">
+                      {index == 0 ? (
+                        <></>
+                      ) : (
+                        <div className="input-group-append">
                         <span
                           className="input-group-text"
                           style={{ cursor: "pointer" }}
@@ -67,6 +72,8 @@ const ClientAjoutCommandes = () => {
                           <i style={{color:"#eb0000"}} className="fa fa-times"></i>
                         </span>
                       </div>
+                      )}
+                      
                     </div>
                   ))}
                 </div>
