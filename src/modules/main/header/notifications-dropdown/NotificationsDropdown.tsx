@@ -34,11 +34,11 @@ const NotificationsDropdown = () => {
         <span className="badge badge-warning navbar-badge">15</span>
       </div>
       <div slot="menu">
-        <span className="dropdown-item dropdown-header">
+        <span className="dropdown-item dropdown-header ">
           {t<string>('header.notifications.count', {quantity: '15'})}
         </span>
-        <div className="dropdown-divider" />
-        <Link to="/" className="dropdown-item">
+        <div className="dropdown-divider " />
+        <Link to="/" className="dropdown-item header-notification-style">
           <i className="fas fa-envelope mr-2" />
           <span>
             {t<string>('header.notifications.newMessagesCount', {
@@ -53,7 +53,7 @@ const NotificationsDropdown = () => {
           </span>
         </Link>
         <div className="dropdown-divider" />
-        <Link to="/" className="dropdown-item">
+        <Link to="/" className="dropdown-item header-notification-style">
           <i className="fas fa-users mr-2" />
           <span>
             {t<string>('header.notifications.friendRequestsCount', {
@@ -67,8 +67,8 @@ const NotificationsDropdown = () => {
             })}
           </span>
         </Link>
-        <div className="dropdown-divider" />
-        <Link to="/" className="dropdown-item">
+        <div className="dropdown-divider " />
+        <Link to="/" className="dropdown-item header-notification-style">
           <i className="fas fa-file mr-2" />
           <span>
             {t<string>('header.notifications.reportsCount', {
@@ -82,8 +82,8 @@ const NotificationsDropdown = () => {
             })}
           </span>
         </Link>
-        <div className="dropdown-divider" />
-        <Link to="/" className="dropdown-item dropdown-footer">
+        <div className="dropdown-divider " />
+        <Link to="/" className="dropdown-item dropdown-footer header-notification-style">
           {t<string>('header.notifications.seeAll')}
         </Link>
       </div>

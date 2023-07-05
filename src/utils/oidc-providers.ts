@@ -65,9 +65,10 @@ export const authLogin = (email: string, password: string) => {
   return new Promise(async (res, rej) => {
     await sleep(500);
     if (email === 'admin@admin.com' && password === 'admin') {
+      console.log("admin")
       localStorage.setItem(
         'authentication',
-        JSON.stringify({ profile: { email: 'admin@example.com',role:"admin" } })
+        JSON.stringify({ profile: { email: 'admin@admin.com',role:"admin" } })
       );
       return res({ profile: { email: 'admin@example.com',role:"admin" } });
     }
@@ -91,14 +92,19 @@ export const authLogin = (email: string, password: string) => {
         JSON.stringify({ profile: { email: 'superAdmin@superAdmin.com',role:"superAdmin" } })
       );
       return res({ profile: { email: 'superAdmin@superAdmin.com',role:"superAdmin" } });
-    }
-    return rej({ message: 'Credentials are wrong!' });
+    }/*
+    else
+    {
+      console.log("wrong")
+      return rej({ message: 'Credentials are wrongggg!' });
+    }*/
+    
   });
 };
 
 export const getAuthStatus = () => {
   return new Promise(async (res, rej) => {
-    await sleep(500);
+    await sleep(1000);
     try {
       let authentication = localStorage.getItem('authentication');
       if (authentication) {

@@ -29,7 +29,7 @@ const ClientCommandes = () => {
                 >
                   <thead>
                     <tr>
-                      <th>Articles</th>
+                      <th>Collis</th>
                       <th>Created At</th>
                       <th>Destination</th>
                       <th>Deliver At</th>
@@ -133,15 +133,6 @@ const ClientCommandes = () => {
                       </td>
                     </tr>
                   </tbody>
-                  <tfoot>
-                    <tr>
-                      <th>Articles</th>
-                      <th>Created At</th>
-                      <th>Destination</th>
-                      <th>Deliver At</th>
-                      <th>Commande Status</th>
-                    </tr>
-                  </tfoot>
                 </table>
               </div>
               {/* /.card-body */}
