@@ -35,7 +35,7 @@ const Footer = () => {
             <div className="container">
               <div className="row">
                 <div className="col-lg-3 col-md-6 footer-contact">
-                  <h3>DELIVERY</h3>
+                  <h3>FASTO</h3>
                   <p style={{ width: 240 }}>
                     Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed
                     do eiusmod tempor incididunt ut labore et dolore magna

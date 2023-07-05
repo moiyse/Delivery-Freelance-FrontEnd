@@ -31,7 +31,7 @@ const LivreurCommandes = () => {
                     <tr>
                       <th>Id Commande</th>
                       <th>Client</th>
-                      <th>Articles</th>
+                      <th>Collis</th>
                       <th>Created At</th>
                       <th>Destination</th>
                       <th>Deliver At</th>
@@ -213,7 +213,7 @@ const LivreurCommandes = () => {
                     <tr>
                       <th>Id Commande</th>
                       <th>Client</th>
-                      <th>Articles</th>
+                      <th>Collis</th>
                       <th>Created At</th>
                       <th>Destination</th>
                       <th>Deliver At</th>

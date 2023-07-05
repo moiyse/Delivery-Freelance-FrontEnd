@@ -56,6 +56,11 @@ export const MENU_ADMIN: IMenuItem[] = [
     icon: 'fa fa-file nav-icon',
     path: '/payments'
   },
+  {
+    name: "Suivi Livreur",
+    icon: 'fa fa-user nav-icon',
+    path: '/payments'
+  },
   
 ];
 
@@ -146,7 +151,7 @@ const MenuSidebar = () => {
   return (
     <aside className={`main-sidebar elevation-4 ${sidebarSkin}`}>
       <Link to="/" className="brand-link">
-        <span className="brand-text">Delivery</span>
+        <span className="brand-text">FASTO</span>
       </Link>
       <div className="sidebar">
         <div className="user-panel mt-3 pb-3 mb-3 d-flex">

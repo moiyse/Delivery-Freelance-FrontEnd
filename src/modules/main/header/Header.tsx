@@ -33,7 +33,7 @@ const Header = () => {
     }
     return classes;
   }, [navbarVariant, headerBorder]);
-
+/*
   const headerInitialization = () => {
     const authenticationData: any = localStorage.getItem("authentication");
     const authenticationObject = JSON.parse(authenticationData);
@@ -106,14 +106,14 @@ const Header = () => {
         </>
       );
     }
-  };
+  };*/
 
 
 
 
   return (
     <nav style={{ padding: "0.5rem 0.5rem" }} className={getContainerClasses()}>
-      <ul style={{ display: "flex" }} className="navbar-nav">
+      <ul style={{ display: "flex" }} className="navbar-nav ">
         <li className="nav-item">
           <button
             onClick={handleToggleMenuSidebar}
@@ -123,24 +123,12 @@ const Header = () => {
             <i className="fas fa-bars" />
           </button>
         </li>
-
-        {headerInitialization()}
         
       </ul>
       <ul className="navbar-nav ml-auto">
-        <MessagesDropdown />
         <NotificationsDropdown />
-        <LanguagesDropdown />
         <UserDropdown />
-        <li className="nav-item">
-          <button
-            type="button"
-            className="nav-link"
-            onClick={handleToggleControlSidebar}
-          >
-            <i className="fas fa-th-large" />
-          </button>
-        </li>
+        
       </ul>
     </nav>
   );
