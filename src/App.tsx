@@ -37,6 +37,7 @@ import ClientAjoutCommandes from './pages/Client/forms/ClientAjoutCommandes';
 import ClientProfile from './pages/Client/profile/ClientProfile';
 import LivreurCommandes from './pages/Livreur/tables/LivreurCommandes';
 import LivreurPayments from './pages/Livreur/tables/LivreurPayments';
+import UpdateUser from './pages/Admin/forms/UpdateUser';
 
 declare const FB: any;
 
