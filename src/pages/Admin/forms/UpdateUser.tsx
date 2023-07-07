@@ -1,47 +1,69 @@
-import { ContentHeader } from "@app/components";
-import { useState } from "react";
+import { useState,useEffect } from "react";
 import "./forms.css";
+import {GET_USER_BY_ID_URL} from '../../../../apiUrls'
+import { updateUserById } from "../tables/UsersService";
 import { toast } from 'react-toastify';
-import {CREATE_USER_URL} from '../../../../apiUrls.jsx'
-const AjoutUser = () => {
+interface UpdateUserProps {
+    userId: number | null;
+}
+
+const UpdateUser: React.FC<UpdateUserProps> = ({userId}) => {
+  const [user,setUser]=useState({
+    idUser: 0,
+    firstName: '',
+    lastName: '',
+    email: '',
+    phone: '',
+    role: '',
+    status: '',
+    createdAt: ''})
   const [firstName,setFirstName]=useState('')
   const [lastName,setLastName]=useState('')
   const [email,setEmail]=useState('')
   const [phone,setPhone]=useState('')
   const [role,setRole]=useState('')
-  const saveData=async()=>{
-    const user={
-      firstName:firstName,
-      lastName:lastName,
-      email:email,
-      role:role,
-      phone:phone
+  const [status,setStatus]=useState('')
+
+  useEffect(() => {
+    const getUserById = async () => {
+        try {
+          const response = await fetch(GET_USER_BY_ID_URL(userId));
+          if (response.ok) {
+            const data = await response.json();
+             setUser(data)
+          } else {
+            console.log('Error:', response.status);
+          }
+        } catch (error) {
+          throw(error)
+        }
+      };
+      getUserById()
+  }, [userId]);
+
+  const handleUpdateButton=async()=>{
+    const userUpdated={
+      firstName:firstName ||user.firstName,
+      lastName:lastName || user.lastName ,
+      email:email || user.email ,
+      role:role || user.role ,
+      phone:phone || user.phone,
+      status:status || user.status
     }
     try{
-      const response = await fetch(CREATE_USER_URL, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(user)
-      });
-      if (!response.ok) {
-        throw new Error('Network response was not ok');
-      }
-      const resposeData=response.json()
-      toast.success('Utilisateur Ajouté avec Succés');
-      console.log(resposeData)
-    }catch(errorr){
+      updateUserById(userId,userUpdated)
+      toast.success('Utilisateur Mofidié avec Succés');
+    }catch(error){
       toast.error('Failed');
-      throw(errorr)
     }
+
   }
+  
   return (
     <>
-    <ContentHeader title="Ajouter Utilisateur" />
       <div className="card card-primary form-card">
         <div className="card-header">
-          <h3 className="card-title">Ajouter User</h3>
+          <h3 className="card-title">Modifier Utilisateur</h3>
         </div>
         {/* /.card-header */}
         {/* form start */}
@@ -56,7 +78,7 @@ const AjoutUser = () => {
                     type="text"
                     className="form-control"
                     id="exampleInputEmail1"
-                    placeholder="Entrer le Nom"
+                    placeholder={user.firstName}
                   />
                 </div>
                 <div className="col-md-6">
@@ -66,7 +88,7 @@ const AjoutUser = () => {
                     type="text"
                     className="form-control"
                     id="exampleInputEmail1"
-                    placeholder="Entrer la prenom"
+                    placeholder={user.lastName}
                   />
                 </div>
               </div>
@@ -80,12 +102,12 @@ const AjoutUser = () => {
                     type="email"
                     className="form-control"
                     id="exampleInputEmail1"
-                    placeholder="Entrer l'email"
+                    placeholder={user.email}
                   />
                 </div>
                 <div className="col-md-6">
                   <label>Selectionner Role</label>
-                  <select className="form-control" onChange={(e) =>{ setRole(e.target.value);console.log(role)}}>
+                  <select defaultValue={user.role} className="form-control" onChange={(e) =>{ setRole(e.target.value);console.log(role)}}>
                     <option>Client</option>
                     <option>Livreur</option>
                     <option>Admin</option>
@@ -102,8 +124,15 @@ const AjoutUser = () => {
                     type="tel"
                     className="form-control"
                     id="exampleInputEmail1"
-                    placeholder="Entrer le numéro de téléphone"
+                    placeholder={user.phone}
                   />
+                </div>
+                <div className="col-md-6">
+                  <label htmlFor="exampleInputEmail1">Selectionner Status</label>
+                  <select defaultValue={user.status} className="form-control" onChange={(e) =>{ setStatus(e.target.value)}}>
+                    <option>En Attente</option>
+                    <option>Active</option>
+                  </select>
                 </div>
               </div>
             </div>
@@ -111,8 +140,8 @@ const AjoutUser = () => {
           </div>
           {/* /.card-body */}
           <div className="card-footer">
-            <button type="button" className="btn btn-primary" onClick={saveData}>
-              Ajouter
+            <button onClick={handleUpdateButton} className="btn btn-primary" type="button">
+              Modifier
             </button>
           </div>
         </form>
@@ -121,4 +150,4 @@ const AjoutUser = () => {
   );
 };
 
-export default AjoutUser;
+export default UpdateUser;
