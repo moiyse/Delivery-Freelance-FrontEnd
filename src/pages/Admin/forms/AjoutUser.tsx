@@ -1,3 +1,4 @@
+import { ContentHeader } from "@app/components";
 import { useState } from "react";
 import "./forms.css";
 import { toast } from 'react-toastify';
@@ -37,6 +38,7 @@ const AjoutUser = () => {
   }
   return (
     <>
+    <ContentHeader title="Ajouter Utilisateur" />
       <div className="card card-primary form-card">
         <div className="card-header">
           <h3 className="card-title">Ajouter User</h3>

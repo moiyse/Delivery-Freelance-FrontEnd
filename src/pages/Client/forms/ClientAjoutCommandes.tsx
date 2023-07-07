@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import "./forms.css";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import { ContentHeader } from "@app/components";
 
 const ClientAjoutCommandes = () => {
   const [selectedDateTime, setSelectedDateTime] = useState(null);
@@ -17,7 +18,7 @@ const ClientAjoutCommandes = () => {
     setInputFields([...inputFields, { value: "" }]);
   };
 
-  const handleRemoveFields = (index:any) => {
+  const handleRemoveFields = (index: any) => {
     const values = [...inputFields];
     values.splice(index, 1);
     setInputFields(values);
@@ -25,6 +26,7 @@ const ClientAjoutCommandes = () => {
 
   return (
     <>
+      <ContentHeader title="Ajouter Commandes" />
       <div className="card card-primary form-card">
         <div className="card-header">
           <h3 className="card-title">Ajouter Commandes</h3>
@@ -35,7 +37,7 @@ const ClientAjoutCommandes = () => {
           <div className="card-body">
             <div className="form-group">
               <div className="row d-flex align-items-center">
-                <label htmlFor="exampleInputEmail1">Articles</label>
+                <label htmlFor="exampleInputEmail1">Collis</label>
                 <div className="col-sm-1">
                   <i
                     style={{
@@ -54,19 +56,26 @@ const ClientAjoutCommandes = () => {
                         key={index}
                         type="text"
                         className="form-control"
-                        placeholder="Enter le Nom"
+                        placeholder="Enter l'article"
                         value={inputField.value}
                         onChange={(event) => handleInputChange(index, event)}
                       />
-                      <div className="input-group-append">
-                        <span
-                          className="input-group-text"
-                          style={{ cursor: "pointer" }}
-                          onClick={() => handleRemoveFields(index)}
-                        >
-                          <i style={{color:"#eb0000"}} className="fa fa-times"></i>
-                        </span>
-                      </div>
+                      {index == 0 ? (
+                        <></>
+                      ) : (
+                        <div className="input-group-append">
+                          <span
+                            className="input-group-text"
+                            style={{ cursor: "pointer" }}
+                            onClick={() => handleRemoveFields(index)}
+                          >
+                            <i
+                              style={{ color: "#eb0000" }}
+                              className="fa fa-times"
+                            ></i>
+                          </span>
+                        </div>
+                      )}
                     </div>
                   ))}
                 </div>
@@ -75,7 +84,9 @@ const ClientAjoutCommandes = () => {
             <div className="form-group">
               <div className="row">
                 <div className="col-md-6">
-                  <label htmlFor="exampleInputEmail1">Destination</label>
+                  <label htmlFor="exampleInputEmail1">
+                    Adresse destination
+                  </label>
                   <input
                     type="text"
                     className="form-control"
@@ -84,40 +95,53 @@ const ClientAjoutCommandes = () => {
                   />
                 </div>
                 <div className="col-md-6">
-                  <div>
-                    <label>Date et temps pour la livraison</label>
-                    <div
-                      className="input-group date"
-                      id="reservationdatetime"
-                      data-target-input="nearest"
-                    >
-                      <DatePicker
-                        selected={selectedDateTime}
-                        onChange={(date: any) => setSelectedDateTime(date)}
-                        showTimeSelect
-                        timeFormat="HH:mm"
-                        timeIntervals={15}
-                        dateFormat="yyyy-MM-dd HH:mm"
-                        placeholderText="Date et temps préférer"
-                        className="form-control datetimepicker-input"
-                        customInput={
-                          <input
-                            type="text"
-                            className="form-control datetimepicker-input"
-                          />
-                        }
-                        popperClassName="custom-popper"
-                        timeCaption="Time"
-                        shouldCloseOnSelect={false}
-                        withPortal
-                      />
+                  <label htmlFor="exampleInputEmail1">Adresse Pickup</label>
+                  <input
+                    type="text"
+                    className="form-control"
+                    id="exampleInputEmail1"
+                    placeholder="Choisir votre destination"
+                  />
+                </div>
+              </div>
+              <div className="form-group">
+                <div className="row">
+                  <div className="col-md-6">
+                    <div>
+                      <label>Date et temps pour la livraison</label>
                       <div
-                        className="input-group-append"
-                        data-target="#reservationdatetime"
-                        data-toggle="datetimepicker"
+                        className="input-group date"
+                        id="reservationdatetime"
+                        data-target-input="nearest"
                       >
-                        <div className="input-group-text">
-                          <i className="fa fa-calendar" />
+                        <DatePicker
+                          selected={selectedDateTime}
+                          onChange={(date: any) => setSelectedDateTime(date)}
+                          showTimeSelect
+                          timeFormat="HH:mm"
+                          timeIntervals={15}
+                          dateFormat="yyyy-MM-dd HH:mm"
+                          placeholderText="Date et temps préférer"
+                          className="form-control datetimepicker-input"
+                          customInput={
+                            <input
+                              type="text"
+                              className="form-control datetimepicker-input"
+                            />
+                          }
+                          popperClassName="custom-popper"
+                          timeCaption="Time"
+                          shouldCloseOnSelect={false}
+                          withPortal
+                        />
+                        <div
+                          className="input-group-append"
+                          data-target="#reservationdatetime"
+                          data-toggle="datetimepicker"
+                        >
+                          <div className="input-group-text">
+                            <i className="fa fa-calendar" />
+                          </div>
                         </div>
                       </div>
                     </div>

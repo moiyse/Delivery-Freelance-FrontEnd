@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import "./users.css";
+import { ContentHeader } from "@app/components";
 
 const LivreurCommandes = () => {
   useEffect(() => {
@@ -11,13 +12,14 @@ const LivreurCommandes = () => {
 
   return (
     <>
+    <ContentHeader title="Commande à livrer" />
       <div className="container-fluid">
         <div className="row">
           <div className="col-12">
             {/* /.card */}
             <div className="card">
               <div className="card-header">
-                <h3 className="card-title">DataTable with default features</h3>
+                <h3 className="card-title">Mes commandes à livrer</h3>
               </div>
               {/* /.card-header */}
               <div className="card-body">
@@ -29,7 +31,7 @@ const LivreurCommandes = () => {
                     <tr>
                       <th>Id Commande</th>
                       <th>Client</th>
-                      <th>Articles</th>
+                      <th>Collis</th>
                       <th>Created At</th>
                       <th>Destination</th>
                       <th>Deliver At</th>
@@ -211,7 +213,7 @@ const LivreurCommandes = () => {
                     <tr>
                       <th>Id Commande</th>
                       <th>Client</th>
-                      <th>Articles</th>
+                      <th>Collis</th>
                       <th>Created At</th>
                       <th>Destination</th>
                       <th>Deliver At</th>

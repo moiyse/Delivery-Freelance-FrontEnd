@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+import { Link } from "react-router-dom";
 
 
 
@@ -28,7 +29,7 @@ const SecondHeader = () => {
       <header id="header" className="fixed-top ">
         <div className="container d-flex align-items-center">
           <h1 className="logo me-auto">
-            <a href="index.html">Delivery</a>
+            <a href="index.html">FASTO</a>
           </h1>
           {/* Uncomment below if you prefer to use an image logo */}
           {/* <a href="index.html" class="logo me-auto"><img src="assets/img/logo.png" alt="" class="img-fluid"></a>*/}
@@ -50,13 +51,17 @@ const SecondHeader = () => {
                 </a>
               </li>
               <li>
-                <a className="nav-link scrollto" href="#contact">
-                  Devenir Client
-                </a>
+                  <a className="nav-link scrollto">
+                    <Link style={{padding:"0"}} to="register">
+                    Devenir Client
+                    </Link>
+                  </a>
               </li>
               <li>
-                <a className="getstarted scrollto" href="#about">
+                <a className="getstarted scrollto">
+                <Link style={{padding:"0"}} to="/login">
                   Se Connecter
+                </Link>
                 </a>
               </li>
             </ul>

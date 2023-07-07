@@ -55,13 +55,14 @@ const Commandes = () => {
   
   return (
     <>
+    <ContentHeader title="List Commandes" />
       <div className="container-fluid">
         <div className="row">
           <div className="col-12">
             {/* /.card */}
             <div className="card">
               <div className="card-header">
-                <h3 className="card-title">DataTable with default features</h3>
+                <h3 className="card-title">Tous les commandes</h3>
               </div>
               {/* /.card-header */}
               <div className="card-body">
@@ -72,7 +73,7 @@ const Commandes = () => {
                   <thead>
                     <tr>
                       <th>Client</th>
-                      <th>Articles</th>
+                      <th>Collis</th>
                       <th>Created At</th>
                       <th>Deliver At</th>
                       <th>Destination</th>
@@ -202,7 +203,7 @@ const Commandes = () => {
                   <tfoot>
                     <tr>
                       <th>Client</th>
-                      <th>Articles</th>
+                      <th>Collis</th>
                       <th>Created At</th>
                       <th>Deliver At</th>
                       <th>Destination</th>

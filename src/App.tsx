@@ -111,7 +111,7 @@ const App = () => {
             <Route path="/ajoutUser" element={<AjoutUser />} />
             <Route path="/payments" element={<Payments />} />
             <Route path="/clientCommandes" element={<ClientCommandes />} />
-            <Route path="/clientAjoutCommandes" element={<ClientAjoutCommandes />} />
+            <Route path="/clientAjoutCommande" element={<ClientAjoutCommandes />} />
             <Route path="/clientProfile" element={<ClientProfile />} />
             <Route path="/livreurCommandes" element={<LivreurCommandes />} />
             <Route path="/LivreurPayment" element={<LivreurPayments />} />

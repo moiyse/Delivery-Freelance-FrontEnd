@@ -51,6 +51,7 @@ const AjoutCommandes = () => {
   
   return (
     <>
+    <ContentHeader title="Ajouter Commande" />
       <div className="card card-primary form-card">
         <div className="card-header">
           <h3 className="card-title">Ajouter Commandes</h3>

@@ -1,12 +1,12 @@
-import React, {useState} from 'react';
-import {useTranslation} from 'react-i18next';
-import {ContentHeader} from '@components';
-import {PfButton, PfImage} from '@profabric/react-components';
-import styled from 'styled-components';
+import React, { useState } from "react";
+import { useTranslation } from "react-i18next";
+import { ContentHeader } from "@components";
+import { PfButton, PfImage } from "@profabric/react-components";
+import styled from "styled-components";
 
-import ActivityTab from './ActivityTab';
-import TimelineTab from './TimelineTab';
-import SettingsTab from './SettingsTab';
+import ActivityTab from "./ActivityTab";
+import TimelineTab from "./TimelineTab";
+import SettingsTab from "./SettingsTab";
 
 const StyledUserImage = styled(PfImage)`
   --pf-border: 3px solid #adb5bd;
@@ -14,7 +14,7 @@ const StyledUserImage = styled(PfImage)`
 `;
 
 const ClientProfile = () => {
-  const [activeTab, setActiveTab] = useState('ACTIVITY');
+  const [activeTab, setActiveTab] = useState("ACTIVITY");
   const [t] = useTranslation();
 
   const toggle = (tab: string) => {
@@ -27,91 +27,88 @@ const ClientProfile = () => {
       <section className="content">
         <div className="container-fluid">
           <div className="row">
-            <div className='col'></div>
+            <div className="col"></div>
             <div className="col-9">
               <div className="card card-primary card-outline">
                 <div className="card-body box-profile">
-                  <div className="text-center">
-                    <StyledUserImage
-                      width={100}
-                      height={100}
-                      rounded
-                      src="/img/default-profile.png"
-                      alt="User profile"
-                    />
-                  </div>
-                  <h3 className="profile-username text-center">
-                    Nina Mcintire
-                  </h3>
-                  <p className="text-muted text-center">Software Engineer</p>
-                  <ul className="list-group list-group-unbordered mb-3">
-                    <li className="list-group-item">
-                      <b>{t<string>('header.user.followers')}</b>
-
-                      <span className="float-right">1,322</span>
-                    </li>
-                    <li className="list-group-item">
-                      <b>{t<string>('views.user.following')}</b>
-                      <span className="float-right">543</span>
-                    </li>
-                    <li className="list-group-item">
-                      <b>{t<string>('header.user.friends')}</b>
-                      <span className="float-right">13,287</span>
-                    </li>
-                  </ul>
-                  <PfButton block>
-                    {/* @ts-ignore */}
-                    {t<string>('main.label.follow')}
-                  </PfButton>
+                  <h3 className="profile-username text-center">John Doe</h3>
+                  <p className="text-muted text-center"><strong>Email: </strong>johndoe@gmail.com</p>
+                  <p className="text-muted text-center"><strong>Tel: </strong>97854623</p>
+                  <form>
+                    <div className="card-body">
+                      <div className="form-group">
+                        <div className="row">
+                          <div className="col-md-6">
+                            <label htmlFor="exampleInputEmail1">Nom</label>
+                            <input
+                              type="text"
+                              className="form-control"
+                              id="exampleInputEmail1"
+                              placeholder="John"
+                            />
+                          </div>
+                          <div className="col-md-6">
+                            <label htmlFor="exampleInputEmail1">Prenom</label>
+                            <input
+                              type="text"
+                              className="form-control"
+                              id="exampleInputEmail1"
+                              placeholder="Doe"
+                            />
+                          </div>
+                        </div>
+                      </div>
+                      <div className="form-group">
+                        <div className="row">
+                          <div className="col">
+                            <label htmlFor="exampleInputEmail1">Email</label>
+                            <input
+                              type="email"
+                              className="form-control"
+                              id="exampleInputEmail1"
+                              placeholder="johndoe@gmail.com"
+                            />
+                          </div>
+                        </div>
+                      </div>
+                      <div className="form-group">
+                        <div className="row">
+                          <div className="col-md-6">
+                            <label htmlFor="exampleInputEmail1">
+                              Téléphone
+                            </label>
+                            <input
+                              type="tel"
+                              className="form-control"
+                              id="exampleInputEmail1"
+                              placeholder="97854623"
+                            />
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    {/* /.card-body */}
+                    <div className="row text-center login-button">
+              <div style={{margin: "0px 95px"}} className="col">
+                <button className='btn btn-primary'>
+                  Modifier
+                </button>
+                {/*<PfButton
+                  block
+                  type="submit"
+                  loading={isAuthLoading}
+                  className='button-login'
+                >
+                  {t<string>('login.button.signIn.label')}
+                </PfButton>*/}
+              </div>
+            </div>
+                  </form>
                 </div>
                 {/* /.card-body */}
               </div>
-              <div className="card card-primary">
-                <div className="card-header">
-                  <h3 className="card-title">
-                    {t<string>('main.label.aboutMe')}
-                  </h3>
-                </div>
-                <div className="card-body">
-                  <strong>
-                    <i className="fas fa-book mr-1" />
-                    {t<string>('main.label.education')}
-                  </strong>
-                  <p className="text-muted">
-                    B.S. in Computer Science from the University of Tennessee at
-                    Knoxville
-                  </p>
-                  <hr />
-                  <strong>
-                    <i className="fas fa-map-marker-alt mr-1" />
-                    {t<string>('main.label.location')}
-                  </strong>
-                  <p className="text-muted">Malibu, California</p>
-                  <hr />
-                  <strong>
-                    <i className="fas fa-pencil-alt mr-1" />
-                    {t<string>('main.label.skills')}
-                  </strong>
-                  <p className="text-muted">
-                    <span className="tag tag-danger">UI Design</span>
-                    <span className="tag tag-success">Coding</span>
-                    <span className="tag tag-info">Javascript</span>
-                    <span className="tag tag-warning">PHP</span>
-                    <span className="tag tag-primary">Node.js</span>
-                  </p>
-                  <hr />
-                  <strong>
-                    <i className="far fa-file-alt mr-1" />
-                    {t<string>('main.label.notes')}
-                  </strong>
-                  <p className="text-muted">
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                    Etiam fermentum enim neque.
-                  </p>
-                </div>
-              </div>
             </div>
-            <div className='col'></div>
+            <div className="col"></div>
           </div>
         </div>
       </section>

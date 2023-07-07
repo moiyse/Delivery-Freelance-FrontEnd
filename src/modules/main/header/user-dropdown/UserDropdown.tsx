@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { DateTime } from 'luxon';
@@ -22,7 +22,7 @@ const UserHeader = styled.li`
   display: flex;
   align-items: center;
   flex-direction: column;
-  height: 175px;
+  height: 75px;
   padding: 10px;
   text-align: center;
   img {
@@ -30,8 +30,7 @@ const UserHeader = styled.li`
     height: 90px;
     width: 90px;
     border: 3px solid;
-    border-color: transparent;
-    border-color: rgba(255, 255, 255, 0.2);
+    border-color: #e93f47;
   }
   p {
     z-index: 5;
@@ -47,8 +46,8 @@ const UserHeader = styled.li`
 const UserBody = styled.li`
   border-bottom-right-radius: 4px;
   border-bottom-left-radius: 4px;
-  border-bottom: 1px solid #495057;
-  border-top: 1px solid #dee2e6;
+  border-bottom: 1px solid #e93f47;
+  border-top: 1px solid #e93f47;
   padding: 15px;
   &::after {
     display: block;
@@ -58,8 +57,8 @@ const UserBody = styled.li`
 
   @media (min-width: 576px) {
     a {
-      background: #ffffff !important;
-      color: #495057 !important;
+      background: #e93f47 !important;
+      color: #e93f47 !important;
     }
   }
 `;
@@ -131,12 +130,23 @@ const UserDropdown = () => {
     }
     localStorage.removeItem('authentication');
   };
+  
 
   const navigateToProfile = (event: any) => {
     event.preventDefault();
     setDropdownOpen(false);
-    navigate('/profile');
+    navigate('/clientProfile');
   };
+
+  const userRole = () => {
+    const authenticationData: any = localStorage.getItem("authentication");
+    const authenticationObject = JSON.parse(authenticationData);
+
+    if(authenticationObject.profile.role == "client"){
+      return true
+    }
+    return false
+  }
 
   return (
     <StyledDropdown isOpen={dropdownOpen} hideArrow>
@@ -150,49 +160,24 @@ const UserDropdown = () => {
         rounded
       />
       <div slot="menu">
-        <UserHeader className=" bg-primary">
-          <StyledBigUserImage
-            src={authentication.profile.picture}
-            fallbackSrc="/img/default-profile.png"
-            alt="User"
-            width={90}
-            height={90}
-            rounded
-          />
+        <UserHeader style={{backgroundColor:"#2b3467",border:"3px solid #e93f47",borderBottom:"none",color:"white"}}>
           <p>
             {authentication.profile.email}
-            <small>
-              <span>Member since </span>
-              <span>
-                {/* {DateTime.fromISO(user.createdAt).toFormat('dd LLL yyyy')} */}
-              </span>
-            </small>
           </p>
         </UserHeader>
-        <UserBody>
-          <div className="row">
-            <div className="col-4 text-center">
-              <Link to="/">{t<string>('header.user.followers')}</Link>
-            </div>
-            <div className="col-4 text-center">
-              <Link to="/">{t<string>('header.user.sales')}</Link>
-            </div>
-            <div className="col-4 text-center">
-              <Link to="/">{t<string>('header.user.friends')}</Link>
-            </div>
-          </div>
-        </UserBody>
-        <UserFooter>
+        <UserFooter style={{border:"3px solid #e93f47",borderTop:"none",color:"#e93f47"}}>
+            {userRole() && (
+            <button
+              type="button"
+              className="btn btn-default btn-flat button-user-header"
+              onClick={navigateToProfile}
+            >
+              Profile
+            </button>
+          )}
           <button
             type="button"
-            className="btn btn-default btn-flat"
-            onClick={navigateToProfile}
-          >
-            {t<string>('header.user.profile')}
-          </button>
-          <button
-            type="button"
-            className="btn btn-default btn-flat float-right"
+            className="btn btn-default btn-flat float-right button-user-header"
             onClick={logOut}
           >
             {t<string>('login.button.signOut')}
