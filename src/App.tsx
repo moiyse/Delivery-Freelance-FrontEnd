@@ -38,6 +38,12 @@ import ClientProfile from './pages/Client/profile/ClientProfile';
 import LivreurCommandes from './pages/Livreur/tables/LivreurCommandes';
 import LivreurPayments from './pages/Livreur/tables/LivreurPayments';
 import UpdateUser from './pages/Admin/forms/UpdateUser';
+import EnPreparation from './pages/Admin/tables/ListCommandByStatus/EnPreparation';
+import EnAttentePickUp from './pages/Admin/tables/ListCommandByStatus/EnAttentePickUp';
+import EnDepot from './pages/Admin/tables/ListCommandByStatus/EnDepot';
+import EnCours from './pages/Admin/tables/ListCommandByStatus/EnCoursDeLivraison';
+import Livree from './pages/Admin/tables/ListCommandByStatus/Livree';
+import Annulee from './pages/Admin/tables/ListCommandByStatus/Annulee';
 
 declare const FB: any;
 
@@ -113,6 +119,12 @@ const App = () => {
             <Route path="/clientCommandes" element={<ClientCommandes />} />
             <Route path="/clientAjoutCommande" element={<ClientAjoutCommandes />} />
             <Route path="/clientProfile" element={<ClientProfile />} />
+            <Route path="/enPreparation" element={<EnPreparation/>}/>
+            <Route path="/enAttentePickUp" element={<EnAttentePickUp/>} />
+            <Route path="/enDepot" element={<EnDepot/>} />
+            <Route path="/enCours" element={<EnCours/>} />
+            <Route path="/livree" element={<Livree/>} />
+            <Route path="/annulee" element={<Annulee/>} />
             <Route path="/livreurCommandes" element={<LivreurCommandes />} />
             <Route path="/LivreurPayment" element={<LivreurPayments />} />
             <Route path="/" element={<Dashboard />} />

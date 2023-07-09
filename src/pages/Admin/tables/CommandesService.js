@@ -1,4 +1,4 @@
-import {CREATE_COMMANDE_URL,GET_ALL_COMMANDES,UPDATE_COMMANDE_BY_ID,DELET_COMMANDE_BY_ID} from '../../../../apiUrls'
+import {GET_COMMANDE_OF_TODAY_BY_STATUS,GET_COMMANDE_BY_ID,CREATE_COMMANDE_URL,GET_ALL_COMMANDES,UPDATE_COMMANDE_BY_ID,DELET_COMMANDE_BY_ID} from '../../../../apiUrls'
 import { toast } from 'react-toastify';
 
 const addCommande=async(commade)=>{
@@ -54,6 +54,29 @@ const updateCommandeLivreur=async(livreurId,commandeId)=>{
   }
 }
 
+const updateCommandeStatus=async(commandeId,statusValue)=>{
+  try {
+    const updatedCommande={
+      commandeStatus:statusValue
+    }
+    const response = await fetch(UPDATE_COMMANDE_BY_ID(commandeId), {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(updatedCommande),
+    });
+    if (!response.ok) {
+      throw new Error('Failed to update commande.')
+    }
+    const data = await response.json()
+    toast.success('Commande Modifier avec succés');
+  } catch (error) {
+    toast.error('!Failed')
+    throw error
+  }
+}
+
 const deleteCommandeById = async (commandeId) => {
   try {
     const response = await fetch(DELET_COMMANDE_BY_ID(commandeId), {
@@ -69,4 +92,52 @@ const deleteCommandeById = async (commandeId) => {
   }
 };
 
-export {addCommande,fetchCommandes,updateCommandeLivreur,deleteCommandeById}
+const getCommandeById = async (commandeId) => {
+  try {
+    const response = await fetch(GET_COMMANDE_BY_ID(commandeId));
+    if (response.ok) {
+      const data = await response.json();
+      return data;
+    } else {
+      console.error('Failed to fetch commande');
+    }
+  } catch (error) {
+    console.error('Error:', error);
+  }
+};
+
+const updateCommandeById=async(commandeId,updatedCommande)=>{
+  try {
+    const response = await fetch(UPDATE_COMMANDE_BY_ID(commandeId), {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(updatedCommande),
+    });
+    if (!response.ok) {
+      throw new Error('Failed to update user.')
+    }
+    const data = await response.json()
+    toast.success('Commande Modifié Avec Succés')
+  } catch (error) {
+    toast.error('Failed')
+    throw error
+  }
+}
+
+const getCommandeOfTodayByStatus=async(statusCommande)=>{
+  try {
+    const response = await fetch(GET_COMMANDE_OF_TODAY_BY_STATUS(statusCommande));
+    if (response.ok) {
+      const data = await response.json();
+      return data;
+    } else {
+      console.error('Failed to fetch commande');
+    }
+  } catch (error) {
+    toast.error('Failed')
+  }
+}
+
+export {updateCommandeStatus,getCommandeOfTodayByStatus,updateCommandeById,getCommandeById,addCommande,fetchCommandes,updateCommandeLivreur,deleteCommandeById}

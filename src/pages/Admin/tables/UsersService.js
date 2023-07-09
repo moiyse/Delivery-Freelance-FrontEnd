@@ -30,7 +30,6 @@ const deleteUserById = async (userId) => {
         throw new Error('Failed to update user.')
       }
       const data = await response.json()
-      console.log(data)
     } catch (error) {
       throw error
     }
