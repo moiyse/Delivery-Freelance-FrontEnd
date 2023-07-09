@@ -20,9 +20,7 @@ import PublicRoute from './routes/PublicRoute';
 import PrivateRoute from './routes/PrivateRoute';
 import { setAuthentication } from './store/reducers/auth';
 import {
-  GoogleProvider,
-  getAuthStatus,
-  getFacebookLoginStatus,
+  getAuthStatus
 } from './utils/oidc-providers';
 import Users from '@app/pages/Admin/tables/Users';
 import FrontMain from './frontOffice/components/FrontMain';
@@ -37,6 +35,11 @@ import ClientAjoutCommandes from './pages/Client/forms/ClientAjoutCommandes';
 import ClientProfile from './pages/Client/profile/ClientProfile';
 import LivreurCommandes from './pages/Livreur/tables/LivreurCommandes';
 import LivreurPayments from './pages/Livreur/tables/LivreurPayments';
+import AjoutPaymentExpediteur from './pages/Admin/forms/AjoutPaymentExpediteur';
+import PaymentExpediteur from './pages/Admin/tables/PaymentExpediteur';
+import LivreurPaymentExpediteur from './pages/Livreur/tables/LivreurPaymentExpediteur';import RoleAuth from './routes/RoleAuth';
+import ChangePassword from './modules/login/ChangerPassword';
+;
 
 declare const FB: any;
 
@@ -45,12 +48,11 @@ const App = () => {
   const screenSize = useSelector((state: any) => state.ui.screenSize);
   const dispatch = useDispatch();
   const [isAppLoading, setIsAppLoading] = useState(true);
+  const [currentUserRole,setCurrentUserRole] =useState("");
 
   const checkSession = async () => {
     try {
       let responses: any = await Promise.all([
-        getFacebookLoginStatus(),
-        GoogleProvider.getUser(),
         getAuthStatus(),
       ]);
 
@@ -65,7 +67,10 @@ const App = () => {
     setIsAppLoading(false);
   };
 
+  
+
   useEffect(() => {
+
     checkSession();
   }, []);
 
@@ -89,6 +94,7 @@ const App = () => {
             <Route path="/delivery/register" element={<Register />} />
           </Route>
         </Route>
+        <Route path="/ajoutUser/changePassword/:password/:id" element={<ChangePassword />} />
         <Route path="/login" element={<PublicRoute />}>
           <Route path="/login" element={<Login />} />
         </Route>
@@ -100,21 +106,42 @@ const App = () => {
         </Route>
         <Route path="/" element={<PrivateRoute />}>
           <Route path="/" element={<Main />}>
-            <Route path="/sub-menu-2" element={<Blank />} />
-            <Route path="/sub-menu-1" element={<SubMenu />} />
-            <Route path="/blank" element={<Blank />} />
-            <Route path="/profile" element={<Profile />} />
-            <Route path="/users" element={<Users />} />
-            <Route path="/commandes" element={<Commandes />} />
-            <Route path="/ajoutCommande" element={<AjoutCommandes />} />
-            <Route path="/ajoutUser" element={<AjoutUser />} />
-            <Route path="/payments" element={<Payments />} />
-            <Route path="/clientCommandes" element={<ClientCommandes />} />
-            <Route path="/clientAjoutCommande" element={<ClientAjoutCommandes />} />
-            <Route path="/clientProfile" element={<ClientProfile />} />
-            <Route path="/livreurCommandes" element={<LivreurCommandes />} />
-            <Route path="/LivreurPayment" element={<LivreurPayments />} />
-            <Route path="/" element={<Dashboard />} />
+            <Route path="/users"  element={<RoleAuth allowedRole={["admin","superAdmin"]} />} >
+              <Route path="/users" element={<Users />} />
+            </Route>
+            <Route path="/listPaymentExpediteur"  element={<RoleAuth allowedRole={["admin","superAdmin"]} />} >
+              <Route path="/listPaymentExpediteur" element={<PaymentExpediteur />} />
+            </Route>
+            <Route path="/commandes"  element={<RoleAuth allowedRole={["admin","superAdmin"]} />} >
+              <Route path="/commandes" element={<Commandes />} />
+            </Route>
+            <Route path="/ajoutCommande"  element={<RoleAuth allowedRole={["admin","superAdmin"]} />} >
+              <Route path="/ajoutCommande" element={<AjoutCommandes />} />
+            </Route>
+            <Route path="/ajoutUser"  element={<RoleAuth allowedRole={["admin","superAdmin"]} />} >
+              <Route path="/ajoutUser" element={<AjoutUser />} />
+            </Route>
+            <Route path="/ajoutPaymentExpediteur"  element={<RoleAuth allowedRole={["admin","superAdmin"]} />} >
+              <Route path="/ajoutPaymentExpediteur" element={<AjoutPaymentExpediteur />} />
+            </Route>
+            <Route path="/clientCommandes"  element={<RoleAuth allowedRole={["client"]} />} >
+              <Route path="/clientCommandes" element={<ClientCommandes />} />
+            </Route>
+            <Route path="/clientAjoutCommande"  element={<RoleAuth allowedRole={["client"]} />} >
+              <Route path="/clientAjoutCommande" element={<ClientAjoutCommandes />} />
+            </Route>
+            <Route path="/clientProfile"  element={<RoleAuth allowedRole={["client"]} />} >
+              <Route path="/clientProfile" element={<ClientProfile />} />
+            </Route>
+            <Route path="/livreurCommandes"  element={<RoleAuth allowedRole={["livreur"]} />} >
+              <Route path="/livreurCommandes" element={<LivreurCommandes />} />
+            </Route>
+            <Route path="/LivreurPaymentExpediteur"  element={<RoleAuth allowedRole={["livreur"]} />} >
+              <Route path="/LivreurPaymentExpediteur" element={<LivreurPaymentExpediteur />} />
+            </Route>
+            <Route path="/"  element={<RoleAuth allowedRole={["admin","superAdmin"]} />} >
+              <Route path="/" element={<Dashboard />} />
+            </Route>
           </Route>
         </Route>
       </Routes>

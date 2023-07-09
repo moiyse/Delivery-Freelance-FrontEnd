@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import "./users.css";
 import {GET_ALL_USERS_URL,UPDATE_USER_BY_ID} from '../../../../apiUrls.jsx'
 import { deleteUserById } from "@app/pages/Admin/tables/UsersService";
+import { sleep } from "@app/utils/helpers";
 type User = {
   idUser: number;
   firstName: string;
@@ -9,29 +10,43 @@ type User = {
   email: string;
   phone: string;
   role: string;
+  retour:number;
+  livraison:number;
+  caisse:number
   status: string;
   createdAt: string;
 };
 const Users = () => {
   const [users,setUsers]=useState<User[]>([])
   const [searchTerm, setSearchTerm] = useState("");
+  const [loading, setLoading] = useState(true);
  
   useEffect(() => {
-    const fetchUsers = async () => {
-      try {
-        const response = await fetch(GET_ALL_USERS_URL);
-        const data = await response.json();
-        setUsers(data);
-      } catch (error) {
-        console.log("Error fetching users:", error);
-      }
-    };
-    fetchUsers();  
+    fetchUsers();
+  }, []);
+
+  useEffect(() => {
     const script = document.createElement("script");
     script.src = "js/table.js";
     script.async = true;
     document.body.appendChild(script);
+
+    return () => {
+      // Clean up the added script when the component unmounts
+      document.body.removeChild(script);
+    };
   }, []);
+
+  const fetchUsers = async () => {
+    try {
+      const response = await fetch(GET_ALL_USERS_URL);
+      const data = await response.json();
+      setUsers(data);
+      setLoading(false)
+    } catch (error) {
+      console.log("Error fetching users:", error);
+    }
+  };
 
   const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(event.target.value);
@@ -67,7 +82,7 @@ const Users = () => {
               </div>
               <div className="card-body">
                 <table
-                  id="example1"
+                  id="userTable"
                   className="table table-bordered table-striped"
                 >
                   <thead>
@@ -76,44 +91,45 @@ const Users = () => {
                       <th>Email</th>
                       <th>Telephone</th>
                       <th>Role</th>
-                      <th>Status</th>
+                      <th>Prix Livraison</th>
+                      <th>Prix Retour</th>
+                      <th>Caisse</th>
                       <th>Date d'inscription</th>
                       <th>Actions</th>
                     </tr>
                   </thead>
                   <tbody>
-                    { filteredUsers.length===0? (
+                    { users.length===0 || loading === true? (
                       <tr>
-                        <td  className="text-center">
-                          No users found.
-                        </td>
+                        <td className="text-center">Pas d'utilisateur</td>
+                        <td className="text-center">Pas d'utilisateur</td>
+                        <td className="text-center">Pas d'utilisateur</td>
+                        <td className="text-center">Pas d'utilisateur</td>
+                        <td className="text-center">Pas d'utilisateur</td>
+                        <td className="text-center">Pas d'utilisateur</td>
+                        <td className="text-center">Pas d'utilisateur</td>
+                        <td className="text-center">Pas d'utilisateur</td>
+                        <td className="text-center">Pas d'utilisateur</td>
                       </tr>
                     ):(
-                      filteredUsers.map((user)=>{
+                      users.map((user)=>{
                         return(
                           <tr key={user.idUser}>
-                            <td>{user.firstName}</td>
+                            <td>{user.firstName + user.lastName}</td>
                             <td>{user.email}</td>
                             <td>{user.phone}</td>
                             <td>{user.role}</td>
-                            <td className="pill-td">
-                            <span
-                                className={`badge ${
-                                  user.status === "Active" ? "bg-success" : "bg-danger"
-                                } dropdown-toggle dropdown-icon`}
-                                data-toggle="dropdown"
-                                aria-expanded="true"
-                              >
-                                <a style={{ textDecoration: "none" }}>{user.status}</a>
-                                <div className="dropdown-menu">
-                                  <a className="dropdown-item" href="#" >
-                                    Active
-                                  </a>
-                                  <a className="dropdown-item" href="#">
-                                    En Attente
-                                  </a>
-                                </div>
-                            </span>
+                            <td>
+                              {user.role == "client" ? (user.livraison + " DT") : "-.-.-.-"}
+                            
+                            </td>
+                            <td>
+                              {user.role == "client" ? (user.retour + " DT") : "-.-.-.-"}
+                            
+                            </td>
+                            <td>
+                              {user.role == "livreur" ? (user.caisse ? (user.caisse + " DT") : "0 DT") : "-.-.-.-"}
+                            
                             </td>
                             <td>{user.createdAt}</td>
                             <td>
@@ -172,7 +188,9 @@ const Users = () => {
                       <th>Email</th>
                       <th>Telephone</th>
                       <th>Role</th>
-                      <th>Status</th>
+                      <th>Prix Livraison</th>
+                      <th>Prix Retour</th>
+                      <th>Caisse</th>
                       <th>Date d'inscription</th>
                       <th>Actions</th>
                     </tr>

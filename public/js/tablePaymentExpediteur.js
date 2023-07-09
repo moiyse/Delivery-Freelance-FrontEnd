@@ -2,13 +2,16 @@ $(function () {
     $("#example1").DataTable({
       responsive: true,
       lengthChange: false,
+      info: false,
       autoWidth: false,
+      language: {
+        emptyTable: " ",
+      },
       columnDefs: [
         { responsivePriority: 1, targets: 0 },
-        { responsivePriority: 1, targets: 2 },
-        { responsivePriority: 1, targets: -1 },
+        { responsivePriority: 1, targets: 1 },
         {
-          targets: [3] /* column index */,
+          targets: [5] /* column index */,
           orderable: false /* true or false */,
         },
       ],

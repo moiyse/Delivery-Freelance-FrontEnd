@@ -6,7 +6,6 @@ import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
 import { PfDropdown, PfImage } from '@profabric/react-components';
 import { setAuthentication } from '@app/store/reducers/auth';
-import { GoogleProvider } from '@app/utils/oidc-providers';
 
 const StyledSmallUserImage = styled(PfImage)`
   margin-top: 3px;
@@ -115,20 +114,10 @@ const UserDropdown = () => {
     event.preventDefault();
     setDropdownOpen(false);
     console.log('authentication', authentication);
-    if (authentication.profile.first_name) {
-      await GoogleProvider.signoutPopup();
       dispatch(setAuthentication(undefined));
-      navigate('/login');
-    } else if (authentication.userID) {
-      FB.logout(() => {
-        dispatch(setAuthentication(undefined));
-        navigate('/login');
-      });
-    } else {
-      dispatch(setAuthentication(undefined));
-      navigate('/login');
-    }
+      
     localStorage.removeItem('authentication');
+    window.location.href = '/login';
   };
   
 
@@ -141,8 +130,13 @@ const UserDropdown = () => {
   const userRole = () => {
     const authenticationData: any = localStorage.getItem("authentication");
     const authenticationObject = JSON.parse(authenticationData);
+    const authenticationToken = authenticationObject.profile.token
+    let jwt = authenticationToken
+    let jwtData = jwt.split('.')[1]
+    let decodedJwtJsonData = window.atob(jwtData)
+    let decodedJwtData = JSON.parse(decodedJwtJsonData)
 
-    if(authenticationObject.profile.role == "client"){
+    if(decodedJwtData.role == "client"){
       return true
     }
     return false

@@ -566,19 +566,6 @@ const Commandes = () => {
                       </td>
                     </tr>
                   </tbody>
-                  <tfoot>
-                    <tr>
-                      <th>Id Commande</th>
-                      <th>Client</th>
-                      <th>Collis</th>
-                      <th>Created At</th>
-                      <th>Destination</th>
-                      <th>Deliver At</th>
-                      <th>Commande Status</th>
-                      <th>Livreur</th>
-                      <th>Actions</th>
-                    </tr>
-                  </tfoot>
                 </table>
               </div>
               {/* /.card-body */}
