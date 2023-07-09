@@ -11,3 +11,5 @@ export const CREATE_COMMANDE_URL=`${BASE_URL}/commande/addCommande`
 export const GET_ALL_COMMANDES=`${BASE_URL}/commande/getAll`
 export const UPDATE_COMMANDE_BY_ID=(commandeId)=>`${BASE_URL}/commande/${commandeId}`
 export const DELET_COMMANDE_BY_ID=(commandeId)=>`${BASE_URL}/commande/${commandeId}`
+export const GET_COMMANDE_BY_ID=(commandeId)=>`${BASE_URL}/commande/${commandeId}`
+export const GET_COMMANDE_OF_TODAY_BY_STATUS=(statusCommande)=>`${BASE_URL}/commande/getByCommandeStatus/${statusCommande}`

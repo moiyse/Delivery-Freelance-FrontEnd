@@ -4,6 +4,7 @@ import { Button, Dialog, DialogTitle, DialogContent, DialogActions } from '@mate
 import UpdateUser from "../forms/UpdateUser";
 import {GET_ALL_USERS_URL} from '../../../../apiUrls.jsx'
 import { deleteUserById } from "@app/pages/Admin/tables/UsersService";
+import { ContentHeader } from "@app/components";
 type User = {
   idUser: number;
   firstName: string;
@@ -38,10 +39,6 @@ const Users = () => {
       }
     };
     fetchUsers();  
-    const script = document.createElement("script");
-    script.src = "js/table.js";
-    script.async = true;
-    document.body.appendChild(script);
   }, []);
 
   const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -57,6 +54,7 @@ const Users = () => {
   
   return (
     <>
+      <ContentHeader title="List Utilisateurs"/>
       <div className="container-fluid">
         <div className="row">
           <div className="col-12">
@@ -75,7 +73,7 @@ const Users = () => {
                       onChange={handleSearch}
                     />
                   </div>
-              </div>
+                </div>
               <div className="card-body">
                 <table
                   id="example1"
