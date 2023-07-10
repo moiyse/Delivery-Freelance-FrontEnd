@@ -48,11 +48,18 @@ const Commandes = () => {
   };
 
   useEffect(() => {
-    const script = document.createElement("script");
-    script.src = "js/tableCommande.js";
-    script.async = true;
-    document.body.appendChild(script);
-  }, []);
+    const getAllCommande=async()=>{
+      const data = await fetchCommandes()
+      setCommandes(data)
+      setFilteredCommandes(data);
+    }
+    const getAllLivreur=async()=>{
+      const data=await fetchAllLivreurs()
+      setLivreurs(data)
+    }
+    getAllCommande()
+    getAllLivreur()
+  }, [currentDate]);
 
   useEffect(() => {
     const getAllCommande=async()=>{
@@ -237,7 +244,7 @@ const Commandes = () => {
                   </tbody>
                   <tfoot>
                     <tr>
-                    <th>Client</th>
+                      <th>Client</th>
                       <th>Collis</th>
                       <th>Created At</th>
                       <th>Deliver At</th>
