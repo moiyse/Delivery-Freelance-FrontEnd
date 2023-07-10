@@ -1,7 +1,10 @@
 import { useEffect, useState } from "react";
 import "./users.css";
-import {GET_ALL_USERS_URL,UPDATE_USER_BY_ID} from '../../../../apiUrls.jsx'
+import { Button, Dialog, DialogTitle, DialogContent, DialogActions } from '@material-ui/core';
+import UpdateUser from "../forms/UpdateUser";
+import {GET_ALL_USERS_URL} from '../../../../apiUrls.jsx'
 import { deleteUserById } from "@app/pages/Admin/tables/UsersService";
+import { ContentHeader } from "@app/components";
 import { sleep } from "@app/utils/helpers";
 type User = {
   idUser: number;
@@ -20,6 +23,17 @@ const Users = () => {
   const [users,setUsers]=useState<User[]>([])
   const [searchTerm, setSearchTerm] = useState("");
   const [loading, setLoading] = useState(true);
+  const [openDialog, setOpenDialog] = useState(false);
+  const [selectedUserId, setSelectedUserId] = useState<number | null>(null);
+  
+  const handleUpdateClick = (userId:number) => {
+    setSelectedUserId(userId);
+    setOpenDialog(true);
+  };
+  const handleCloseDialog = () => {
+    setOpenDialog(false);
+  };
+   
  
   useEffect(() => {
     fetchUsers();
@@ -61,6 +75,7 @@ const Users = () => {
   
   return (
     <>
+      <ContentHeader title="List Utilisateurs"/>
       <div className="container-fluid">
         <div className="row">
           <div className="col-12">
@@ -79,7 +94,7 @@ const Users = () => {
                       onChange={handleSearch}
                     />
                   </div>
-              </div>
+                </div>
               <div className="card-body">
                 <table
                   id="userTable"
@@ -134,7 +149,7 @@ const Users = () => {
                             <td>{user.createdAt}</td>
                             <td>
                               <div className="btn-group">
-                                <button type="button" className="btn btn-warning">
+                                <button onClick={() => handleUpdateClick(user.idUser)} type="button" className="btn btn-warning">
                                   <i className="fas fa-pen"></i>
                                 </button>
                                 <button
@@ -206,6 +221,18 @@ const Users = () => {
         {/* /.row */}
       </div>
       {/* /.container-fluid */}
+      
+      <Dialog open={openDialog} onClose={handleCloseDialog}>
+        <DialogTitle>Update User</DialogTitle>
+        <DialogContent>
+          <UpdateUser userId={selectedUserId} />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseDialog}>Cancel</Button>
+        </DialogActions>
+      </Dialog>
+
+
     </>
   );
 };

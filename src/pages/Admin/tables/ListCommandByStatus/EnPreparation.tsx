@@ -1,14 +1,10 @@
 import { useEffect, useState } from "react";
-import "./users.css";
-import { deleteCommandeById, fetchCommandes, updateCommandeLivreur, updateCommandeStatus } from "../tables/CommandesService.js";
-import { fetchAllLivreurs } from "./UsersService";
+import "../users.css";
+import { deleteCommandeById, fetchCommandes, getCommandeOfTodayByStatus, updateCommandeLivreur, updateCommandeStatus } from "../../tables/CommandesService.js";
+import { fetchAllLivreurs } from "../UsersService";
 import { ContentHeader } from "@app/components";
 import { Button, Dialog, DialogTitle, DialogContent, DialogActions } from '@material-ui/core';
-import UpdateCommande from "../forms/UpdateCommande";
-import CommandeFilter from "@app/pages/Admin/tables/filtre/CommandeFilter";
-import {FloatButton} from 'antd'
-import ThisDayFilter from "@app/pages/Admin/tables/filtre/ThisDayFilter";
-import NextWeekFilter from "@app/pages/Admin/tables/filtre/NextWeekFilter";
+import UpdateCommande from "../../forms/UpdateCommande";
 export interface Commande{
   idCommande:number,
   depart:string,
@@ -30,7 +26,7 @@ interface Livreur {
   firstName: string;
   lastName: string;
 }
-const Commandes = () => {
+const EnPreparation = () => {
   const [commandes,setCommandes]=useState<Commande[]>([])
   const [livreurs,setLivreurs]=useState<Livreur[]>([])
   const [selectedCommandeId, setSelectedCommandeId] = useState<number | null>(null);
@@ -38,7 +34,7 @@ const Commandes = () => {
   const [filteredCommandes, setFilteredCommandes] = useState<Commande[]>([]); // State for filtered commandes
   const [currentDate, setCurrentDate] = useState<string>(new Date().toISOString().split("T")[0]);
   const [valueOfTheCommandeStatus, setValueOfTheCommandeStatus] = useState<string[]>(['en préparation','en attente pickup','en dépot','en cours de livraison','livré','annulé']);
-  
+
   const handleUpdateClick = (commandeId:number) => {
     setSelectedCommandeId(commandeId);
     setOpenDialog(true);
@@ -48,15 +44,8 @@ const Commandes = () => {
   };
 
   useEffect(() => {
-    const script = document.createElement("script");
-    script.src = "js/tableCommande.js";
-    script.async = true;
-    document.body.appendChild(script);
-  }, []);
-
-  useEffect(() => {
-    const getAllCommande=async()=>{
-      const data = await fetchCommandes()
+    const getEnPreparationCommandeOfToday=async()=>{
+      const data = await getCommandeOfTodayByStatus('en préparation')
       setCommandes(data)
       setFilteredCommandes(data);
     }
@@ -64,10 +53,9 @@ const Commandes = () => {
       const data=await fetchAllLivreurs()
       setLivreurs(data)
     }
-    getAllCommande()
+    getEnPreparationCommandeOfToday()
     getAllLivreur()
   }, [currentDate]);
-
   const updateStatusCommande=async(idCommande:number,value:string)=>{
     updateCommandeStatus(idCommande,value)
     window.location.reload()
@@ -76,58 +64,23 @@ const Commandes = () => {
       updateCommandeLivreur(livreurId,commadeId)
       window.location.reload()
   }
+
   const removeCommande = (commandeId:number) => {
     setFilteredCommandes((prevUsers) => prevUsers.filter((commande) => commande.idCommande !== commandeId));
   };
-  const filterCommandesByDate = (startDate: string, endDate: string) => {
-    const filtered = commandes.filter((commande) => {
-      if (commande.delivredAt >= startDate && commande.delivredAt <= endDate) {
-        return true;
-      }
-      return false;
-    });
-    setFilteredCommandes(filtered);
-  };
-  const filterCommandesByThisDay = () => {
-    const filtered = commandes.filter((commande) => commande.delivredAt.split("T")[0] === currentDate);
-    setFilteredCommandes(filtered);
-  };
-  const handleFilterByNextWeek = () => {
-    const nextWeekStartDate = new Date();
-    nextWeekStartDate.setDate(nextWeekStartDate.getDate() + 7);
-    const nextWeekEndDate = new Date();
-    nextWeekEndDate.setDate(nextWeekEndDate.getDate() + 14);
-    const filtered = commandes.filter((commande) => {
-      const delivredAtDate = new Date(commande.delivredAt);
-      return delivredAtDate >= nextWeekStartDate && delivredAtDate <= nextWeekEndDate;
-    });
-    setFilteredCommandes(filtered);
-  };
+
   return (
     <>
-    <ContentHeader title="List Commandes" />
+    <ContentHeader title="List Commandes En Préparation" />
       <div className="container-fluid">
         <div className="row">
           <div className="col-12">
             {/* /.card */}
             <div className="card">
               <div className="card-header">
-                <h3 className="card-title">Tous les commandes</h3>
+                <h3 className="card-title">En Préparation</h3>
               </div>
               {/* /.card-header */}
-              <div className="card-header">
-                  <div className="d-flex justify-content-end">
-                      <div style={{marginRight:20}}>
-                        <NextWeekFilter onFilterByNextWeek={handleFilterByNextWeek}/>
-                      </div>
-                      <div style={{marginRight:20}}>
-                        <ThisDayFilter onFilterByDay={filterCommandesByThisDay} />
-                      </div>
-                     <CommandeFilter
-                        onFilter={(startDate, endDate) => filterCommandesByDate(startDate, endDate)}
-                      />  
-                  </div>
-              </div>
               <div className="card-body">
                 <table
                   id="example1"
@@ -206,6 +159,7 @@ const Commandes = () => {
                               {commande.livreurId ? "Voir Livreur": "No Livreur"}
                             </a>
                             <div className="dropdown-menu">
+                              
                                 {livreurs.length===0 ?(
                                   <a className="dropdown-item">Vide</a>
                                 ):(
@@ -216,6 +170,7 @@ const Commandes = () => {
                                     </a>
                                   ))
                                 )}
+                              
                             </div>
                           </td>
                           <td>
@@ -237,7 +192,7 @@ const Commandes = () => {
                   </tbody>
                   <tfoot>
                     <tr>
-                    <th>Client</th>
+                      <th>Client</th>
                       <th>Collis</th>
                       <th>Created At</th>
                       <th>Deliver At</th>
@@ -273,4 +228,4 @@ const Commandes = () => {
   );
 };
 
-export default Commandes;
+export default EnPreparation;

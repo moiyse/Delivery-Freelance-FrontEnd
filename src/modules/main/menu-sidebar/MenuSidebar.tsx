@@ -45,9 +45,39 @@ export const MENU_ADMIN: IMenuItem[] = [
       },
 
       {
-        name: " List Commandes",
+        name: " Liste Commandes",
         icon: 'fas fa-list-ul',
         path: '/commandes'
+      },
+      {
+        name: "En Préparation",
+        icon: 'fas fa-list-ul',
+        path: '/enPreparation'
+      },
+      {
+        name: "En Attente PickUp",
+        icon: 'fas fa-list-ul',
+        path: '/enAttentePickUp'
+      },
+      {
+        name: "En Dépot",
+        icon: 'fas fa-list-ul',
+        path: '/enDepot'
+      },
+      {
+        name: "En Cours",
+        icon: 'fas fa-sync-alt',
+        path: '/enCours'
+      },
+      {
+        name: "Livrés",
+        icon: 'fas fa-list-ul',
+        path: '/livree'
+      },
+      {
+        name: "Annulés",
+        icon: 'fa-regular fa-ban',
+        path: '/annulee'
       }
     ]
   },

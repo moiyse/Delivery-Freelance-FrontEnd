@@ -134,9 +134,9 @@ const AjoutPaymentExpediteur = () => {
             Client: {client.firstName} {client.lastName}
           </div>
           <div className="ml-2">
-            Livrer non payé : {client.passedCommandeIfClient.filter((commande:any)=>commande.commandeStatus == "livrer").length}
+            Livrer non payé : {client.passedCommandeIfClient.filter((commande:any)=>commande.commandeStatus == "livré").length}
             <br/>
-            Annuler non payé : {client.passedCommandeIfClient.filter((commande:any)=>commande.commandeStatus == "annuler").length}
+            Annuler non payé : {client.passedCommandeIfClient.filter((commande:any)=>commande.commandeStatus == "annulé").length}
           </div>
         </div>
       ),

@@ -1,7 +1,8 @@
 import { ContentHeader } from "@app/components";
 import { useState } from "react";
 import "./forms.css";
-import { CREATE_USER_URL } from "../../../../apiUrls.jsx";
+import { toast } from 'react-toastify';
+import {CREATE_USER_URL} from '../../../../apiUrls.jsx'
 import { Link } from "react-router-dom";
 import axios from "axios";
 const AjoutUser = () => {
@@ -17,28 +18,36 @@ const AjoutUser = () => {
     e.preventDefault();
     const currentUrl = window.location.href;
     let UserId:number;
-    const formData = new FormData();
-    formData.append("firstName", firstName);
-    formData.append("lastName", lastName);
-    formData.append("email", email);
-    formData.append("role", role);
-    formData.append("retour", retour);
-    formData.append("livraison", livraison);
-    formData.append("phone", phone);
-    formData.append("currentUrl", currentUrl);
+    const user={
+      firstName:firstName,
+      lastName:lastName,
+      email:email,
+      role:role,
+      phone:phone,
+      livraison:livraison,
+      retour:retour,
+      currentUrl:currentUrl,
+
+    }
   
     try {
-      await axios.post(CREATE_USER_URL, formData, {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      }).then(function (response) {
-        console.log(response.data)
-        window.location.href = "/users";
-        
-    });
-    } catch (error) {
-      console.log(error);
+        const response = await fetch(CREATE_USER_URL, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(user)
+        });
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+      const resposeData=response.json()
+      toast.success('Utilisateur Ajouté avec Succés');
+      console.log(resposeData)
+      window.location.href = "/users";
+    }catch(errorr){
+      toast.error('Failed');
+      throw(errorr)
     }
   };
 
@@ -149,11 +158,7 @@ const AjoutUser = () => {
           </div>
           {/* /.card-body */}
           <div className="card-footer">
-            <button
-              type="submit"
-              className="btn btn-primary"
-              onClick={saveData}
-            >
+            <button type="button" className="btn btn-primary" onClick={saveData}>
               Ajouter
             </button>
           </div>

@@ -142,7 +142,7 @@ const LivreurPaymentExpediteur = () => {
                             {
                               data.client.passedCommandeIfClient.filter(
                                 (commande: any) =>
-                                  commande.commandeStatus === "livrer"
+                                  commande.commandeStatus === "livré"
                               ).length
                             }
                           </td>
@@ -150,19 +150,19 @@ const LivreurPaymentExpediteur = () => {
                             {
                               data.client.passedCommandeIfClient.filter(
                                 (commande: any) =>
-                                  commande.commandeStatus === "annuler"
+                                  commande.commandeStatus === "annulé"
                               ).length
                             }
                           </td>
                           <td>
                             {data.client.passedCommandeIfClient.filter(
                               (commande: any) =>
-                                commande.commandeStatus === "livrer"
+                                commande.commandeStatus === "livré"
                             ).length *
                               data.client.livraison +
                               data.client.passedCommandeIfClient.filter(
                                 (commande: any) =>
-                                  commande.commandeStatus === "annuler"
+                                  commande.commandeStatus === "annulé"
                               ).length *
                                 data.client.retour}{" "}
                             DT

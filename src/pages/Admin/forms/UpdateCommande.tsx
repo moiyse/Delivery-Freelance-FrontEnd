@@ -2,17 +2,33 @@ import { useEffect, useState } from "react";
 import "./forms.css";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import {GET_ALL_LIVREUR} from '../../../../apiUrls'
-import { addCommande } from "../tables/CommandesService";
+import { getCommandeById, updateCommandeById } from "../tables/CommandesService";
 import { fetchAllLivreurs } from "../tables/UsersService";
-import { ContentHeader } from "@app/components";
-import { getCurrentUser } from "@app/services/auth";
 interface Livreur {
   idUser:number
   firstName: string;
   lastName: string;
 }
-const AjoutCommandes = () => {
+interface UpdateCommandeProps {
+    commandeId: number | null;
+}
+const UpdateCommande: React.FC<UpdateCommandeProps>  = ({commandeId}) => {
+  const [commande,setCommande]=useState({
+    idCommande: 0,
+    depart: '',
+    destination: '',
+    paymentStatus: '',
+    commandeStatus: '',
+    createdAt: '',
+    delivredAt: '',
+    nomDestinataire: '',
+    prenomDestinataire: '',
+    phoneDestinataire: '',
+    prixArticle: '',
+    articles: '',
+    livreurId: '',
+    clientId: ''
+    })  
   const [selectedDateTime, setSelectedDateTime] = useState(null);
   const [livreurs,setLivreurs]=useState<Livreur[]>([]);
   const [articles,setArticles]=useState('')
@@ -26,34 +42,48 @@ const AjoutCommandes = () => {
   const [phoneDest,setPhoneDest]=useState('');
   const [prixArticle,setPrixArticle]=useState<number>(0)
   useEffect(() => {
-    const fetchLivreurs = async () => {
-      const data = await fetchAllLivreurs();
-      setLivreurs(data);
+    const fetchCommandeById = async () => {
+      const data = await getCommandeById(commandeId);
+      setCommande(data)
     }; 
-    fetchLivreurs()
-  }, []);
-
-  const handleSubmitButton=async()=>{
-    const commandeToSend={
-      depart:depart,
-      destination:destination,
-      delivredAt:selectedDateTime,
-      clientId: getCurrentUser().idUser,
-      nomDestinataire:nomDest,
-      prenomDestinataire:prenomDest,
-      phoneDestinataire:phoneDest,
-      prixArticle:prixArticle,
-      articles:articles
+    const fetchLivreus=async()=>{
+      const data=await fetchAllLivreurs()
+      setLivreurs(data)
     }
-    addCommande(commandeToSend)
+    fetchCommandeById()
+    fetchLivreus()
+  }, [commandeId]);
+
+  const handleUpdateButton=async()=>{
+    const commandeUpdated={
+      depart:depart ||commande.depart,
+      destination:destination || commande.destination ,
+      paymentStatus:statusPayment || commande.paymentStatus ,
+      commandeStatus:statusCommande || commande.commandeStatus ,
+      delivredAt:selectedDateTime||commande.delivredAt,
+      nomDestinataire:nomDest || commande.nomDestinataire,
+      prenomDestinataire:prenomDest||commande.prenomDestinataire,
+      phoneDestinataire:phoneDest||commande.phoneDestinataire,
+      prixArticle:prixArticle||commande.prixArticle,
+      articles:articles||commande.articles,
+      livreurId:livreur||commande.livreurId,
+
+    }
+    try{
+      updateCommandeById(commandeId,commandeUpdated)
+    }catch(error){
+      throw(error)
+    }
+
   }
+
   
   return (
     <>
-    <ContentHeader title="Ajouter Commande" />
+    
       <div className="card card-primary form-card">
         <div className="card-header">
-          <h3 className="card-title">Ajouter Commandes</h3>
+          <h3 className="card-title">Modifier Commande</h3>
         </div>
         {/* /.card-header */}
         {/* form start */}
@@ -67,7 +97,7 @@ const AjoutCommandes = () => {
                     type="text"
                     className="form-control"
                     id="exampleInputEmail1"
-                    placeholder="Merci De Séparer Les Articles Avec -"
+                    placeholder={commande.articles}
                   />    
               </div>
             </div>
@@ -80,7 +110,7 @@ const AjoutCommandes = () => {
                     type="text"
                     className="form-control"
                     id="exampleInputEmail1"
-                    placeholder="Choisir votre depart"
+                    placeholder={commande.depart}
                   />
                 </div>
                 <div className="col-md-6">
@@ -90,7 +120,7 @@ const AjoutCommandes = () => {
                     type="text"
                     className="form-control"
                     id="exampleInputEmail1"
-                    placeholder="Choisir votre destination"
+                    placeholder={commande.destination}
                   />
                 </div>
               </div>
@@ -99,7 +129,7 @@ const AjoutCommandes = () => {
               <div className="row">
               <div className="col-md-6">
                   <div>
-                    <label>Date et temps pour la livraison</label>
+                    <label>Date de livraison</label>
                     <div
                       className="input-group date"
                       id="reservationdatetime"
@@ -112,7 +142,7 @@ const AjoutCommandes = () => {
                         timeFormat="HH:mm"
                         timeIntervals={15}
                         dateFormat="yyyy-MM-dd HH:mm"
-                        placeholderText="Date et temps préférer"
+                        placeholderText={commande.delivredAt}
                         className="form-control datetimepicker-input"
                         customInput={
                           <input
@@ -137,15 +167,36 @@ const AjoutCommandes = () => {
                     </div>
                   </div>
                 </div>
+                <div className="col">
+                  <label>Assigner Livreur</label>
+                  <select className="form-control" onChange={(e)=>{setLivreur(e.target.value)}}>
+                  {livreurs.map((livreur, index) => (
+                    <option key={livreur.idUser} value={livreur.idUser}>
+                      {livreur.firstName} {livreur.lastName}
+                    </option>
+                  ))}
+                  </select>
+                </div>
+              </div>
+            </div>
+            <div className="form-group">
+              <div className="row">
                 <div className="col-md-6">
-                  <label htmlFor="exampleInputEmail1">Prix De L'article</label>
-                  <input
-                    onChange={(e)=>{setPrixArticle(Number(e.target.value))}}
-                    type="number"
-                    className="form-control"
-                    id="exampleInputEmail1"
-                    placeholder="Prix De L'article"
-                  />
+                  <label htmlFor="exampleInputEmail1">Statut Du Commande</label>
+                  <select className="form-control" onChange={(e)=>{setStatusCommande(e.target.value)}} >
+                    <option>en préparation</option>
+                    <option>en attente pickup</option>
+                    <option>en dépot</option>
+                    <option>en cours de livraison</option>
+                    <option>livré</option>
+                  </select>
+                </div>
+                <div className="col-md-6">
+                  <label htmlFor="exampleInputEmail1">Statut Du Paiement </label>
+                  <select className="form-control" onChange={(e)=>{setStatusPayment(e.target.value)}} >
+                    <option>payé</option>
+                    <option>nonPayé</option>
+                  </select>
                 </div>
               </div>
             </div>
@@ -158,7 +209,7 @@ const AjoutCommandes = () => {
                     type="text"
                     className="form-control"
                     id="exampleInputEmail1"
-                    placeholder="Nom Du Distinateur"
+                    placeholder={commande.nomDestinataire}
                   />
                 </div>
                 <div className="col-md-6">
@@ -168,7 +219,7 @@ const AjoutCommandes = () => {
                     type="text"
                     className="form-control"
                     id="exampleInputEmail1"
-                    placeholder="Prenom Du Distinateur"
+                    placeholder={commande.prenomDestinataire}
                   />
                 </div>
               </div>
@@ -182,7 +233,17 @@ const AjoutCommandes = () => {
                     type="text"
                     className="form-control"
                     id="exampleInputEmail1"
-                    placeholder="Téléphone Du Distinateur"
+                    placeholder={commande.phoneDestinataire}
+                  />
+                </div>
+                <div className="col-md-6">
+                  <label htmlFor="exampleInputEmail1">Prix De L'article</label>
+                  <input
+                    onChange={(e)=>{setPrixArticle(Number(e.target.value))}}
+                    type="number"
+                    className="form-control"
+                    id="exampleInputEmail1"
+                    placeholder={commande.prixArticle}
                   />
                 </div>
               </div>
@@ -190,8 +251,8 @@ const AjoutCommandes = () => {
           </div>
           {/* /.card-body */}
           <div className="card-footer">
-            <button onClick={handleSubmitButton} type="button" className="btn btn-primary">
-              Ajouter
+            <button onClick={handleUpdateButton} type="button" className="btn btn-primary">
+              Modifier
             </button>
           </div>
         </form>
@@ -200,4 +261,4 @@ const AjoutCommandes = () => {
   );
 };
 
-export default AjoutCommandes;
+export default UpdateCommande;

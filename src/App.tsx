@@ -39,7 +39,13 @@ import AjoutPaymentExpediteur from './pages/Admin/forms/AjoutPaymentExpediteur';
 import PaymentExpediteur from './pages/Admin/tables/PaymentExpediteur';
 import LivreurPaymentExpediteur from './pages/Livreur/tables/LivreurPaymentExpediteur';import RoleAuth from './routes/RoleAuth';
 import ChangePassword from './modules/login/ChangerPassword';
-;
+import UpdateUser from './pages/Admin/forms/UpdateUser';
+import EnPreparation from './pages/Admin/tables/ListCommandByStatus/EnPreparation';
+import EnAttentePickUp from './pages/Admin/tables/ListCommandByStatus/EnAttentePickUp';
+import EnDepot from './pages/Admin/tables/ListCommandByStatus/EnDepot';
+import EnCours from './pages/Admin/tables/ListCommandByStatus/EnCoursDeLivraison';
+import Livree from './pages/Admin/tables/ListCommandByStatus/Livree';
+import Annulee from './pages/Admin/tables/ListCommandByStatus/Annulee';
 
 declare const FB: any;
 
@@ -105,7 +111,7 @@ const App = () => {
           <Route path="/changer-mdp" element={<RecoverPassword />} />
         </Route>
         <Route path="/" element={<PrivateRoute />}>
-          <Route path="/" element={<Main />}>
+        <Route path="/" element={<Main />}>
             <Route path="/users"  element={<RoleAuth allowedRole={["admin","superAdmin"]} />} >
               <Route path="/users" element={<Users />} />
             </Route>
@@ -123,6 +129,24 @@ const App = () => {
             </Route>
             <Route path="/ajoutPaymentExpediteur"  element={<RoleAuth allowedRole={["admin","superAdmin"]} />} >
               <Route path="/ajoutPaymentExpediteur" element={<AjoutPaymentExpediteur />} />
+            </Route>
+            <Route path="/enPreparation"  element={<RoleAuth allowedRole={["admin","superAdmin"]} />} >
+              <Route path="/enPreparation" element={<EnPreparation />} />
+            </Route>
+            <Route path="/enAttentePickUp"  element={<RoleAuth allowedRole={["admin","superAdmin"]} />} >
+              <Route path="/enAttentePickUp" element={<EnAttentePickUp />} />
+            </Route>
+            <Route path="/enDepot"  element={<RoleAuth allowedRole={["admin","superAdmin"]} />} >
+              <Route path="/enDepot" element={<EnDepot />} />
+            </Route>
+            <Route path="/enCours"  element={<RoleAuth allowedRole={["admin","superAdmin"]} />} >
+              <Route path="/enCours" element={<EnCours />} />
+            </Route>
+            <Route path="/livree"  element={<RoleAuth allowedRole={["admin","superAdmin"]} />} >
+              <Route path="/livree" element={<Livree />} />
+            </Route>
+            <Route path="/annulee"  element={<RoleAuth allowedRole={["admin","superAdmin"]} />} >
+              <Route path="/annulee" element={<Annulee />} />
             </Route>
             <Route path="/clientCommandes"  element={<RoleAuth allowedRole={["client"]} />} >
               <Route path="/clientCommandes" element={<ClientCommandes />} />
