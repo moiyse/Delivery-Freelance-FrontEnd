@@ -1,5 +1,7 @@
 import { UserManager, UserManagerSettings } from 'oidc-client-ts';
 import { sleep } from './helpers';
+import axios from 'axios';
+import { LOGIN_AUTHENTIFICATION } from '../../apiUrls';
 
 declare const FB: any;
 
@@ -13,58 +15,45 @@ const GOOGLE_CONFIG: UserManagerSettings = {
   loadUserInfo: true,
 };
 
-export const GoogleProvider = new UserManager(GOOGLE_CONFIG);
 
-export const facebookLogin = () => {
-  return new Promise((res, rej) => {
-    let authResponse: any;
-    FB.login(
-      (r: any) => {
-        if (r.authResponse) {
-          authResponse = r.authResponse;
-          FB.api(
-            '/me?fields=id,name,email,picture.width(640).height(640)',
-            (profileResponse: any) => {
-              authResponse.profile = profileResponse;
-              authResponse.profile.picture = profileResponse.picture.data.url;
-              res(authResponse);
-            }
-          );
-        } else {
-          console.log('User cancelled login or did not fully authorize.');
-          rej(undefined);
-        }
-      },
-      { scope: 'public_profile,email' }
-    );
-  });
-};
 
-export const getFacebookLoginStatus = () => {
-  return new Promise((res, rej) => {
-    let authResponse: any = {};
-    FB.getLoginStatus((r: any) => {
-      if (r.authResponse) {
-        authResponse = r.authResponse;
-        FB.api(
-          '/me?fields=id,name,email,picture.width(640).height(640)',
-          (profileResponse: any) => {
-            authResponse.profile = profileResponse;
-            authResponse.profile.picture = profileResponse.picture.data.url;
-            res(authResponse);
-          }
-        );
-      } else {
-        res(undefined);
-      }
-    });
-  });
-};
-
-export const authLogin = (email: string, password: string) => {
+export const authLogin = (email: any, password: string) => {
+  let data : any
+  const formData = new FormData();
+    formData.append("email", email);
+    formData.append("password", password);
+    console.log("formData",formData)
   return new Promise(async (res, rej) => {
     await sleep(500);
-    if (email === 'admin@admin.com' && password === 'admin') {
+    await axios
+      .post(LOGIN_AUTHENTIFICATION,formData,{
+        headers: {
+          "Content-Type": "application/json",
+        },})
+      .then((res) => {
+        data = res.data;
+        console.log("token from login : ", data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+      console.log("here 1")
+    if(data){
+      console.log("here 2")
+      localStorage.setItem(
+        'authentication',
+        JSON.stringify({ profile: { email: data.email,token:data.token } })
+      );
+      return res({ profile: { email: data.email,token:data.token } });
+    }
+
+    else
+    {
+      console.log("wrong")
+      return rej({ message: 'Credentials are wrongggg!' });
+    }
+
+    /*if (email === 'admin@admin.com' && password === 'admin') {
       console.log("admin")
       localStorage.setItem(
         'authentication',
@@ -92,12 +81,9 @@ export const authLogin = (email: string, password: string) => {
         JSON.stringify({ profile: { email: 'superAdmin@superAdmin.com',role:"superAdmin" } })
       );
       return res({ profile: { email: 'superAdmin@superAdmin.com',role:"superAdmin" } });
-    }/*
-    else
-    {
-      console.log("wrong")
-      return rej({ message: 'Credentials are wrongggg!' });
     }*/
+    
+    
     
   });
 };

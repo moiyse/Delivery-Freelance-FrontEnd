@@ -6,6 +6,7 @@ import {GET_ALL_LIVREUR} from '../../../../apiUrls'
 import { addCommande } from "../tables/CommandesService";
 import { fetchAllLivreurs } from "../tables/UsersService";
 import { ContentHeader } from "@app/components";
+import { getCurrentUser } from "@app/services/auth";
 interface Livreur {
   idUser:number
   firstName: string;
@@ -37,7 +38,7 @@ const AjoutCommandes = () => {
       depart:depart,
       destination:destination,
       delivredAt:selectedDateTime,
-      //clientId: houni lezem tgeti el id ta3 el admin el authentificated
+      clientId: getCurrentUser().idUser,
       nomDestinataire:nomDest,
       prenomDestinataire:prenomDest,
       phoneDestinataire:phoneDest,

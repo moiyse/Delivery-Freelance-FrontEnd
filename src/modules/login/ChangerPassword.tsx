@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { useFormik } from 'formik';
 import { useTranslation } from 'react-i18next';
@@ -8,16 +8,37 @@ import { setAuthentication } from '@store/reducers/auth';
 import { setWindowClass } from '@app/utils/helpers';
 import { PfCheckbox, PfButton } from '@profabric/react-components';
 import * as Yup from 'yup';
+import { CHANGE_PASSWORD, GET_CLIENT_BY_ID } from "../../../apiUrls"
 import "./login.css"
 
 
 import {
-  authLogin,
-} from '@app/utils/oidc-providers';
-import { Form, InputGroup } from 'react-bootstrap';
+    authLogin,
+  } from '@app/utils/oidc-providers';
+  import { Form, InputGroup } from 'react-bootstrap';
+import axios from 'axios';
 
-const Login = () => {
-  const [isAuthLoading, setAuthLoading] = useState(false);
+type User = {
+    idUser: number;
+    firstName: string;
+    lastName:String;
+    email: string;
+    phone: string;
+    role: string;
+    retour:number;
+    livraison:number;
+    caisse:number
+    status: string;
+    createdAt: string;
+  };
+
+const ChangePassword = () => {
+
+    const { password,id } = useParams();
+    const [userId, setUserId] = useState(id);
+    const [generatedPassword, setGeneratedPassword] = useState(password);
+    const [getUser,setGetUser] = useState<User>()
+    const [isAuthLoading, setAuthLoading] = useState(false);
   const [isGoogleAuthLoading, setGoogleAuthLoading] = useState(false);
   const [isFacebookAuthLoading, setFacebookAuthLoading] = useState(false);
   const dispatch = useDispatch();
@@ -25,19 +46,51 @@ const Login = () => {
   const navigate = useNavigate();
   const [t] = useTranslation();
 
-  const login = async (email: string, password: string) => {
+
+  
+
+  const changePassword = async (newPassword: string) => {
+    const formData = new FormData();
+    if (userId) {
+        formData.append("userId", userId );
+      }
+      if (generatedPassword) {
+        formData.append("generatedPassword", generatedPassword);
+      }
+      formData.append("newPassword", newPassword);
+      console.log(formData)
     try {
-      setAuthLoading(true);
-      const response = await authLogin(email, password);
-      dispatch(setAuthentication(response as any));
-      toast.success('Login is succeed!');
-      setAuthLoading(false);
-      // dispatch(loginUser(token));
-      navigate('/');
-    } catch (error: any) {
-      setAuthLoading(false);
-      toast.error(error.message || 'Failed');
-    }
+
+        await axios.post(CHANGE_PASSWORD, formData, {
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }).then(async function (response) {
+            console.log("here before authLogin")
+            await axios.get(GET_CLIENT_BY_ID(userId))
+            .then(async (res)=> {
+                console.log('get client',res.data)
+                await authLogin(res.data.email, newPassword);
+                toast.success("Mot de passe changer")
+                window.location.href = "/Z"
+            })
+            .catch((error)=>{
+                console.log(error)
+            })
+            
+            //window.location.href = "/";
+            
+        });
+
+        
+
+        
+          
+          console.log("here 5")
+          
+        } catch (error: any) {
+          toast.error(error.message || "Failed");
+        }
   };
 
 
@@ -47,21 +100,22 @@ const Login = () => {
       password: '',
     },
     validationSchema: Yup.object({
-      email: Yup.string().email('Invalid email address').required('Required'),
       password: Yup.string()
         .min(5, 'Must be 5 characters or more')
         .max(30, 'Must be 30 characters or less')
         .required('Required'),
     }),
     onSubmit: (values) => {
-      login(values.email, values.password);
+        changePassword(values.password);
     },
   });
 
   setWindowClass('hold-transition login-page');
 
-  return (
-    <div className="login-box">
+
+
+    return (
+        <div className="login-box">
       <div className="card card-outline card-primary">
         <div className="card-header text-center">
           <Link to="/" className="h1">
@@ -69,33 +123,8 @@ const Login = () => {
           </Link>
         </div>
         <div className="card-body login-body">
-          <p className="login-box-msg">Se connecter pour acéder à votre dashboard</p>
+          <p className="login-box-msg">Changer votre password</p>
           <form onSubmit={handleSubmit}>
-            <div className="mb-3 ">
-              <InputGroup className="mb-3 login-input">
-                <Form.Control
-                  id="email"
-                  name="email"
-                  type="email"
-                  placeholder="Email"
-                  onChange={handleChange}
-                  value={values.email}
-                  isValid={touched.email && !errors.email}
-                  isInvalid={touched.email && !!errors.email}
-                />
-                {touched.email && errors.email ? (
-                  <Form.Control.Feedback type="invalid">
-                    {errors.email}
-                  </Form.Control.Feedback>
-                ) : (
-                  <InputGroup.Append>
-                    <InputGroup.Text>
-                      <i className="fas fa-envelope" />
-                    </InputGroup.Text>
-                  </InputGroup.Append>
-                )}
-              </InputGroup>
-            </div>
             <div className="mb-3">
               <InputGroup className="mb-3 login-input">
                 <Form.Control
@@ -124,8 +153,8 @@ const Login = () => {
 
             <div className="row text-center login-button">
               <div className="col">
-                <button type='submit' className='btn btn-primary'>
-                  Login
+                <button type="submit" className='btn btn-primary'>
+                  Changer mot de passe
                 </button>
                 {/*<PfButton
                   block
@@ -146,7 +175,8 @@ const Login = () => {
         </div>
       </div>
     </div>
-  );
-};
+    )
+}
 
-export default Login;
+
+export default ChangePassword;

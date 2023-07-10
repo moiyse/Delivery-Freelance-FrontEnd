@@ -1,5 +1,5 @@
 $(function () {
-  $("#example1").DataTable({
+  $("#userTable").DataTable({
     responsive: true,
     lengthChange: false,
     autoWidth: false,
@@ -7,7 +7,7 @@ $(function () {
       { responsivePriority: 1, targets: 0 },
       { responsivePriority: 1, targets: -1 },
       {
-        targets: [6] /* column index */,
+        targets: [8] /* column index */,
         orderable: false /* true or false */,
       },
     ],

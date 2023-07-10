@@ -32,3 +32,15 @@
 }
 
 
+.button-custom{
+    background-color: #e93f47;
+    border-color: #e93f47;
+    width: 100%;
+}
+
+.button-custom:hover{
+    background-color: #e93f47;
+    border-color: #e93f47;
+}
+
+

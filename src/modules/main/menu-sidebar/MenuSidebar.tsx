@@ -82,14 +82,26 @@ export const MENU_ADMIN: IMenuItem[] = [
     ]
   },
   {
-    name: "Payement Commande",
-    icon: 'fa fa-file nav-icon',
-    path: '/payments'
+    name: "Payment Expediteur",
+    icon: 'fas fa-money-bill-wave nav-icon',
+    children: [
+      {
+        name: " Ajouter Payment Expediteur",
+        icon: 'fa fa-plus-circle',
+        path: '/ajoutPaymentExpediteur'
+      },
+
+      {
+        name: " List Payment Expediteur",
+        icon: 'fas fa-list-ul',
+        path: '/listPaymentExpediteur'
+      }
+    ]
   },
   {
     name: "Suivi Livreur",
     icon: 'fa fa-user nav-icon',
-    path: '/payments'
+    path: '/suiviLivreur'
   },
   
 ];
@@ -121,9 +133,9 @@ export const MENU_LIVREUR: IMenuItem[] = [
     path: '/livreurCommandes'
   },
   {
-    name: "Payment de mes commandes",
-    icon: 'fa fa-file nav-icon',
-    path: '/livreurPayment'
+    name: "Mes Payment Expediteur",
+    icon: 'fa fa-money-bill-wave nav-icon',
+    path: '/livreurPaymentExpediteur'
   },
   
 ];
@@ -151,22 +163,27 @@ const MenuSidebar = () => {
   let msg:string = "start"
 
   const initilizeMenu = () => { 
-    const authenticationData:any = localStorage.getItem('authentication');
+    const authenticationData: any = localStorage.getItem("authentication");
     const authenticationObject = JSON.parse(authenticationData);
-    if(authenticationObject.profile.role == "admin" || authenticationObject.profile.role == "superAdmin")
+    const authenticationToken = authenticationObject.profile.token
+    let jwt = authenticationToken
+    let jwtData = jwt.split('.')[1]
+    let decodedJwtJsonData = window.atob(jwtData)
+    let decodedJwtData = JSON.parse(decodedJwtJsonData)
+    if(decodedJwtData.role == "admin" || decodedJwtData.role == "superAdmin")
     {
       console.log("here1")
       msg="admin"
       MENU = MENU_ADMIN
       console.log(MENU)
     }
-    else if(authenticationObject.profile.role == "livreur")
+    else if(decodedJwtData.role == "livreur")
     {
       msg="livreur"
       console.log("here2")
       MENU = MENU_LIVREUR
     }
-    else if(authenticationObject.profile.role == "client")
+    else if(decodedJwtData.role == "client")
     {
       msg="client"
       console.log("here3")

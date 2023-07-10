@@ -61,6 +61,20 @@ const Commandes = () => {
     getAllLivreur()
   }, [currentDate]);
 
+  useEffect(() => {
+    const getAllCommande=async()=>{
+      const data = await fetchCommandes()
+      setCommandes(data)
+      setFilteredCommandes(data);
+    }
+    const getAllLivreur=async()=>{
+      const data=await fetchAllLivreurs()
+      setLivreurs(data)
+    }
+    getAllCommande()
+    getAllLivreur()
+  }, [currentDate]);
+
   const updateStatusCommande=async(idCommande:number,value:string)=>{
     updateCommandeStatus(idCommande,value)
     window.location.reload()

@@ -2,7 +2,11 @@ $(function () {
     $("#example1").DataTable({
       responsive: true,
       lengthChange: false,
+      info: false,
       autoWidth: false,
+      language: {
+        emptyTable: " ",
+      },
       columnDefs: [
         { responsivePriority: 1, targets: 0 },
         { responsivePriority: 1, targets: 1 },
