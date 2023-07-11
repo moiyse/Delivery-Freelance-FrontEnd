@@ -1,10 +1,28 @@
 import { ContentHeader } from "@app/components";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import "./forms.css";
 import { toast } from 'react-toastify';
 import {CREATE_USER_URL} from '../../../../apiUrls.jsx'
 import { Link } from "react-router-dom";
 import axios from "axios";
+import { getUserById } from "../tables/UsersService";
+
+
+type User = {
+  idUser: number;
+  firstName: string;
+  lastName:String;
+  email: string;
+  phone: string;
+  role: string;
+  retour:number;
+  livraison:number;
+  caisse:number
+  status: string;
+  createdAt: string;
+};
+
+
 const AjoutUser = () => {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
@@ -21,6 +39,8 @@ const AjoutUser = () => {
   const [retourError, setRetourError] = useState("");
   const [livraisonError, setLivraisonError] = useState("");
 
+  const [currentUser, setCurrentUser] = useState<User>();
+
   const validateEmail = (email:any) => {
     const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return regex.test(email);
@@ -30,6 +50,7 @@ const AjoutUser = () => {
     const regex = /^\d{10}$/; // Assuming the phone number should be 10 digits long
     return regex.test(phone);
   };
+  
 
   const saveData = async (e: any) => {
     e.preventDefault();
@@ -62,9 +83,6 @@ const AjoutUser = () => {
 
   if (phone.trim() === "") {
     setPhoneError("S'il vous plais entrer téléphone");
-    isValid = false;
-  } else if (!validatePhoneNumber(phone)) {
-    setPhoneError("Please enter a valid phone number");
     isValid = false;
   } else {
     setPhoneError("");
@@ -131,6 +149,10 @@ const AjoutUser = () => {
       throw(errorr)
     }
   };
+
+  const getCurrentUser = async() => {
+    setCurrentUser(await getUserById())
+  }
 
   return (
     <>
@@ -209,7 +231,7 @@ const AjoutUser = () => {
                     <option disabled selected>Selectionner Role</option>
                     <option value="client">Client</option>
                     <option value="livreur">Livreur</option>
-                    <option value="admin">Admin</option>
+                    {currentUser?.role == "superAdmin" &&( <option value="admin">Admin</option>)}
                   </select>
                   {roleError && <div className="error">{roleError}<i style={{fontSize:"14px"}} className="fas fa-exclamation ml-2"></i></div>}
                 </div>

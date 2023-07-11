@@ -72,7 +72,22 @@ const ChangePassword = () => {
                 console.log('get client',res.data)
                 await authLogin(res.data.email, newPassword);
                 toast.success("Mot de passe changer")
-                window.location.href = "/Z"
+                if(res.data.role == "admin" || res.data.role == "superAdmin")
+                {
+                  window.location.href = "/"
+                }
+                else if(res.data.role == "client")
+                { 
+                  window.location.href = "/clientProfile"
+                }else if(res.data.role == "livreur")
+                {
+                  window.location.href = "/livreurCommande"
+                }
+                else
+                {
+                  window.location.href = "/"
+                }
+                
             })
             .catch((error)=>{
                 console.log(error)

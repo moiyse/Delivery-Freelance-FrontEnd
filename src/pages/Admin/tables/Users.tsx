@@ -83,9 +83,7 @@ const Users = () => {
     
   }
 
-  const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchTerm(event.target.value);
-  };
+  
   const removeUser = (userId:number) => {
     setUsers((prevUsers) => prevUsers.filter((user) => user.idUser !== userId));
   };
@@ -106,16 +104,6 @@ const Users = () => {
                 <h3 className="card-title">Tous les utilisateurs</h3>
               </div>
               {/* /.card-header */}
-                <div className="card-header">
-                  <div className="d-flex justify-content-end">
-                    <input
-                      type="text"
-                      placeholder="Search"
-                      value={searchTerm}
-                      onChange={handleSearch}
-                    />
-                  </div>
-                </div>
               <div className="card-body">
                 <table
                   id="userTable"
