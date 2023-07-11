@@ -1,25 +1,61 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import "./users.css";
+import { getCommandeByIdAuthentificated, updateCommandeStatus } from "../../Admin/tables/CommandesService.js";
 import { ContentHeader } from "@app/components";
+import { Button, Dialog, DialogTitle, DialogContent, DialogActions } from '@material-ui/core';
+import UpdateCommande from "../../Admin/forms/UpdateCommande";
+import { getCurrentUser } from "@app/services/auth";
 
-const LivreurCommandes = () => {
+export interface Commande{
+  idCommande:number,
+  depart:string,
+  destination:string,
+  paymentStatus:string,
+  commandeStatus:string,
+  createdAt:string,
+  delivredAt:string,
+  nomDestinataire:string,
+  prenomDestinataire:string,
+  phoneDestinataire:string,
+  prixArticle:string,
+  articles:string,
+  livreurId:number
+  clientId:number
+}
+
+const LivreurCommandes  = () => {
+  const [selectedCommandeId, setSelectedCommandeId] = useState<number | null>(null);
+  const [openDialog, setOpenDialog] = useState(false);
+  const [filteredCommandes, setFilteredCommandes] = useState<Commande[]>([]); // State for filtered commandes
+  const [currentDate, setCurrentDate] = useState<string>(new Date().toISOString().split("T")[0]);
+  const [valueOfTheCommandeStatus, setValueOfTheCommandeStatus] = useState<string[]>(['en préparation','en attente pickup','en dépot','en cours de livraison','livré','annulé']);
+  const handleCloseDialog = () => {
+    setOpenDialog(false);
+  };
+
   useEffect(() => {
-    const script = document.createElement("script");
-    script.src = "js/tableCommande.js";
-    script.async = true;
-    document.body.appendChild(script);
-  }, []);
+    const getMyOwnCommande=async()=>{
+      const data = await getCommandeByIdAuthentificated(getCurrentUser().idUser)
+      setFilteredCommandes(data);
+    }
+    getMyOwnCommande()
+    
+  }, [currentDate]);
 
+  const updateStatusCommande=async(idCommande:number,value:string)=>{
+    updateCommandeStatus(idCommande,value)
+    window.location.reload()
+  }
   return (
     <>
-    <ContentHeader title="Commande à livrer" />
+    <ContentHeader title="List Commandes" />
       <div className="container-fluid">
         <div className="row">
           <div className="col-12">
             {/* /.card */}
             <div className="card">
               <div className="card-header">
-                <h3 className="card-title">Mes commandes à livrer</h3>
+                <h3 className="card-title">Tous Les Commandes D'aujourd'hui</h3>
               </div>
               {/* /.card-header */}
               <div className="card-body">
@@ -29,195 +65,88 @@ const LivreurCommandes = () => {
                 >
                   <thead>
                     <tr>
-                      <th>Id Commande</th>
-                      <th>Client</th>
                       <th>Collis</th>
                       <th>Created At</th>
-                      <th>Destination</th>
                       <th>Deliver At</th>
+                      <th>Destination</th>
+                      <th>Nom Distinataire</th>
+                      <th>Phone Distinataire</th>
                       <th>Commande Status</th>
+                      <th>Paiement Status</th>
                     </tr>
                   </thead>
                   <tbody>
-                    <tr>
-                      <td>4</td>
-                      <td>John Doe</td>
-                      <td>
-                        <a
-                          style={{ textDecoration: "none",color: "#212529" }}
-                          className="dropdown-toggle dropdown-icon"
-                          data-toggle="dropdown"
-                          aria-expanded="true"
-                        >
-                          Articles
-                        </a>
-                        <div className="dropdown-menu">
-                          <a
-                            className="dropdown-item"
-                          >
-                            Shoes
-                          </a>
-                          <a className="dropdown-item">
-                            Table
-                          </a>
-                          <a className="dropdown-item">
-                            Vest
-                          </a>
-                        </div>
-                      </td>
-                      <td>06/30/2023</td>
-                      <td>36.842427, 10.163887</td>
-                      <td>07/16/2023</td>
-                      <td className="pill-td">
-                        <span className="badge bg-warning">Waiting Pickup</span>
+                    {filteredCommandes.length===0 ? (
+                      <tr>
+                      <td  className="text-center">
+                        No commands found.
                       </td>
                     </tr>
-                    <tr>
-                      <td>7</td>
-                      <td>Michael Brown</td>
-                      <td>
-                        <a
-                          style={{ textDecoration: "none",color: "#212529" }}
-                          className="dropdown-toggle dropdown-icon"
-                          data-toggle="dropdown"
-                          aria-expanded="true"
-                        >
-                          Articles
-                        </a>
-                        <div className="dropdown-menu">
-                          <a
-                            className="dropdown-item"
-                          >
-                            Book
-                          </a>
-                          <a className="dropdown-item">
-                            Desk
-                          </a>
-                          <a className="dropdown-item">
-                            Coat
-                          </a>
-                        </div>
-                      </td>
-                      <td>06/27/2023</td>
-                      <td>37.7749° N, 122.4194° W</td>
-                      <td>07/13/2023</td>
-                      <td className="pill-td">
-                        <span className="badge bg-success">Delivered</span>
-                      </td>
-                    </tr>
+                    ):(
+                      filteredCommandes.map((commande)=>{
+                        return(
+                          <tr>
+                          <td>
+                            <a
+                              style={{ textDecoration: "none",color: "#212529" }}
+                              className="dropdown-toggle dropdown-icon"
+                              data-toggle="dropdown"
+                              aria-expanded="true"
+                            >
+                              Articles
+                            </a>
+                            <div className="dropdown-menu">
+                            {commande.articles.split('-').map((article, index) => (
+                              <a className="dropdown-item" key={index}>
+                                {article}
+                              </a>
+                            ))}
+                            </div>
+                          </td>
+                          <td>{commande.createdAt}</td>
+                          <td>{commande.delivredAt}</td>
+                          <td>{commande.destination}</td>
+                          <td>{commande.nomDestinataire} {commande.prenomDestinataire}</td>
+                          <td>{commande.phoneDestinataire}</td>
+                          <td className="pill-td">
+                            <a className="dropdown-toggle dropdown-icon"
+                              data-toggle="dropdown"
+                              aria-expanded="true">
+                              <span className="badge bg-warning">{commande.commandeStatus}</span>
+                            </a>
+                            <div className="dropdown-menu">
+                                  {valueOfTheCommandeStatus.map((val)=>(
+                                    <a className={val===commande.commandeStatus? 'badge bg-warning' : 'dropdown-item'} 
+                                      style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }} href="#"
+                                      onClick={()=>{updateStatusCommande(commande.idCommande,val)}}>
+                                      {val}
+                                    </a>
+                                  ))
+                                  }           
+                            </div>
+                          </td>
+                          <td className="pill-td">
+                            <a>
+                              <span className="badge bg-warning">{commande.paymentStatus}</span>
+                            </a>
+                          </td>  
+                        </tr>
+                        )
+                      })
+                    )}
 
-                    <tr>
-                      <td>8</td>
-                      <td>Sarah Johnson</td>
-                      <td>
-                        <a
-                          style={{ textDecoration: "none",color: "#212529" }}
-                          className="dropdown-toggle dropdown-icon"
-                          data-toggle="dropdown"
-                          aria-expanded="true"
-                        >
-                          Articles
-                        </a>
-                        <div className="dropdown-menu">
-                          <a
-                            className="dropdown-item"
-                            
-                          >
-                            Camera
-                          </a>
-                          <a className="dropdown-item">
-                            Chair
-                          </a>
-                          <a className="dropdown-item" >
-                            Shirt
-                          </a>
-                        </div>
-                      </td>
-                      <td>06/26/2023</td>
-                      <td>51.5074° N, 0.1278° W</td>
-                      <td>07/12/2023</td>
-                      <td className="pill-td">
-                        <span className="badge bg-warning">Waiting Pickup</span>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>10</td>
-                      <td>Olivia Davis</td>
-                      <td>
-                        <a
-                          style={{ textDecoration: "none",color: "#212529" }}
-                          className="dropdown-toggle dropdown-icon"
-                          data-toggle="dropdown"
-                          aria-expanded="true"
-                        >
-                          Articles
-                        </a>
-                        <div className="dropdown-menu">
-                          <a
-                            className="dropdown-item"
-                            
-                          >
-                            Watch
-                          </a>
-                          <a className="dropdown-item">
-                            Sofa
-                          </a>
-                          <a className="dropdown-item">
-                            T-shirt
-                          </a>
-                        </div>
-                      </td>
-                      <td>06/25/2023</td>
-                      <td>40.7128° N, 74.0060° W</td>
-                      <td>07/11/2023</td>
-                      <td className="pill-td">
-                        <span className="badge bg-info">Picked Up</span>
-                      </td>
-                    </tr>
-
-                    <tr>
-                      <td>11</td>
-                      <td>James Wilson</td>
-                      <td>
-                        <a
-                          style={{ textDecoration: "none",color: "#212529" }}
-                          className="dropdown-toggle dropdown-icon"
-                          data-toggle="dropdown"
-                          aria-expanded="true"
-                        >
-                          Articles
-                        </a>
-                        <div className="dropdown-menu">
-                          <a
-                            className="dropdown-item"
-                          >
-                            Headphones
-                          </a>
-                          <a className="dropdown-item">
-                            Table
-                          </a>
-                          <a className="dropdown-item">
-                            Jacket
-                          </a>
-                        </div>
-                      </td>
-                      <td>06/24/2023</td>
-                      <td>37.7749° N, 122.4194° W</td>
-                      <td>07/10/2023</td>
-                      <td className="pill-td">
-                        <span className="badge bg-danger">Canceled</span>
-                      </td>
-                    </tr>
+                    
                   </tbody>
                   <tfoot>
                     <tr>
-                      <th>Id Commande</th>
-                      <th>Client</th>
                       <th>Collis</th>
                       <th>Created At</th>
-                      <th>Destination</th>
                       <th>Deliver At</th>
+                      <th>Destination</th>
+                      <th>Nom Distinataire</th>
+                      <th>Phone Distinataire</th>
                       <th>Commande Status</th>
+                      <th>Paiement Status</th>
                     </tr>
                   </tfoot>
                 </table>
@@ -231,8 +160,19 @@ const LivreurCommandes = () => {
         {/* /.row */}
       </div>
       {/* /.container-fluid */}
+
+      <Dialog open={openDialog} onClose={handleCloseDialog}>
+        <DialogTitle>Update Commande</DialogTitle>
+        <DialogContent>
+          <UpdateCommande commandeId={selectedCommandeId} />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseDialog}>Cancel</Button>
+        </DialogActions>
+      </Dialog>
+
     </>
   );
 };
 
-export default LivreurCommandes;
+export default LivreurCommandes ;
