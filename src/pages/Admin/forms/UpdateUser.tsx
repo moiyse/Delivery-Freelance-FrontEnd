@@ -16,15 +16,23 @@ const UpdateUser: React.FC<UpdateUserProps> = ({userId}) => {
     phone: '',
     role: '',
     status: '',
+    livraison:'',
+    retour:'',
+    caisse:'',
     createdAt: ''})
   const [firstName,setFirstName]=useState('')
   const [lastName,setLastName]=useState('')
   const [email,setEmail]=useState('')
   const [phone,setPhone]=useState('')
-  const [role,setRole]=useState('')
   const [status,setStatus]=useState('')
+  const [role, setRole] = useState("");
+  const [retour, setRetour] = useState("");
+  const [livraison, setLivraison] = useState("");
+  const [caisse, setCaisse] = useState("");
+
 
   useEffect(() => {
+    console.log(userId)
     const getUserById = async () => {
         try {
           const response = await fetch(GET_USER_BY_ID_URL(userId));
@@ -32,13 +40,14 @@ const UpdateUser: React.FC<UpdateUserProps> = ({userId}) => {
             const data = await response.json();
              setUser(data)
           } else {
-            console.log('Error:', response.status);
+            console.log('Error userset:', response.status);
           }
         } catch (error) {
           throw(error)
         }
       };
       getUserById()
+      console.log("user gotten",user)
   }, [userId]);
 
   const handleUpdateButton=async()=>{
@@ -48,7 +57,10 @@ const UpdateUser: React.FC<UpdateUserProps> = ({userId}) => {
       email:email || user.email ,
       role:role || user.role ,
       phone:phone || user.phone,
-      status:status || user.status
+      status:status || user.status,
+      livraison:livraison || user.livraison,
+      retour:retour || user.retour,
+      caisse:caisse || user.caisse,
     }
     try{
       updateUserById(userId,userUpdated)
@@ -107,15 +119,63 @@ const UpdateUser: React.FC<UpdateUserProps> = ({userId}) => {
                 </div>
                 <div className="col-md-6">
                   <label>Selectionner Role</label>
-                  <select defaultValue={user.role} className="form-control" onChange={(e) =>{ setRole(e.target.value);console.log(role)}}>
-                    <option>Client</option>
-                    <option>Livreur</option>
-                    <option>Admin</option>
+                  <select
+                    className="form-control"
+                    onChange={(e) => {
+                      setRole(e.target.value);
+                      console.log(role);
+                    }}
+                  >
+                    <option disabled selected>{user.role}</option>
+                    <option value="client">Client</option>
+                    <option value="livreur">Livreur</option>
+                    <option value="admin">Admin</option>
                   </select>
                 </div>
               </div>
             </div>
             <div className="form-group">
+            {(role == "client" || (user.role == "client" && role!="livreur")) && (
+                  <div className="row">
+                  <div className="col-md-3">
+                    <label htmlFor="exampleInputEmail1">Retour</label>
+                    <input
+                      onChange={(e) => setRetour(e.currentTarget.value)}
+                      type="number"
+                      className="form-control"
+                      id="exampleInputEmail1"
+                      placeholder={user.retour}
+                    />
+                  </div>
+                  <div className="col-md-3">
+                    <label htmlFor="exampleInputEmail1">Livraison</label>
+                    <input
+                      onChange={(e) => setLivraison(e.currentTarget.value)}
+                      type="number"
+                      className="form-control"
+                      id="exampleInputEmail1"
+                      placeholder={user.livraison}
+                    />
+                  </div>
+                </div>
+                )}
+                {(role == "livreur" || (user.role == "livreur" && role!="client"))  && (
+                  <div className="row">
+                  <div className="col-md-3">
+                    <label htmlFor="exampleInputEmail1">Caisse</label>
+                    <input
+                      onChange={(e) => setCaisse(e.currentTarget.value)}
+                      type="number"
+                      className="form-control"
+                      id="exampleInputEmail1"
+                      placeholder={user.caisse}
+                    />
+                  </div>
+                </div>
+                )}
+            </div>
+            {role == "admin" || user.role == "admin" && (
+              <div className="form-group">
               <div className="row">
                 <div className="col-md-6">
                   <label htmlFor="exampleInputEmail1">Téléphone</label>
@@ -136,6 +196,8 @@ const UpdateUser: React.FC<UpdateUserProps> = ({userId}) => {
                 </div>
               </div>
             </div>
+            )}
+            
             
           </div>
           {/* /.card-body */}

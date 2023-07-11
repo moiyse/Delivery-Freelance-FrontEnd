@@ -16,7 +16,7 @@ $(function () {
         { responsivePriority: 2, targets: 7 },
         { responsivePriority: 3, targets: 5 },
         {
-          targets: [8] /* column index */,
+          targets: [7] /* column index */,
           orderable: false /* true or false */,
         },
       ],

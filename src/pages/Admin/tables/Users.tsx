@@ -6,6 +6,7 @@ import {GET_ALL_USERS_URL} from '../../../../apiUrls.jsx'
 import { deleteUserById } from "@app/pages/Admin/tables/UsersService";
 import { ContentHeader } from "@app/components";
 import { sleep } from "@app/utils/helpers";
+import Swal from 'sweetalert2';
 type User = {
   idUser: number;
   firstName: string;
@@ -40,16 +41,19 @@ const Users = () => {
   }, []);
 
   useEffect(() => {
-    const script = document.createElement("script");
-    script.src = "js/table.js";
-    script.async = true;
-    document.body.appendChild(script);
+    if(users.length != 0)
+    {
+      const script = document.createElement("script");
+      script.src = "js/table.js";
+      script.async = true;
+      document.body.appendChild(script);
 
-    return () => {
-      // Clean up the added script when the component unmounts
-      document.body.removeChild(script);
-    };
-  }, []);
+      return () => {
+        // Clean up the added script when the component unmounts
+        document.body.removeChild(script);
+      };
+    }
+  }, [users]);
 
   const fetchUsers = async () => {
     try {
@@ -61,6 +65,23 @@ const Users = () => {
       console.log("Error fetching users:", error);
     }
   };
+
+  const deleteUser = (idUser:number,firstName:string,lastName:String) => {
+    Swal.fire({
+      title: 'Supprimer un utilisateur',
+      text: `Etes vous sur de supprimer l'utilisateur " ${firstName} ${lastName} " ?`,
+      icon: 'error',
+      showCancelButton: true,
+      confirmButtonText: 'Supprimer',
+      cancelButtonText: 'Retour'
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        await deleteUserById(idUser)
+        window.location.href = window.location.href
+      }
+    });
+    
+  }
 
   const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(event.target.value);
@@ -152,42 +173,7 @@ const Users = () => {
                                 <button onClick={() => handleUpdateClick(user.idUser)} type="button" className="btn btn-warning">
                                   <i className="fas fa-pen"></i>
                                 </button>
-                                <button
-                                  type="button"
-                                  className="btn btn-info"
-                                  data-toggle="dropdown"
-                                  aria-expanded="true"
-                                >
-                                  <i className="fa fa-bars" />
-                                </button>
-                                <ul
-                                  className="dropdown-menu "
-                                  x-placement="top-start"
-                                  style={{
-                                    position: "absolute",
-                                    willChange: "transform",
-                                    top: 0,
-                                    left: 0,
-                                    transform: "translate3d(-122px, -84px, 0px)",
-                                  }}
-                                >
-                                  <li>
-                                    <a className="dropdown-item" href="#">
-                                      Admin
-                                    </a>
-                                  </li>
-                                  <li>
-                                    <a className="dropdown-item" href="#">
-                                      Livreur
-                                    </a>
-                                  </li>
-                                  <li>
-                                    <a className="dropdown-item" href="#">
-                                      Client
-                                    </a>
-                                  </li>
-                                </ul>
-                                <button type="button" className="btn btn-danger" onClick={()=>{deleteUserById(user.idUser);removeUser(user.idUser)}}>
+                                <button type="button" className="btn btn-danger" onClick={()=>{deleteUser(user.idUser,user.firstName,user.lastName)}}>
                                   <i className="fa fa-trash"></i>
                                 </button>
                               </div>

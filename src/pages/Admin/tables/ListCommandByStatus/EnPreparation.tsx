@@ -44,6 +44,22 @@ const EnPreparation = () => {
   };
 
   useEffect(() => {
+    if(filteredCommandes.length != 0)
+    {
+      const script = document.createElement("script");
+      script.src = "js/tableCommande.js";
+      script.async = true;
+      document.body.appendChild(script);
+
+      return () => {
+        // Clean up the added script when the component unmounts
+        document.body.removeChild(script);
+      };
+    }
+    
+  }, [filteredCommandes]);
+
+  useEffect(() => {
     const getEnPreparationCommandeOfToday=async()=>{
       const data = await getCommandeOfTodayByStatus('en préparation')
       setCommandes(data)

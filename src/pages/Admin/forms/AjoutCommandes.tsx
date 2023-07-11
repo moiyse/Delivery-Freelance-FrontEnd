@@ -18,13 +18,20 @@ const AjoutCommandes = () => {
   const [articles,setArticles]=useState('')
   const [destination,setDestination]=useState('')
   const [depart,setDepart]=useState('')
-  const [livreur,setLivreur]=useState('')
-  const [statusCommande,setStatusCommande]=useState('')
-  const [statusPayment,setStatusPayment]=useState('')
   const [nomDest,setNomDest]=useState('')
   const [prenomDest,setPrenomDest]=useState('')
   const [phoneDest,setPhoneDest]=useState('');
   const [prixArticle,setPrixArticle]=useState<number>(0)
+  const [phoneDestError, setPhoneDestError] = useState("");
+  const [articlesError, setArticlesError] = useState("");
+  const [destinationError, setDestinationError] = useState("");
+  const [departError, setDepartError] = useState("");
+  const [nomDestError, setNomDestError] = useState("");
+  const [prenomDestError, setPrenomDestError] = useState("");
+  const [prixArticleError, setPrixArticleError] = useState("");
+  const [selectedDateTimeError, setSelectedDateTimeError] = useState("");
+
+
   useEffect(() => {
     const fetchLivreurs = async () => {
       const data = await fetchAllLivreurs();
@@ -33,7 +40,77 @@ const AjoutCommandes = () => {
     fetchLivreurs()
   }, []);
 
+  const validatePhoneNumber = (phone:any) => {
+    const regex = /^[0-9]{10}$/;
+    return regex.test(phone);
+  };
+
   const handleSubmitButton=async()=>{
+
+    let isValid = true;
+
+    if (articles == "") {
+      setArticlesError("S'il vous plais entrer articles");
+      isValid = false;
+    } else {
+      setArticlesError("");
+    }
+
+    if (destination == "") {
+      setDestinationError("S'il vous plais entrer destination");
+      isValid = false;
+    } else {
+      setDestinationError("");
+    }
+
+    if (depart == "") {
+      setDepartError("S'il vous plais entrer depart");
+      isValid = false;
+    } else {
+      setDepartError("");
+    }
+
+    if (nomDest == "") {
+      setNomDestError("S'il vous plais entrer recipient prenom");
+      isValid = false;
+    } else {
+      setNomDestError("");
+    }
+
+    if (prenomDest == "") {
+      setPrenomDestError("S'il vous plais entrer recipient nom");
+      isValid = false;
+    } else {
+      setPrenomDestError("");
+    }
+
+    if (selectedDateTimeError == "") {
+      setSelectedDateTimeError("S'il vous plais selectionner date");
+      isValid = false;
+    } else {
+      setSelectedDateTimeError("");
+    }
+
+    if (!validatePhoneNumber(phoneDest)) {
+      setPhoneDestError("S'il vous plais entrer telephone");
+      isValid = false;
+    } else {
+      setPhoneDestError("");
+    }
+    
+
+    if (prixArticle <= 0) {
+      setPrixArticleError("Please enter a valid price for the article");
+      isValid = false;
+    } else {
+      setPrixArticleError("");
+    }
+
+    if (!isValid) {
+      return; // Don't proceed if there are validation errors
+    }
+
+
     const commandeToSend={
       depart:depart,
       destination:destination,
@@ -68,7 +145,8 @@ const AjoutCommandes = () => {
                     className="form-control"
                     id="exampleInputEmail1"
                     placeholder="Merci De Séparer Les Articles Avec -"
-                  />    
+                  />
+                  {articlesError && <div className="error">{articlesError}<i style={{fontSize:"14px"}} className="fas fa-exclamation ml-2"></i></div>}    
               </div>
             </div>
             <div className="form-group">
@@ -82,6 +160,7 @@ const AjoutCommandes = () => {
                     id="exampleInputEmail1"
                     placeholder="Choisir votre depart"
                   />
+                  {departError && <div className="error">{departError}<i style={{fontSize:"14px"}} className="fas fa-exclamation ml-2"></i></div>}
                 </div>
                 <div className="col-md-6">
                   <label htmlFor="exampleInputEmail1">Adresse De Destination</label>
@@ -92,6 +171,7 @@ const AjoutCommandes = () => {
                     id="exampleInputEmail1"
                     placeholder="Choisir votre destination"
                   />
+                  {destinationError && <div className="error">{destinationError}<i style={{fontSize:"14px"}} className="fas fa-exclamation ml-2"></i></div>}
                 </div>
               </div>
             </div>
@@ -125,6 +205,7 @@ const AjoutCommandes = () => {
                         shouldCloseOnSelect={false}
                         withPortal
                       />
+                      {selectedDateTimeError && <div className="error">{selectedDateTimeError}<i style={{fontSize:"14px"}} className="fas fa-exclamation ml-2"></i></div>}
                       <div
                         className="input-group-append"
                         data-target="#reservationdatetime"
@@ -146,6 +227,7 @@ const AjoutCommandes = () => {
                     id="exampleInputEmail1"
                     placeholder="Prix De L'article"
                   />
+                  {prixArticleError && <div className="error">{prixArticleError}<i style={{fontSize:"14px"}} className="fas fa-exclamation ml-2"></i></div>}
                 </div>
               </div>
             </div>
@@ -160,6 +242,7 @@ const AjoutCommandes = () => {
                     id="exampleInputEmail1"
                     placeholder="Nom Du Distinateur"
                   />
+                  {nomDestError && <div className="error">{nomDestError}<i style={{fontSize:"14px"}} className="fas fa-exclamation ml-2"></i></div>}
                 </div>
                 <div className="col-md-6">
                   <label htmlFor="exampleInputEmail1">Prenom Du Distinateur</label>
@@ -170,6 +253,7 @@ const AjoutCommandes = () => {
                     id="exampleInputEmail1"
                     placeholder="Prenom Du Distinateur"
                   />
+                  {prenomDestError && <div className="error">{prenomDestError}<i style={{fontSize:"14px"}} className="fas fa-exclamation ml-2"></i></div>}
                 </div>
               </div>
             </div>
@@ -184,6 +268,7 @@ const AjoutCommandes = () => {
                     id="exampleInputEmail1"
                     placeholder="Téléphone Du Distinateur"
                   />
+                  {phoneDestError && <div className="error">{phoneDestError}<i style={{fontSize:"14px"}} className="fas fa-exclamation ml-2"></i></div>}
                 </div>
               </div>
             </div>

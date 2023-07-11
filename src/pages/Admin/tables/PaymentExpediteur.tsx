@@ -2,10 +2,13 @@ import { useEffect, useState } from "react";
 import "./users.css";
 import { ContentHeader } from "@app/components";
 import {
+  DELETE_PAYMENTEXPEDITEUR,
   GET_ALL_PaymentExpediteur,
   GET_CLIENT_BY_ID,
 } from "../../../../apiUrls.jsx";
 import axios from "axios";
+import Swal from 'sweetalert2';
+
 
 type PaymentExpediteur = {
   idPayment: number;
@@ -33,6 +36,7 @@ const PaymentExpediteur = () => {
   }, []);
 
   useEffect(() => {
+    
     const fetchData = async () => {
       console.log("fetch data payment expediteur", paymentExpediteurs);
       const paymentExpediteursData = paymentExpediteurs.map(
@@ -53,7 +57,25 @@ const PaymentExpediteur = () => {
 
     fetchData();
     setDataFetched(true);
+    
   }, [paymentExpediteurs]);
+
+
+  useEffect(() => {
+    if(clientById.length != 0)
+    {
+      const script = document.createElement("script");
+      script.src = "js/tablePaymentExpediteur.js";
+      script.async = true;
+      document.body.appendChild(script);
+
+      return () => {
+        // Clean up the added script when the component unmounts
+        document.body.removeChild(script);
+      };
+    }
+  }, [clientById])
+  
 
   const fetchPaymentExpediteur = async () => {
     await axios
@@ -65,10 +87,6 @@ const PaymentExpediteur = () => {
       .catch((error) => {
         console.log(error);
       });
-    const script = document.createElement("script");
-    script.src = "js/tablePaymentExpediteur.js";
-    script.async = true;
-    document.body.appendChild(script);
   };
 
   const formatDateToString = (date: Date) => {
@@ -85,6 +103,44 @@ const PaymentExpediteur = () => {
       console.log("Error fetching users:", error);
     }
   };
+
+  const deletePaymentExpediteurById = async (idPaymentExpediteur:number) => {
+    try {
+      const response = await fetch(DELETE_PAYMENTEXPEDITEUR(idPaymentExpediteur), {
+        method: 'DELETE',
+      });
+  
+      if (!response.ok) {
+        throw new Error('Failed to delete user.')
+      }
+  
+      const data = await response.json()
+      console.log(data)
+    } catch (error) {
+      throw error
+    }
+  }
+
+  const removePaymentExpediteur = async (idPaymentExpediteur:number) => {
+    setPaymentExpediteur((prevPaymentExpediteur) => prevPaymentExpediteur.filter((paymentExpediteur) => paymentExpediteur.idPayment !== idPaymentExpediteur));
+  }
+
+
+  const deletePaymentExpediteur = (idPaymentExpediteur:number) =>{
+    Swal.fire({
+      title: 'Supprimer un utilisateur',
+      text: `Etes vous sur de supprimer l'expedition " ${idPaymentExpediteur} " ?`,
+      icon: 'error',
+      showCancelButton: true,
+      confirmButtonText: 'Supprimer',
+      cancelButtonText: 'Retour'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        deletePaymentExpediteurById(idPaymentExpediteur)
+        window.location.href = window.location.href
+      }
+    });
+  }
 
   if (!dataFetched) {
     return <div>Loading...</div>;
@@ -167,10 +223,7 @@ const PaymentExpediteur = () => {
                           </td>
                           <td className="d-flex justify-content-center">
                             <div className="btn-group">
-                              <button type="button" className="btn btn-warning">
-                                <i className="fas fa-pen"></i>
-                              </button>
-                              <button type="button" className="btn btn-danger">
+                              <button onClick={()=>{deletePaymentExpediteur(data.paymentExpediteur.idPayment)}} type="button" className="btn btn-danger">
                                 <i className="fa fa-trash"></i>
                               </button>
                             </div>

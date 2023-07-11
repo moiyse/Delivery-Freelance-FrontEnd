@@ -13,9 +13,89 @@ const AjoutUser = () => {
   const [role, setRole] = useState("");
   const [retour, setRetour] = useState("");
   const [livraison, setLivraison] = useState("");
+  const [firstNameError, setFirstNameError] = useState("");
+  const [lastNameError, setLastNameError] = useState("");
+  const [emailError, setEmailError] = useState("");
+  const [phoneError, setPhoneError] = useState("");
+  const [roleError, setRoleError] = useState("");
+  const [retourError, setRetourError] = useState("");
+  const [livraisonError, setLivraisonError] = useState("");
+
+  const validateEmail = (email:any) => {
+    const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return regex.test(email);
+  };
+  
+  const validatePhoneNumber = (phone:any) => {
+    const regex = /^\d{10}$/; // Assuming the phone number should be 10 digits long
+    return regex.test(phone);
+  };
 
   const saveData = async (e: any) => {
     e.preventDefault();
+
+    let isValid = true;
+
+  if (firstName.trim() === "") {
+    setFirstNameError("S'il vous plais entrer prenom");
+    isValid = false;
+  } else {
+    setFirstNameError("");
+  }
+
+  if (lastName.trim() === "") {
+    setLastNameError("S'il vous plais entrer nom");
+    isValid = false;
+  } else {
+    setLastNameError("");
+  }
+
+  if (email.trim() === "") {
+    setEmailError("S'il vous plais entrer email");
+    isValid = false;
+  } else if (!validateEmail(email)) {
+    setEmailError("S'il vous plais entrer email valide");
+    isValid = false;
+  } else {
+    setEmailError("");
+  }
+
+  if (phone.trim() === "") {
+    setPhoneError("S'il vous plais entrer téléphone");
+    isValid = false;
+  } else if (!validatePhoneNumber(phone)) {
+    setPhoneError("Please enter a valid phone number");
+    isValid = false;
+  } else {
+    setPhoneError("");
+  }
+
+  if (role === "") {
+    setRoleError("S'il vous plais entrer selectionner role");
+    isValid = false;
+  } else {
+    setRoleError("");
+  }
+
+  if (role === "client") {
+    if (retour === "") {
+      setRetourError("S'il vous plais entrer prix de retour");
+      isValid = false;
+    } else {
+      setRetourError("");
+    }
+
+    if (livraison === "") {
+      setLivraisonError("S'il vous plais entrer prix de livraison");
+      isValid = false;
+    } else {
+      setLivraisonError("");
+    }
+  }
+
+  if (!isValid) {
+    return; // Don't proceed if there are validation errors
+  }
     const currentUrl = window.location.href;
     let UserId:number;
     const user={
@@ -26,6 +106,7 @@ const AjoutUser = () => {
       phone:phone,
       livraison:livraison,
       retour:retour,
+      caisse:role == "livreur" ? 0 : null,
       currentUrl:currentUrl,
 
     }
@@ -73,6 +154,7 @@ const AjoutUser = () => {
                     id="exampleInputEmail1"
                     placeholder="Entrer le Nom"
                   />
+                  {firstNameError && <div className="error">{firstNameError}<i style={{fontSize:"14px"}} className="fas fa-exclamation ml-2"></i></div>}
                 </div>
                 <div className="col-md-6">
                   <label htmlFor="exampleInputEmail1">Prenom</label>
@@ -83,6 +165,7 @@ const AjoutUser = () => {
                     id="exampleInputEmail1"
                     placeholder="Entrer la prenom"
                   />
+                  {lastNameError && <div className="error">{lastNameError}<i style={{fontSize:"14px"}} className="fas fa-exclamation ml-2"></i></div>}
                 </div>
               </div>
             </div>
@@ -97,6 +180,7 @@ const AjoutUser = () => {
                     id="exampleInputEmail1"
                     placeholder="Entrer l'email"
                   />
+                  {emailError && <div className="error">{emailError}<i style={{fontSize:"14px"}} className="fas fa-exclamation ml-2"></i></div>}
                 </div>
                 <div className="col-md-6">
                   <label htmlFor="exampleInputEmail1">Téléphone</label>
@@ -107,6 +191,7 @@ const AjoutUser = () => {
                     id="exampleInputEmail1"
                     placeholder="Entrer le numéro de téléphone"
                   />
+                  {phoneError && <div className="error">{phoneError}<i style={{fontSize:"14px"}} className="fas fa-exclamation ml-2"></i></div>}
                 </div>
               </div>
             </div>
@@ -122,15 +207,16 @@ const AjoutUser = () => {
                     }}
                   >
                     <option disabled selected>Selectionner Role</option>
-                    <option value="Client">Client</option>
-                    <option value="Livreur">Livreur</option>
-                    <option value="Admin">Admin</option>
+                    <option value="client">Client</option>
+                    <option value="livreur">Livreur</option>
+                    <option value="admin">Admin</option>
                   </select>
+                  {roleError && <div className="error">{roleError}<i style={{fontSize:"14px"}} className="fas fa-exclamation ml-2"></i></div>}
                 </div>
               </div>
             </div>
             <div className="form-group">
-            {role == "Client" && (
+            {role == "client" && (
                   <div className="row">
                   <div className="col-md-3">
                     <label htmlFor="exampleInputEmail1">Retour</label>
@@ -141,6 +227,7 @@ const AjoutUser = () => {
                       id="exampleInputEmail1"
                       placeholder="Entrer le prix de retour en DT"
                     />
+                    {retourError && <div className="error">{retourError}<i style={{fontSize:"14px"}} className="fas fa-exclamation ml-2"></i></div>}
                   </div>
                   <div className="col-md-3">
                     <label htmlFor="exampleInputEmail1">Livraison</label>
@@ -151,6 +238,7 @@ const AjoutUser = () => {
                       id="exampleInputEmail1"
                       placeholder="Entrer le prix de livraison en DT"
                     />
+                    {livraisonError && <div className="error">{livraisonError}<i style={{fontSize:"14px"}} className="fas fa-exclamation ml-2"></i></div>}
                   </div>
                 </div>
                 )}

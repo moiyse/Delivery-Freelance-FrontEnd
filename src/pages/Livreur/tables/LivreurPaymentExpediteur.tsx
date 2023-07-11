@@ -9,6 +9,7 @@ import {
 } from "../../../../apiUrls.jsx";
 import axios from "axios";
 import { getCurrentUser } from "@app/services/auth";
+import { getUserById, updateUserById } from "@app/pages/Admin/tables/UsersService";
 
 type PaymentExpediteur = {
   idPayment: number;
@@ -63,11 +64,24 @@ const LivreurPaymentExpediteur = () => {
       .catch((error) => {
         console.log(error);
       });
-    const script = document.createElement("script");
-    script.src = "js/tablePaymentExpediteur.js";
-    script.async = true;
-    document.body.appendChild(script);
   };
+
+
+  useEffect(() => {
+    if(clientById.length != 0)
+    {
+      const script = document.createElement("script");
+      script.src = "js/tablePaymentExpediteur.js";
+      script.async = true;
+      document.body.appendChild(script);
+
+      return () => {
+        // Clean up the added script when the component unmounts
+        document.body.removeChild(script);
+      };
+    }
+  }, [clientById])
+  
 
   const formatDateToString = (date: Date) => {
     const formattedDate = new Date(date).toLocaleDateString();
@@ -84,9 +98,14 @@ const LivreurPaymentExpediteur = () => {
     }
   };
 
-  const clientPayed = async (idClient:number,idPaymentExpediteur:number)=>{
+  const clientPayed = async (client:any,idClient:number,idPaymentExpediteur:number,idLivreur:number)=>{
     console.log("idClient : ",idClient," idPaymentExpediteur : ",idPaymentExpediteur)
-    axios
+    let livreur = await getUserById(idLivreur)
+
+    livreur.caisse = livreur.caisse - countTotalPrixExpedition(client)
+    updateUserById(idLivreur,livreur)
+
+    await axios
       .put(UPDATE_CLIENT_COMMANDS_TO_PAYED(idClient,idPaymentExpediteur))
       .then((res) => {
         console.log("success message : ", res.data);
@@ -95,6 +114,12 @@ const LivreurPaymentExpediteur = () => {
       .catch((error) => {
         console.log(error);
       });
+  }
+
+  const countTotalPrixExpedition = (client:any) => {
+    return client.passedCommandeIfClient
+                            .filter((commande: any) => commande.commandeStatus === "livré").length * client.livraison + client.passedCommandeIfClient.filter( (commande: any) =>
+                                  commande.commandeStatus === "annulé").length * client.retour
   }
 
   if (!dataFetched) {
@@ -155,21 +180,11 @@ const LivreurPaymentExpediteur = () => {
                             }
                           </td>
                           <td>
-                            {data.client.passedCommandeIfClient.filter(
-                              (commande: any) =>
-                                commande.commandeStatus === "livré"
-                            ).length *
-                              data.client.livraison +
-                              data.client.passedCommandeIfClient.filter(
-                                (commande: any) =>
-                                  commande.commandeStatus === "annulé"
-                              ).length *
-                                data.client.retour}{" "}
-                            DT
+                            {countTotalPrixExpedition(data.client)}{" "} DT
                           </td>
                           <td className="d-flex justify-content-center">
                             <div className="btn-group">
-                              <button onClick={async ()=>{await clientPayed(data.client.idUser,data.paymentExpediteur.idPaymentExpediteur)}} type="button" className="btn btn-success">
+                              <button onClick={async ()=>{await clientPayed(data.client,data.client.idUser,data.paymentExpediteur.idPaymentExpediteur,data.paymentExpediteur.PaymentExpediteurLivreurId)}} type="button" className="btn btn-success">
                                 Payer
                               </button>
                             </div>
