@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import "./users.css";
 import { deleteCommandeById, fetchCommandes, updateCommandeLivreur, updateCommandeStatus } from "../tables/CommandesService.js";
-import { fetchAllLivreurs } from "./UsersService";
+import { fetchAllLivreurs, getUserById, updateUserById } from "./UsersService";
 import { ContentHeader } from "@app/components";
 import { Button, Dialog, DialogTitle, DialogContent, DialogActions } from '@material-ui/core';
 import UpdateCommande from "../forms/UpdateCommande";
@@ -9,6 +9,8 @@ import CommandeFilter from "@app/pages/Admin/tables/filtre/CommandeFilter";
 import {FloatButton} from 'antd'
 import ThisDayFilter from "@app/pages/Admin/tables/filtre/ThisDayFilter";
 import NextWeekFilter from "@app/pages/Admin/tables/filtre/NextWeekFilter";
+import Swal from 'sweetalert2';
+
 export interface Commande{
   idCommande:number,
   depart:string,
@@ -20,10 +22,10 @@ export interface Commande{
   nomDestinataire:string,
   prenomDestinataire:string,
   phoneDestinataire:string,
-  prixArticle:string,
   articles:string,
-  livreurId:number
-  clientId:number
+  livreurId:number,
+  clientId:number,
+  prixArticle:number
 }
 interface Livreur {
   idUser:number
@@ -38,6 +40,7 @@ const Commandes = () => {
   const [filteredCommandes, setFilteredCommandes] = useState<Commande[]>([]); // State for filtered commandes
   const [currentDate, setCurrentDate] = useState<string>(new Date().toISOString().split("T")[0]);
   const [valueOfTheCommandeStatus, setValueOfTheCommandeStatus] = useState<string[]>(['en préparation','en attente pickup','en dépot','en cours de livraison','livré','annulé']);
+  const [tableInit,setTableInit] = useState(false);
   
   const handleUpdateClick = (commandeId:number) => {
     setSelectedCommandeId(commandeId);
@@ -48,18 +51,20 @@ const Commandes = () => {
   };
 
   useEffect(() => {
-    const getAllCommande=async()=>{
-      const data = await fetchCommandes()
-      setCommandes(data)
-      setFilteredCommandes(data);
+    if(filteredCommandes.length != 0 && tableInit===false)
+    {
+      const script = document.createElement("script");
+      script.src = "js/tableCommande.js";
+      script.async = true;
+      document.body.appendChild(script);
+      setTableInit(true)
+      return () => {
+        // Clean up the added script when the component unmounts
+        document.body.removeChild(script);
+      };
     }
-    const getAllLivreur=async()=>{
-      const data=await fetchAllLivreurs()
-      setLivreurs(data)
-    }
-    getAllCommande()
-    getAllLivreur()
-  }, [currentDate]);
+    
+  }, [filteredCommandes]);
 
   useEffect(() => {
     const getAllCommande=async()=>{
@@ -75,7 +80,18 @@ const Commandes = () => {
     getAllLivreur()
   }, [currentDate]);
 
-  const updateStatusCommande=async(idCommande:number,value:string)=>{
+  const updateStatusCommande=async(commande:Commande,idCommande:number,value:string)=>{
+    if(commande.livreurId)
+    {
+      let user = await getUserById(commande.clientId)
+      let livreur = await getUserById(commande.clientId)
+      if(commande.commandeStatus == "livré")
+      {
+        livreur.caisse = livreur.caisse + commande.prixArticle
+      }
+      updateUserById(commande.livreurId,livreur)
+    }
+    
     updateCommandeStatus(idCommande,value)
     window.location.reload()
   }
@@ -110,6 +126,28 @@ const Commandes = () => {
     });
     setFilteredCommandes(filtered);
   };
+
+
+  const deleteCommande = (idCommande:number) => {
+
+    Swal.fire({
+      title: 'Supprimer un utilisateur',
+      text: `Etes vous sûr de supprimer la commande avec l'ID : ${idCommande} " ?`,
+      icon: 'error',
+      showCancelButton: true,
+      confirmButtonText: 'Supprimer',
+      cancelButtonText: 'Retour'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        deleteCommandeById(idCommande)
+        window.location.href = window.location.href
+      }
+    });
+
+    
+  }
+
+  
   return (
     <>
     <ContentHeader title="List Commandes" />
@@ -192,11 +230,11 @@ const Commandes = () => {
                               aria-expanded="true">
                               <span className="badge bg-warning">{commande.commandeStatus}</span>
                             </a>
-                            <div className="dropdown-menu">
+                            <div className="dropdown-menu commande-status-pill">
                                   {valueOfTheCommandeStatus.map((val)=>(
                                     <a className={val===commande.commandeStatus? 'badge bg-warning' : 'dropdown-item'} 
                                       style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }} href="#"
-                                      onClick={()=>{updateStatusCommande(commande.idCommande,val)}}>
+                                      onClick={()=>{updateStatusCommande(commande,commande.idCommande,val)}}>
                                       {val}
                                     </a>
                                   ))
@@ -230,7 +268,7 @@ const Commandes = () => {
                               <button onClick={() => handleUpdateClick(commande.idCommande)} type="button" className="btn btn-warning">
                                 <i className="fas fa-pen"></i>
                               </button>
-                              <button type="button" className="btn btn-danger" onClick={()=>{deleteCommandeById(commande.idCommande);removeCommande(commande.idCommande)}}>
+                              <button type="button" className="btn btn-danger" onClick={()=>{deleteCommande(commande.idCommande)}}>
                                 <i className="fa fa-trash"></i>
                               </button>
                             </div>
@@ -242,18 +280,6 @@ const Commandes = () => {
 
                     
                   </tbody>
-                  <tfoot>
-                    <tr>
-                      <th>Client</th>
-                      <th>Collis</th>
-                      <th>Created At</th>
-                      <th>Deliver At</th>
-                      <th>Destination</th>
-                      <th>Commande Status</th>
-                      <th>Livreur</th>
-                      <th>Actions</th>
-                    </tr>
-                  </tfoot>
                 </table>
               </div>
               {/* /.card-body */}

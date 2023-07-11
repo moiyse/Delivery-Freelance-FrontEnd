@@ -15,6 +15,7 @@ export const GET_ALL_CLIENT_WITH_NOT_PAYED_COMMANDS=`${BASE_URL}/user/getAllClie
 export const GET_ALL_PaymentExpediteur=`${BASE_URL}/paymentExpediteur/getAll`
 export const Create_PaymentExpediteur=`${BASE_URL}/paymentExpediteur/addPaymentExpediteur`
 export const GET_PAYMENTEXPEDITEUR_BY_LIVREURID = (livreurId)=>`${BASE_URL}/paymentExpediteur/getByLivreurId/${livreurId}`
+export const DELETE_PAYMENTEXPEDITEUR = (idPaymentExpediteur)=>`${BASE_URL}/paymentExpediteur/${idPaymentExpediteur}`
 
 
 

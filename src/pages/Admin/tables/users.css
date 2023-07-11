@@ -21,3 +21,10 @@
 .bg-warning, .bg-warning > a {
     color: white !important;
 }
+
+
+.commande-status-pill a{
+    height: 25px;
+    font-size: 1rem;
+    font-weight: 400;
+}

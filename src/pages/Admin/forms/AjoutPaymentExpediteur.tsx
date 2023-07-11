@@ -34,17 +34,12 @@ type Commande = {
   };
 
 const AjoutPaymentExpediteur = () => {
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
-  const [email, setEmail] = useState("");
-  const [phone, setPhone] = useState("");
   const [clientSelected, setClientSelected] = useState("");
   const [livreurSelected, setLivreurSelected] = useState("");
-  const [retour, setRetour] = useState("");
-  const [livraison, setLivraison] = useState("");
   const [allLivreur, setAllLivreur] = useState<User[]>([]);
-  const [allClient, setAllClient] = useState<User[]>([]);
   const [clientCommandeNotPayed, setClientCommandeNotPayed] = useState<User[]>([]);
+  const [clientSelectedError, setClientSelectedError] = useState("");
+  const [livreurSelectedError, setLivreurSelectedError] = useState("");
 
   useEffect(() => {
     axios
@@ -93,6 +88,27 @@ const AjoutPaymentExpediteur = () => {
 
   const saveData = async (e: any) => {
     e.preventDefault();
+
+    let isValid = true;
+
+  if (clientSelected === "") {
+    setClientSelectedError("S'il vous plais selectionner client");
+    isValid = false;
+  } else {
+    setClientSelectedError("");
+  }
+
+  if (livreurSelected === "") {
+    setLivreurSelectedError("S'il vous plais selectionner livreur");
+    isValid = false;
+  } else {
+    setLivreurSelectedError("");
+  }
+
+  if (!isValid) {
+    return; // Don't proceed if there are validation errors
+  }
+
     const formData = new FormData();
     formData.append("PaymentExpediteurClientId", clientSelected);
     formData.append("PaymentExpediteurLivreurId", livreurSelected);
@@ -168,6 +184,7 @@ const AjoutPaymentExpediteur = () => {
                     placeholder="Selectionner Client"
                     styles={customSelectStyles} // Apply custom styles
                   />
+                  {clientSelectedError && <div className="error">{clientSelectedError}<i style={{fontSize:"14px"}} className="fas fa-exclamation ml-2"></i></div>}
                 </div>
 
                 <div className="col-md-6">
@@ -181,6 +198,7 @@ const AjoutPaymentExpediteur = () => {
                     placeholder="Selectionner Livreur"
                     styles={customSelectStyles} // Apply custom styles
                   />
+                  {livreurSelectedError && <div className="error">{livreurSelectedError}<i style={{fontSize:"14px"}} className="fas fa-exclamation ml-2"></i></div>}
                 </div>
               </div>
             </div>
