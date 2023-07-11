@@ -28,6 +28,7 @@ export const DELET_COMMANDE_BY_ID=(commandeId)=>`${BASE_URL}/commande/${commande
 export const GET_COMMANDE_BY_ID=(commandeId)=>`${BASE_URL}/commande/${commandeId}`
 export const GET_COMMANDE_OF_TODAY_BY_STATUS=(statusCommande)=>`${BASE_URL}/commande/getByCommandeStatus/${statusCommande}`
 export const GET_MY_OWN_COMMANDE=(idAuthentificated)=>`${BASE_URL}/commande/getMyOwnCommande/${idAuthentificated}`
+export const GET_MY_OWN_COMMANDES=(idAuthentificated)=>`${BASE_URL}/commande/getAllMyOwnCommande/${idAuthentificated}`
 
 /////////////////Auth//////////////////
 export const LOGIN_AUTHENTIFICATION=`${BASE_URL}/auth/login`
