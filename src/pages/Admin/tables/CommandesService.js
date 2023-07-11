@@ -1,4 +1,4 @@
-import {GET_COMMANDE_OF_TODAY_BY_STATUS,GET_COMMANDE_BY_ID,CREATE_COMMANDE_URL,GET_ALL_COMMANDES,UPDATE_COMMANDE_BY_ID,DELET_COMMANDE_BY_ID} from '../../../../apiUrls'
+import {GET_MY_OWN_COMMANDE,GET_COMMANDE_OF_TODAY_BY_STATUS,GET_COMMANDE_BY_ID,CREATE_COMMANDE_URL,GET_ALL_COMMANDES,UPDATE_COMMANDE_BY_ID,DELET_COMMANDE_BY_ID} from '../../../../apiUrls'
 import { toast } from 'react-toastify';
 
 const addCommande=async(commade)=>{
@@ -106,6 +106,20 @@ const getCommandeById = async (commandeId) => {
   }
 };
 
+const getCommandeByIdAuthentificated = async (authentificatedId) => {
+  try {
+    const response = await fetch(GET_MY_OWN_COMMANDE(authentificatedId));
+    if (response.ok) {
+      const data = await response.json();
+      return data;
+    } else {
+      console.error('Failed to fetch commande');
+    }
+  } catch (error) {
+    console.error('Error:', error);
+  }
+};
+
 const updateCommandeById=async(commandeId,updatedCommande)=>{
   try {
     const response = await fetch(UPDATE_COMMANDE_BY_ID(commandeId), {
@@ -140,4 +154,4 @@ const getCommandeOfTodayByStatus=async(statusCommande)=>{
   }
 }
 
-export {updateCommandeStatus,getCommandeOfTodayByStatus,updateCommandeById,getCommandeById,addCommande,fetchCommandes,updateCommandeLivreur,deleteCommandeById}
+export {getCommandeByIdAuthentificated,updateCommandeStatus,getCommandeOfTodayByStatus,updateCommandeById,getCommandeById,addCommande,fetchCommandes,updateCommandeLivreur,deleteCommandeById}
