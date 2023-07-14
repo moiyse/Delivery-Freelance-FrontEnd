@@ -51,32 +51,32 @@ export const MENU_ADMIN: IMenuItem[] = [
       },
       {
         name: "En Préparation",
-        icon: 'fas fa-list-ul',
+        icon: 'fas fa-cogs',
         path: '/enPreparation'
       },
       {
         name: "En Attente PickUp",
-        icon: 'fas fa-list-ul',
+        icon: 'fas fa-stopwatch',
         path: '/enAttentePickUp'
       },
       {
         name: "En Dépot",
-        icon: 'fas fa-list-ul',
+        icon: 'fas fa-truck-loading',
         path: '/enDepot'
       },
       {
         name: "En Cours",
-        icon: 'fas fa-sync-alt',
+        icon: 'fas fa-truck',
         path: '/enCours'
       },
       {
         name: "Livrés",
-        icon: 'fas fa-list-ul',
+        icon: 'far fa-check-circle',
         path: '/livree'
       },
       {
         name: "Annulés",
-        icon: 'fa-regular fa-ban',
+        icon: 'fas fa-chevron-circle-left',
         path: '/annulee'
       }
     ]

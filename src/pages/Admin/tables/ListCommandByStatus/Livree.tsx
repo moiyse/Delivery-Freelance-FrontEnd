@@ -111,7 +111,7 @@ const Livree = () => {
                       <th>Created At</th>
                       <th>Deliver At</th>
                       <th>Destination</th>
-                      <th>Commande Status</th>
+                      <th>Status Commande</th>
                       <th>Livreur</th>
                       <th>Actions</th>
                     </tr>
@@ -184,7 +184,7 @@ const Livree = () => {
                                   livreurs.map((liv)=>(
                                     <a  style={{ backgroundColor: liv.idUser === commande.livreurId ? 'red' : '' }}
                                         onClick={()=>{updateLivreurOfTheCommande(liv.idUser,commande.idCommande)}} className="dropdown-item" href="#">
-                                      {liv.firstName}
+                                      {liv.firstName +" "+liv.lastName}
                                     </a>
                                   ))
                                 )}
@@ -215,7 +215,7 @@ const Livree = () => {
                       <th>Created At</th>
                       <th>Deliver At</th>
                       <th>Destination</th>
-                      <th>Commande Status</th>
+                      <th>Status Commande</th>
                       <th>Livreur</th>
                       <th>Actions</th>
                     </tr>

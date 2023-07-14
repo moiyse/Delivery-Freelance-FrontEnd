@@ -168,4 +168,18 @@ const getCommandeOfTodayByStatus=async(statusCommande)=>{
   }
 }
 
+const getCollisCommandeByUserId=async(idUser)=>{
+  try {
+    const response = await fetch(GET_COMMANDE_OF_TODAY_BY_STATUS(idUser));
+    if (response.ok) {
+      const data = await response.json();
+      return data;
+    } else {
+      console.error('Failed to fetch commande');
+    }
+  } catch (error) {
+    toast.error('Failed')
+  }
+}
+
 export {getAllMyOwnCommandes,getCommandeByIdAuthentificated,updateCommandeStatus,getCommandeOfTodayByStatus,updateCommandeById,getCommandeById,addCommande,fetchCommandes,updateCommandeLivreur,deleteCommandeById}

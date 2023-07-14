@@ -58,38 +58,38 @@ const AjoutUser = () => {
     let isValid = true;
 
   if (firstName.trim() === "") {
-    setFirstNameError("S'il vous plais entrer prenom");
+    setFirstNameError("Veuillez entrer prenom");
     isValid = false;
   } else {
     setFirstNameError("");
   }
 
   if (lastName.trim() === "") {
-    setLastNameError("S'il vous plais entrer nom");
+    setLastNameError("Veuillez entrer nom");
     isValid = false;
   } else {
     setLastNameError("");
   }
 
   if (email.trim() === "") {
-    setEmailError("S'il vous plais entrer email");
+    setEmailError("Veuillez entrer email");
     isValid = false;
   } else if (!validateEmail(email)) {
-    setEmailError("S'il vous plais entrer email valide");
+    setEmailError("Veuillez entrer email valide");
     isValid = false;
   } else {
     setEmailError("");
   }
 
   if (phone.trim() === "") {
-    setPhoneError("S'il vous plais entrer téléphone");
+    setPhoneError("Veuillez entrer téléphone");
     isValid = false;
   } else {
     setPhoneError("");
   }
 
   if (role === "") {
-    setRoleError("S'il vous plais entrer selectionner role");
+    setRoleError("Veuillez entrer selectionner role");
     isValid = false;
   } else {
     setRoleError("");
@@ -97,14 +97,14 @@ const AjoutUser = () => {
 
   if (role === "client") {
     if (retour === "") {
-      setRetourError("S'il vous plais entrer prix de retour");
+      setRetourError("Veuillez entrer prix de retour");
       isValid = false;
     } else {
       setRetourError("");
     }
 
     if (livraison === "") {
-      setLivraisonError("S'il vous plais entrer prix de livraison");
+      setLivraisonError("Veuillez entrer prix de livraison");
       isValid = false;
     } else {
       setLivraisonError("");
