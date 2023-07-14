@@ -80,7 +80,7 @@ const ClientCommandes = () => {
                       <th>Départ</th>
                       <th>Destination</th>
                       <th>Commande Paiement</th>
-                      <th>Commande Status</th>
+                      <th>Status Commande</th>
                       <th>Actions</th>
                     </tr>
                   </thead>
@@ -151,7 +151,7 @@ const ClientCommandes = () => {
                       <th>Départ</th>
                       <th>Destination</th>
                       <th>Commande Paiement</th>
-                      <th>Commande Status</th>
+                      <th>Status Commande</th>
                       <th>Actions</th>
                     </tr>
                   </tfoot>

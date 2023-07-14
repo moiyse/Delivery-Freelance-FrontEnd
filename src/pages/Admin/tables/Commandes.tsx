@@ -185,7 +185,7 @@ const Commandes = () => {
                       <th>Created At</th>
                       <th>Deliver At</th>
                       <th>Destination</th>
-                      <th>Commande Status</th>
+                      <th>Status Commande</th>
                       <th>Livreur</th>
                       <th>Actions</th>
                     </tr>
@@ -194,8 +194,30 @@ const Commandes = () => {
                     {filteredCommandes.length===0 ? (
                       <tr>
                       <td  className="text-center">
-                        No commands found.
+                        Pas de commande
                       </td>
+                      <td  className="text-center">
+                        Pas de commande
+                      </td>
+                      <td  className="text-center">
+                        Pas de commande
+                      </td>
+                      <td  className="text-center">
+                        Pas de commande
+                      </td>
+                      <td  className="text-center">
+                        Pas de commande
+                      </td>
+                      <td  className="text-center">
+                        Pas de commande
+                      </td>
+                      <td  className="text-center">
+                        Pas de commande
+                      </td>
+                      <td  className="text-center">
+                        Pas de commande
+                      </td>
+
                     </tr>
                     ):(
                       filteredCommandes.map((commande)=>{
@@ -255,9 +277,9 @@ const Commandes = () => {
                                   <a className="dropdown-item">Vide</a>
                                 ):(
                                   livreurs.map((liv)=>(
-                                    <a  style={{ backgroundColor: liv.idUser === commande.livreurId ? 'red' : '' }}
+                                    <a  style={{ backgroundColor: liv.idUser === commande.livreurId ? 'lightblue' : '' }}
                                         onClick={()=>{updateLivreurOfTheCommande(liv.idUser,commande.idCommande)}} className="dropdown-item" href="#">
-                                      {liv.firstName}
+                                      {liv.idUser === commande.livreurId ? ("selected: "+liv.firstName +" "+liv.lastName) : liv.firstName +" "+liv.lastName}
                                     </a>
                                   ))
                                 )}

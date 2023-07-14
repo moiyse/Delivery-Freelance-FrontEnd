@@ -2,26 +2,49 @@ import { useEffect, useState } from "react";
 import "./forms.css";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import {GET_ALL_LIVREUR} from '../../../../apiUrls'
+import { GET_ALL_CLIENTS, GET_ALL_LIVREUR } from "../../../../apiUrls";
 import { addCommande } from "../tables/CommandesService";
 import { fetchAllLivreurs } from "../tables/UsersService";
 import { ContentHeader } from "@app/components";
 import { getCurrentUser } from "@app/services/auth";
+import { ville } from "./ville";
+
 interface Livreur {
-  idUser:number
+  idUser: number;
   firstName: string;
   lastName: string;
 }
+
+type User = {
+  idUser: number;
+  firstName: string;
+  lastName: String;
+  email: string;
+  phone: string;
+  role: string;
+  retour: number;
+  livraison: number;
+  caisse: number;
+  status: string;
+  createdAt: string;
+};
+
 const AjoutCommandes = () => {
   const [selectedDateTime, setSelectedDateTime] = useState(null);
-  const [livreurs,setLivreurs]=useState<Livreur[]>([]);
-  const [articles,setArticles]=useState('')
-  const [destination,setDestination]=useState('')
-  const [depart,setDepart]=useState('')
-  const [nomDest,setNomDest]=useState('')
-  const [prenomDest,setPrenomDest]=useState('')
-  const [phoneDest,setPhoneDest]=useState('');
-  const [prixArticle,setPrixArticle]=useState<number>(0)
+  const [livreurs, setLivreurs] = useState<Livreur[]>([]);
+  const [clients, setClients] = useState<User[]>([]);
+  const [articles, setArticles] = useState("");
+  const [destination, setDestination] = useState("");
+  const [depart, setDepart] = useState("");
+  const [nomDest, setNomDest] = useState("");
+  const [prenomDest, setPrenomDest] = useState("");
+  const [phoneDest, setPhoneDest] = useState("");
+  const [prixArticle, setPrixArticle] = useState<number>(0);
+  const [departVille, setDepartVille] = useState("");
+  const [destinationVille, setDestinationVille] = useState("");
+  const [selectedClientId, setSelectedClientId] = useState("");
+
+
   const [phoneDestError, setPhoneDestError] = useState("");
   const [articlesError, setArticlesError] = useState("");
   const [destinationError, setDestinationError] = useState("");
@@ -31,73 +54,82 @@ const AjoutCommandes = () => {
   const [prixArticleError, setPrixArticleError] = useState("");
   const [selectedDateTimeError, setSelectedDateTimeError] = useState("");
 
-
   useEffect(() => {
     const fetchLivreurs = async () => {
       const data = await fetchAllLivreurs();
       setLivreurs(data);
-    }; 
-    fetchLivreurs()
+    };
+    fetchLivreurs();
+    const fetchClients = async ()=> {
+      const data = await getAllClients();
+      setClients(data);
+    }
+    fetchClients()
   }, []);
 
-  const validatePhoneNumber = (phone:any) => {
-    const regex = /^[0-9]{10}$/;
-    return regex.test(phone);
-  };
 
-  const handleSubmitButton=async()=>{
+  const getAllClients = async ()=> {
+    try {
+      const response = await fetch(GET_ALL_CLIENTS);
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      console.log("Error fetching users:", error);
+    }
+  }
 
+
+  const handleSubmitButton = async () => {
     let isValid = true;
 
     if (articles == "") {
-      setArticlesError("S'il vous plais entrer articles");
+      setArticlesError("Veuillez entrer articles");
       isValid = false;
     } else {
       setArticlesError("");
     }
 
     if (destination == "") {
-      setDestinationError("S'il vous plais entrer destination");
+      setDestinationError("Veuillez entrer destination");
       isValid = false;
     } else {
       setDestinationError("");
     }
 
     if (depart == "") {
-      setDepartError("S'il vous plais entrer depart");
+      setDepartError("Veuillez entrer depart");
       isValid = false;
     } else {
       setDepartError("");
     }
 
     if (nomDest == "") {
-      setNomDestError("S'il vous plais entrer recipient prenom");
+      setNomDestError("Veuillez entrer recipient prenom");
       isValid = false;
     } else {
       setNomDestError("");
     }
 
     if (prenomDest == "") {
-      setPrenomDestError("S'il vous plais entrer recipient nom");
+      setPrenomDestError("Veuillez entrer recipient nom");
       isValid = false;
     } else {
       setPrenomDestError("");
     }
 
-    if (selectedDateTimeError == "") {
-      setSelectedDateTimeError("S'il vous plais selectionner date");
+    if (!selectedDateTime) {
+      setSelectedDateTimeError("Veuillez selectionner date");
       isValid = false;
     } else {
       setSelectedDateTimeError("");
     }
 
-    if (!validatePhoneNumber(phoneDest)) {
-      setPhoneDestError("S'il vous plais entrer telephone");
+    if (phoneDest=="") {
+      setPhoneDestError("Veuillez entrer telephone");
       isValid = false;
     } else {
       setPhoneDestError("");
     }
-    
 
     if (prixArticle <= 0) {
       setPrixArticleError("Please enter a valid price for the article");
@@ -110,24 +142,25 @@ const AjoutCommandes = () => {
       return; // Don't proceed if there are validation errors
     }
 
+    const commandeToSend = {
+      depart: depart,
+      departVille:departVille,
+      destination: destination,
+      destinationVille:destinationVille,
+      delivredAt: selectedDateTime,
+      clientId: selectedClientId,
+      nomDestinataire: nomDest,
+      prenomDestinataire: prenomDest,
+      phoneDestinataire: phoneDest,
+      prixArticle: prixArticle,
+      articles: articles,
+    };
+    addCommande(commandeToSend);
+  };
 
-    const commandeToSend={
-      depart:depart,
-      destination:destination,
-      delivredAt:selectedDateTime,
-      clientId: getCurrentUser().idUser,
-      nomDestinataire:nomDest,
-      prenomDestinataire:prenomDest,
-      phoneDestinataire:phoneDest,
-      prixArticle:prixArticle,
-      articles:articles
-    }
-    addCommande(commandeToSend)
-  }
-  
   return (
     <>
-    <ContentHeader title="Ajouter Commande" />
+      <ContentHeader title="Ajouter Commande" />
       <div className="card card-primary form-card">
         <div className="card-header">
           <h3 className="card-title">Ajouter Commandes</h3>
@@ -136,17 +169,27 @@ const AjoutCommandes = () => {
         {/* form start */}
         <form>
           <div className="card-body">
-          <div className="form-group">
+            <div className="form-group">
               <div className="row">
-                  <label htmlFor="exampleInputEmail1">Articles</label>
-                  <input
-                    onChange={(e)=>{setArticles(e.target.value)}}
-                    type="text"
-                    className="form-control"
-                    id="exampleInputEmail1"
-                    placeholder="Merci De Séparer Les Articles Avec -"
-                  />
-                  {articlesError && <div className="error">{articlesError}<i style={{fontSize:"14px"}} className="fas fa-exclamation ml-2"></i></div>}    
+                <label htmlFor="exampleInputEmail1">Articles</label>
+                <input
+                  onChange={(e) => {
+                    setArticles(e.target.value);
+                  }}
+                  type="text"
+                  className="form-control"
+                  id="exampleInputEmail1"
+                  placeholder="Merci De Séparer Les Articles Avec -"
+                />
+                {articlesError && (
+                  <div className="error">
+                    {articlesError}
+                    <i
+                      style={{ fontSize: "14px" }}
+                      className="fas fa-exclamation ml-2"
+                    ></i>
+                  </div>
+                )}
               </div>
             </div>
             <div className="form-group">
@@ -154,30 +197,82 @@ const AjoutCommandes = () => {
                 <div className="col-md-6">
                   <label htmlFor="exampleInputEmail1">Adresse De Départ</label>
                   <input
-                    onChange={(e)=>{setDepart(e.target.value)}}
+                    onChange={(e) => {
+                      setDepart(e.target.value);
+                    }}
                     type="text"
                     className="form-control"
                     id="exampleInputEmail1"
                     placeholder="Choisir votre depart"
                   />
-                  {departError && <div className="error">{departError}<i style={{fontSize:"14px"}} className="fas fa-exclamation ml-2"></i></div>}
+                  {departError && (
+                    <div className="error">
+                      {departError}
+                      <i
+                        style={{ fontSize: "14px" }}
+                        className="fas fa-exclamation ml-2"
+                      ></i>
+                    </div>
+                  )}
                 </div>
                 <div className="col-md-6">
-                  <label htmlFor="exampleInputEmail1">Adresse De Destination</label>
+                  <label htmlFor="exampleInputEmail1">
+                    Adresse De Destination
+                  </label>
                   <input
-                    onChange={(e)=>{setDestination(e.target.value)}}
+                    onChange={(e) => {
+                      setDestination(e.target.value);
+                    }}
                     type="text"
                     className="form-control"
                     id="exampleInputEmail1"
                     placeholder="Choisir votre destination"
                   />
-                  {destinationError && <div className="error">{destinationError}<i style={{fontSize:"14px"}} className="fas fa-exclamation ml-2"></i></div>}
+                  {destinationError && (
+                    <div className="error">
+                      {destinationError}
+                      <i
+                        style={{ fontSize: "14px" }}
+                        className="fas fa-exclamation ml-2"
+                      ></i>
+                    </div>
+                  )}
                 </div>
               </div>
             </div>
             <div className="form-group">
               <div className="row">
-              <div className="col-md-6">
+                <div className="col-md-6">
+                  <label>Ville de départ</label>
+                  <select
+                    className="form-control"
+                    onChange={(e) => {
+                      setDepartVille(e.target.value);
+                      console.log(departVille);
+                    }}
+                  >
+                    <option disabled selected>Selectinner Ville</option>
+                    {ville.map(ville=>(<option value="ville">{ville}</option>))}
+                  </select>
+                </div>
+                <div className="col-md-6">
+                  <label>Ville de déstinateur</label>
+                  <select
+                    className="form-control"
+                    onChange={(e) => {
+                      setDestinationVille(e.target.value);
+                      console.log(destinationVille);
+                    }}
+                  >
+                    <option disabled selected>Selectionner Role</option>
+                    {ville.map(ville=>(<option value="ville">{ville}</option>))}
+                  </select>
+                </div>
+              </div>
+            </div>
+            <div className="form-group">
+              <div className="row">
+                <div className="col-md-6">
                   <div>
                     <label>Date et temps pour la livraison</label>
                     <div
@@ -205,7 +300,15 @@ const AjoutCommandes = () => {
                         shouldCloseOnSelect={false}
                         withPortal
                       />
-                      {selectedDateTimeError && <div className="error">{selectedDateTimeError}<i style={{fontSize:"14px"}} className="fas fa-exclamation ml-2"></i></div>}
+                      {selectedDateTimeError && (
+                        <div className="error">
+                          {selectedDateTimeError}
+                          <i
+                            style={{ fontSize: "14px" }}
+                            className="fas fa-exclamation ml-2"
+                          ></i>
+                        </div>
+                      )}
                       <div
                         className="input-group-append"
                         data-target="#reservationdatetime"
@@ -221,13 +324,23 @@ const AjoutCommandes = () => {
                 <div className="col-md-6">
                   <label htmlFor="exampleInputEmail1">Prix De L'article</label>
                   <input
-                    onChange={(e)=>{setPrixArticle(Number(e.target.value))}}
+                    onChange={(e) => {
+                      setPrixArticle(Number(e.target.value));
+                    }}
                     type="number"
                     className="form-control"
                     id="exampleInputEmail1"
                     placeholder="Prix De L'article"
                   />
-                  {prixArticleError && <div className="error">{prixArticleError}<i style={{fontSize:"14px"}} className="fas fa-exclamation ml-2"></i></div>}
+                  {prixArticleError && (
+                    <div className="error">
+                      {prixArticleError}
+                      <i
+                        style={{ fontSize: "14px" }}
+                        className="fas fa-exclamation ml-2"
+                      ></i>
+                    </div>
+                  )}
                 </div>
               </div>
             </div>
@@ -236,46 +349,99 @@ const AjoutCommandes = () => {
                 <div className="col-md-6">
                   <label htmlFor="exampleInputEmail1">Nom Du Distinateur</label>
                   <input
-                    onChange={(e)=>{setNomDest(e.target.value)}}
+                    onChange={(e) => {
+                      setNomDest(e.target.value);
+                    }}
                     type="text"
                     className="form-control"
                     id="exampleInputEmail1"
                     placeholder="Nom Du Distinateur"
                   />
-                  {nomDestError && <div className="error">{nomDestError}<i style={{fontSize:"14px"}} className="fas fa-exclamation ml-2"></i></div>}
+                  {nomDestError && (
+                    <div className="error">
+                      {nomDestError}
+                      <i
+                        style={{ fontSize: "14px" }}
+                        className="fas fa-exclamation ml-2"
+                      ></i>
+                    </div>
+                  )}
                 </div>
                 <div className="col-md-6">
-                  <label htmlFor="exampleInputEmail1">Prenom Du Distinateur</label>
+                  <label htmlFor="exampleInputEmail1">
+                    Prenom Du Distinateur
+                  </label>
                   <input
-                    onChange={(e)=>{setPrenomDest(e.target.value)}}
+                    onChange={(e) => {
+                      setPrenomDest(e.target.value);
+                    }}
                     type="text"
                     className="form-control"
                     id="exampleInputEmail1"
                     placeholder="Prenom Du Distinateur"
                   />
-                  {prenomDestError && <div className="error">{prenomDestError}<i style={{fontSize:"14px"}} className="fas fa-exclamation ml-2"></i></div>}
+                  {prenomDestError && (
+                    <div className="error">
+                      {prenomDestError}
+                      <i
+                        style={{ fontSize: "14px" }}
+                        className="fas fa-exclamation ml-2"
+                      ></i>
+                    </div>
+                  )}
                 </div>
               </div>
             </div>
             <div className="form-group">
               <div className="row">
                 <div className="col-md-6">
-                  <label htmlFor="exampleInputEmail1">Téléphone Du Distinateur</label>
+                  <label htmlFor="exampleInputEmail1">
+                    Téléphone Du Distinateur
+                  </label>
                   <input
-                    onChange={(e)=>{setPhoneDest(e.target.value)}}
+                    onChange={(e) => {
+                      setPhoneDest(e.target.value);
+                    }}
                     type="text"
                     className="form-control"
                     id="exampleInputEmail1"
                     placeholder="Téléphone Du Distinateur"
                   />
-                  {phoneDestError && <div className="error">{phoneDestError}<i style={{fontSize:"14px"}} className="fas fa-exclamation ml-2"></i></div>}
+                  {phoneDestError && (
+                    <div className="error">
+                      {phoneDestError}
+                      <i
+                        style={{ fontSize: "14px" }}
+                        className="fas fa-exclamation ml-2"
+                      ></i>
+                    </div>
+                  )}
+                </div>
+                <div className="col-md-6">
+                  <label htmlFor="exampleInputEmail1">
+                    Client
+                  </label>
+                  <select
+                    className="form-control"
+                    onChange={(e) => {
+                      setSelectedClientId(e.target.value);
+                      //console.log(client);
+                    }}
+                  >
+                    <option disabled selected>Selectionner Role</option>
+                    {clients.map(client=><option value={client.idUser}>{client.firstName + " "+client.lastName}</option>)}
+                  </select>
                 </div>
               </div>
             </div>
           </div>
           {/* /.card-body */}
           <div className="card-footer">
-            <button onClick={handleSubmitButton} type="button" className="btn btn-primary">
+            <button
+              onClick={handleSubmitButton}
+              type="button"
+              className="btn btn-primary"
+            >
               Ajouter
             </button>
           </div>

@@ -46,6 +46,7 @@ import EnDepot from './pages/Admin/tables/ListCommandByStatus/EnDepot';
 import EnCours from './pages/Admin/tables/ListCommandByStatus/EnCoursDeLivraison';
 import Livree from './pages/Admin/tables/ListCommandByStatus/Livree';
 import Annulee from './pages/Admin/tables/ListCommandByStatus/Annulee';
+import Livreur from './pages/Admin/tables/Livreur';
 
 declare const FB: any;
 
@@ -147,6 +148,9 @@ const App = () => {
             </Route>
             <Route path="/annulee"  element={<RoleAuth allowedRole={["admin","superAdmin"]} />} >
               <Route path="/annulee" element={<Annulee />} />
+            </Route>
+            <Route path="/suiviLivreur"  element={<RoleAuth allowedRole={["admin","superAdmin"]} />} >
+              <Route path="/suiviLivreur" element={<Livreur />} />
             </Route>
             <Route path="/clientCommandes"  element={<RoleAuth allowedRole={["client"]} />} >
               <Route path="/clientCommandes" element={<ClientCommandes />} />

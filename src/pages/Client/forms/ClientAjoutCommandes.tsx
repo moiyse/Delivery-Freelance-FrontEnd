@@ -6,13 +6,15 @@ import { addCommande } from "../../../pages/Admin/tables/CommandesService.js";
 import { fetchAllLivreurs } from "../../../pages/Admin/tables/UsersService";
 import { ContentHeader } from "@app/components";
 import { getCurrentUser } from "@app/services/auth";
+
 interface Livreur {
   idUser:number
   firstName: string;
   lastName: string;
 }
 const ClientAjoutCommande = () => {
-  const [selectedDateTime, setSelectedDateTime] = useState(null);
+  const [selectedDateTime, setSelectedDateTime] = useState<Date | null>(null);
+  const [selectedDateTimeError, setSelectedDateTimeError] = useState("");
   const [livreurs,setLivreurs]=useState<Livreur[]>([]);
   const [articles,setArticles]=useState('')
   const [destination,setDestination]=useState('')
@@ -21,6 +23,15 @@ const ClientAjoutCommande = () => {
   const [prenomDest,setPrenomDest]=useState('')
   const [phoneDest,setPhoneDest]=useState('');
   const [prixArticle,setPrixArticle]=useState<number>(0)
+  const [phoneDestError, setPhoneDestError] = useState("");
+  const [articlesError, setArticlesError] = useState("");
+  const [destinationError, setDestinationError] = useState("");
+  const [departError, setDepartError] = useState("");
+  const [nomDestError, setNomDestError] = useState("");
+  const [prenomDestError, setPrenomDestError] = useState("");
+  const [prixArticleError, setPrixArticleError] = useState("");
+
+
   useEffect(() => {
     const fetchLivreurs = async () => {
       const data = await fetchAllLivreurs();
@@ -30,6 +41,62 @@ const ClientAjoutCommande = () => {
   }, []);
 
   const handleSubmitButton=async()=>{
+
+    let isValid = true;
+
+    if (articles =="") {
+      setArticlesError("Please enter articles");
+      isValid = false;
+    } else {
+      setArticlesError("");
+    }
+
+    if (destination == "") {
+      setDestinationError("Please enter the destination");
+      isValid = false;
+    } else {
+      setDestinationError("");
+    }
+
+    if (depart == "") {
+      setDepartError("Please enter the departure");
+      isValid = false;
+    } else {
+      setDepartError("");
+    }
+
+    if (nomDest == "") {
+      setNomDestError("Please enter the recipient's first name");
+      isValid = false;
+    } else {
+      setNomDestError("");
+    }
+
+    if (prenomDest == "") {
+      setPrenomDestError("Please enter the recipient's last name");
+      isValid = false;
+    } else {
+      setPrenomDestError("");
+    }
+
+    if (prixArticle <= 0) {
+      setPrixArticleError("Please enter a valid price for the article");
+      isValid = false;
+    } else {
+      setPrixArticleError("");
+    }
+
+    if (!selectedDateTime) {
+      setSelectedDateTimeError("Please select a date and time");
+      isValid = false;
+    } else {
+      setSelectedDateTimeError("");
+    }
+
+    if (!isValid) {
+      return; // Don't proceed if there are validation errors
+    }
+
     const commandeToSend={
       depart:depart,
       destination:destination,
@@ -64,7 +131,8 @@ const ClientAjoutCommande = () => {
                     className="form-control"
                     id="exampleInputEmail1"
                     placeholder="Merci De Séparer Les Articles Avec -"
-                  />    
+                  />
+                  {articlesError && <div className="error">{articlesError}<i style={{fontSize:"14px"}} className="fas fa-exclamation ml-2"></i></div>}
               </div>
             </div>
             <div className="form-group">
@@ -78,6 +146,7 @@ const ClientAjoutCommande = () => {
                     id="exampleInputEmail1"
                     placeholder="Choisir votre depart"
                   />
+                  {departError && <div className="error">{departError}<i style={{fontSize:"14px"}} className="fas fa-exclamation ml-2"></i></div>}
                 </div>
                 <div className="col-md-6">
                   <label htmlFor="exampleInputEmail1">Adresse De Destination</label>
@@ -88,6 +157,8 @@ const ClientAjoutCommande = () => {
                     id="exampleInputEmail1"
                     placeholder="Choisir votre destination"
                   />
+                  {destinationError && <div className="error">{destinationError}<i style={{fontSize:"14px"}} className="fas fa-exclamation ml-2"></i></div>}
+
                 </div>
               </div>
             </div>
@@ -121,6 +192,7 @@ const ClientAjoutCommande = () => {
                         shouldCloseOnSelect={false}
                         withPortal
                       />
+                      {selectedDateTimeError && <div className="error">{selectedDateTimeError}<i style={{fontSize:"14px"}} className="fas fa-exclamation ml-2"></i></div>}
                       <div
                         className="input-group-append"
                         data-target="#reservationdatetime"
@@ -142,6 +214,7 @@ const ClientAjoutCommande = () => {
                     id="exampleInputEmail1"
                     placeholder="Prix De L'article"
                   />
+                  {prixArticleError && <div className="error">{prixArticleError}<i style={{fontSize:"14px"}} className="fas fa-exclamation ml-2"></i></div>}
                 </div>
               </div>
             </div>
@@ -156,6 +229,7 @@ const ClientAjoutCommande = () => {
                     id="exampleInputEmail1"
                     placeholder="Nom Du Distinateur"
                   />
+                  {nomDestError && <div className="error">{nomDestError}<i style={{fontSize:"14px"}} className="fas fa-exclamation ml-2"></i></div>}
                 </div>
                 <div className="col-md-6">
                   <label htmlFor="exampleInputEmail1">Prenom Du Distinateur</label>
@@ -166,6 +240,7 @@ const ClientAjoutCommande = () => {
                     id="exampleInputEmail1"
                     placeholder="Prenom Du Distinateur"
                   />
+                  {prenomDestError && <div className="error">{prenomDestError}<i style={{fontSize:"14px"}} className="fas fa-exclamation ml-2"></i></div>}
                 </div>
               </div>
             </div>
@@ -180,6 +255,7 @@ const ClientAjoutCommande = () => {
                     id="exampleInputEmail1"
                     placeholder="Téléphone Du Distinateur"
                   />
+                  {phoneDestError && <div className="error">{phoneDestError}<i style={{fontSize:"14px"}} className="fas fa-exclamation ml-2"></i></div>}
                 </div>
               </div>
             </div>

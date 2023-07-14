@@ -92,14 +92,14 @@ const AjoutPaymentExpediteur = () => {
     let isValid = true;
 
   if (clientSelected === "") {
-    setClientSelectedError("S'il vous plais selectionner client");
+    setClientSelectedError("Veuillez selectionner client");
     isValid = false;
   } else {
     setClientSelectedError("");
   }
 
   if (livreurSelected === "") {
-    setLivreurSelectedError("S'il vous plais selectionner livreur");
+    setLivreurSelectedError("Veuillez selectionner livreur");
     isValid = false;
   } else {
     setLivreurSelectedError("");

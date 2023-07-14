@@ -71,7 +71,7 @@ const LivreurCommandes  = () => {
                       <th>Destination</th>
                       <th>Nom Distinataire</th>
                       <th>Phone Distinataire</th>
-                      <th>Commande Status</th>
+                      <th>Status Commande</th>
                       <th>Paiement Status</th>
                     </tr>
                   </thead>
@@ -145,7 +145,7 @@ const LivreurCommandes  = () => {
                       <th>Destination</th>
                       <th>Nom Distinataire</th>
                       <th>Phone Distinataire</th>
-                      <th>Commande Status</th>
+                      <th>Status Commande</th>
                       <th>Paiement Status</th>
                     </tr>
                   </tfoot>

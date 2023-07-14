@@ -30,8 +30,8 @@ const Payments = () => {
                   <thead>
                     <tr>
                       <th>Id Commande</th>
-                      <th>Commande Status</th>
-                      <th>Payment Status</th>
+                      <th>Status Commande</th>
+                      <th>Status Paiment</th>
                       <th>Actions</th>
                     </tr>
                   </thead>
@@ -290,8 +290,8 @@ const Payments = () => {
                   <tfoot>
                     <tr>
                       <th>Id Commande</th>
-                      <th>Commande Status</th>
-                      <th>Payment Status</th>
+                      <th>Status Commande</th>
+                      <th>Status Paiment</th>
                       <th>Actions</th>
                     </tr>
                   </tfoot>

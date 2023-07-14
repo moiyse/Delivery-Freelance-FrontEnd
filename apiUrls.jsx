@@ -10,6 +10,8 @@ export const GET_CLIENT_BY_ID = (clientId)=>`${BASE_URL}/user/${clientId}`
 export const GET_USER_BY_ID_URL=(userId)=>`${BASE_URL}/user/${userId}`
 export const GET_ALL_LIVREUR=`${BASE_URL}/user/getAllLivreur`
 export const GET_ALL_CLIENT_WITH_NOT_PAYED_COMMANDS=`${BASE_URL}/user/getAllClientWithNotPayedCommands`
+export const GET_ALL_CLIENTS=`${BASE_URL}/user/getAllClient`
+
 
 //////////////PaymentExediteur/////////////
 export const GET_ALL_PaymentExpediteur=`${BASE_URL}/paymentExpediteur/getAll`
@@ -29,6 +31,8 @@ export const GET_COMMANDE_BY_ID=(commandeId)=>`${BASE_URL}/commande/${commandeId
 export const GET_COMMANDE_OF_TODAY_BY_STATUS=(statusCommande)=>`${BASE_URL}/commande/getByCommandeStatus/${statusCommande}`
 export const GET_MY_OWN_COMMANDE=(idAuthentificated)=>`${BASE_URL}/commande/getMyOwnCommande/${idAuthentificated}`
 export const GET_MY_OWN_COMMANDES=(idAuthentificated)=>`${BASE_URL}/commande/getAllMyOwnCommande/${idAuthentificated}`
+export const GET_COMMANDE_BY_USer_ID=(idUser)=>`${BASE_URL}/commande/getCommandeByClientId/${idUser}`
+
 
 /////////////////Auth//////////////////
 export const LOGIN_AUTHENTIFICATION=`${BASE_URL}/auth/login`
