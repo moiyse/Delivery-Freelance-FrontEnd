@@ -252,7 +252,7 @@ const AjoutCommandes = () => {
                     }}
                   >
                     <option disabled selected>Selectinner Ville</option>
-                    {ville.map(ville=>(<option value="ville">{ville}</option>))}
+                    {ville.map(ville=>(<option value={ville}>{ville}</option>))}
                   </select>
                 </div>
                 <div className="col-md-6">
@@ -265,7 +265,7 @@ const AjoutCommandes = () => {
                     }}
                   >
                     <option disabled selected>Selectionner Role</option>
-                    {ville.map(ville=>(<option value="ville">{ville}</option>))}
+                    {ville.map(ville=>(<option value={ville}>{ville}</option>))}
                   </select>
                 </div>
               </div>
