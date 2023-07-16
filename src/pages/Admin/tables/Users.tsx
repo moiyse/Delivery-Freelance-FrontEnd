@@ -77,20 +77,12 @@ const Users = () => {
     }).then(async (result) => {
       if (result.isConfirmed) {
         await deleteUserById(idUser)
-        window.location.href = window.location.href
+        setUsers((prevUsers) => prevUsers.filter((user) => user.idUser !== idUser));
+        //window.location.href = window.location.href
       }
     });
     
   }
-
-  
-  const removeUser = (userId:number) => {
-    setUsers((prevUsers) => prevUsers.filter((user) => user.idUser !== userId));
-  };
-  const filteredUsers = users.filter((user) => {
-    const fullName = `${user.firstName} ${user.lastName}`.toLowerCase();
-    return fullName.includes(searchTerm.toLowerCase());
-  });
   
   return (
     <>
