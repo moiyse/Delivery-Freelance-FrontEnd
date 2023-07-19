@@ -41,11 +41,11 @@ const Livreur = () => {
   }, []);
 
   useEffect(() => {
-    if(users.length != 0)
-    {
-      const script = document.createElement("script");
+    const script = document.createElement("script");
       script.src = "js/tableLivreur.js";
       script.async = true;
+    if(users.length != 0 && !document.body.contains(script))
+    {
       document.body.appendChild(script);
 
       return () => {

@@ -156,15 +156,15 @@ const ClientCommandes = () => {
                           </td>
                           <td>
                             <div className="btn-group">
-                              <button onClick={() => handleUpdateClick(commande.idCommande)} type="button" className="btn btn-warning">
+                              {commande.commandeStatus == "en préparation" && <button onClick={() => handleUpdateClick(commande.idCommande)} type="button" className="btn btn-warning">
                                 <i className="fas fa-pen"></i>
-                              </button>
-                              <button disabled={commande.demandeStatus === "demandé"} onClick={() => handlePaymentClick(commande.idCommande)} type="button" className="btn btn-success">
+                              </button>}
+                              <button disabled={commande.demandeStatus === "demandé" && (commande.commandeStatus != "livré" && commande.commandeStatus != "annulé")} onClick={() => handlePaymentClick(commande.idCommande)} type="button" title="Demande d'être payer" className="btn btn-success">
                                 <i className="fas fa-money-bill-wave"></i>
                               </button>
-                              <button type="button" className="btn btn-danger" onClick={()=>{deleteCommandeById(commande.idCommande);removeCommande(commande.idCommande)}}>
+                              {commande.commandeStatus == "en préparation" && <button type="button" className="btn btn-danger" onClick={()=>{deleteCommandeById(commande.idCommande);removeCommande(commande.idCommande)}}>
                                 <i className="fa fa-trash"></i>
-                              </button>
+                              </button>}
                             </div>
                           </td>
                         </tr>

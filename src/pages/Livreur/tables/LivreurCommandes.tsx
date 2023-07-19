@@ -34,17 +34,19 @@ const LivreurCommandes  = () => {
   };
 
   useEffect(() => {
-    const getMyOwnCommande=async()=>{
-      const data = await getCommandeByIdAuthentificated(getCurrentUser().idUser)
-      setFilteredCommandes(data);
-    }
+    
     getMyOwnCommande()
     
   }, [currentDate]);
 
+  const getMyOwnCommande=async()=>{
+    const data = await getCommandeByIdAuthentificated(getCurrentUser().idUser)
+    setFilteredCommandes(data);
+  }
+
   const updateStatusCommande=async(idCommande:number,value:string)=>{
     updateCommandeStatus(idCommande,value)
-    window.location.reload()
+    getMyOwnCommande();
   }
   return (
     <>

@@ -38,7 +38,8 @@ const UpdateUser: React.FC<UpdateUserProps> = ({userId}) => {
           const response = await fetch(GET_USER_BY_ID_URL(userId));
           if (response.ok) {
             const data = await response.json();
-             setUser(data)
+            console.log(data)
+            setUser(data)
           } else {
             console.log('Error userset:', response.status);
           }
@@ -47,6 +48,9 @@ const UpdateUser: React.FC<UpdateUserProps> = ({userId}) => {
         }
       };
       getUserById()
+      if(user.idUser == 0){
+        toast.error("Utilisateur est un Super Admin")
+      }
       console.log("user gotten",user)
   }, [userId]);
 
