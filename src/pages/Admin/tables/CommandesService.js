@@ -77,6 +77,29 @@ const updateCommandeStatus=async(commandeId,statusValue)=>{
   }
 }
 
+const updateDemandeStatus=async(commandeId,statusValue)=>{
+  try {
+    const updatedCommande={
+      demandeStatus:statusValue
+    }
+    const response = await fetch(UPDATE_COMMANDE_BY_ID(commandeId), {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(updatedCommande),
+    });
+    if (!response.ok) {
+      throw new Error('Failed to update commande.')
+    }
+    const data = await response.json()
+    toast.success('Demande de payment à été envoyer');
+  } catch (error) {
+    toast.error('!Failed')
+    throw error
+  }
+}
+
 const deleteCommandeById = async (commandeId) => {
   try {
     const response = await fetch(DELET_COMMANDE_BY_ID(commandeId), {
@@ -182,4 +205,4 @@ const getCollisCommandeByUserId=async(idUser)=>{
   }
 }
 
-export {getAllMyOwnCommandes,getCommandeByIdAuthentificated,updateCommandeStatus,getCommandeOfTodayByStatus,updateCommandeById,getCommandeById,addCommande,fetchCommandes,updateCommandeLivreur,deleteCommandeById}
+export {updateDemandeStatus,getAllMyOwnCommandes,getCommandeByIdAuthentificated,updateCommandeStatus,getCommandeOfTodayByStatus,updateCommandeById,getCommandeById,addCommande,fetchCommandes,updateCommandeLivreur,deleteCommandeById}

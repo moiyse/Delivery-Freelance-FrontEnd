@@ -95,7 +95,7 @@ const LivreurCommandes  = () => {
                             >
                               Articles
                             </a>
-                            <div className="dropdown-menu">
+                            <div className="dropdown-overflow dropdown-menu">
                             {commande.articles.split('-').map((article, index) => (
                               <a className="dropdown-item" key={index}>
                                 {article}
@@ -114,7 +114,7 @@ const LivreurCommandes  = () => {
                               aria-expanded="true">
                               <span className="badge bg-warning">{commande.commandeStatus}</span>
                             </a>
-                            <div className="dropdown-menu">
+                            <div className="dropdown-overflow dropdown-menu">
                                   {valueOfTheCommandeStatus.map((val)=>(
                                     <a className={val===commande.commandeStatus? 'badge bg-warning' : 'dropdown-item'} 
                                       style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }} href="#"

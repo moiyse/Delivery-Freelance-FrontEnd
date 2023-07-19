@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import "./users.css";
-import { deleteCommandeById, fetchCommandes, getAllMyOwnCommandes, updateCommandeLivreur, updateCommandeStatus } from "../../Admin/tables/CommandesService"
+import { deleteCommandeById, fetchCommandes, getAllMyOwnCommandes, updateCommandeLivreur, updateCommandeStatus, updateDemandeStatus } from "../../Admin/tables/CommandesService"
 import { ContentHeader } from "@app/components";
 import { Button, Dialog, DialogTitle, DialogContent, DialogActions } from '@material-ui/core';
 import UpdateCommandeLivreur from "./UpdateCommandeClient";
@@ -11,6 +11,7 @@ export interface Commande{
   destination:string,
   paymentStatus:string,
   commandeStatus:string,
+  demandeStatus:string,
   createdAt:string,
   delivredAt:string,
   nomDestinataire:string,
@@ -41,19 +42,46 @@ const ClientCommandes = () => {
   };
 
   useEffect(() => {
-    const getAllMyOwnCommande=async()=>{
-      const data = await getAllMyOwnCommandes(getCurrentUser().idUser)
-      setCommandes(data)
-      setFilteredCommandes(data);
-    }
     getAllMyOwnCommande()
   }, []);
+
+
+  useEffect(() => {
+    const script = document.createElement("script");
+      script.src = "js/tableCommande.js";
+      script.async = true;
+    if(commandes.length != 0 && !document.body.contains(script))
+    {
+      importTable()
+    }
+    
+  }, [commandes])
+  
+
+
+  const getAllMyOwnCommande=async()=>{
+    const data = await getAllMyOwnCommandes(getCurrentUser().idUser)
+    setCommandes(data)
+    setFilteredCommandes(data);
+  }
 
  
   
   const removeCommande = (commandeId:number) => {
     setFilteredCommandes((prevUsers) => prevUsers.filter((commande) => commande.idCommande !== commandeId));
   };
+
+  const handlePaymentClick =async(commandeId:number) => {
+    await updateDemandeStatus(commandeId,"demandé")
+    getAllMyOwnCommande()
+  }
+
+  const importTable = ()=> {
+    const script = document.createElement("script");
+      script.src = "js/tableCommande.js";
+      script.async = true;
+      document.body.appendChild(script);
+  }
 
   return (
     <>
@@ -104,7 +132,7 @@ const ClientCommandes = () => {
                             >
                               Articles
                             </a>
-                            <div className="dropdown-menu">
+                            <div className="dropdown-overflow dropdown-menu">
                             {commande.articles.split('-').map((article, index) => (
                               <a className="dropdown-item" key={index}>
                                 {article}
@@ -131,6 +159,9 @@ const ClientCommandes = () => {
                               <button onClick={() => handleUpdateClick(commande.idCommande)} type="button" className="btn btn-warning">
                                 <i className="fas fa-pen"></i>
                               </button>
+                              <button disabled={commande.demandeStatus === "demandé"} onClick={() => handlePaymentClick(commande.idCommande)} type="button" className="btn btn-success">
+                                <i className="fas fa-money-bill-wave"></i>
+                              </button>
                               <button type="button" className="btn btn-danger" onClick={()=>{deleteCommandeById(commande.idCommande);removeCommande(commande.idCommande)}}>
                                 <i className="fa fa-trash"></i>
                               </button>
@@ -143,18 +174,6 @@ const ClientCommandes = () => {
 
                     
                   </tbody>
-                  <tfoot>
-                    <tr>
-                      <th>Collis</th>
-                      <th>Created At</th>
-                      <th>Deliver At</th>
-                      <th>Départ</th>
-                      <th>Destination</th>
-                      <th>Commande Paiement</th>
-                      <th>Status Commande</th>
-                      <th>Actions</th>
-                    </tr>
-                  </tfoot>
                 </table>
               </div>
               {/* /.card-body */}

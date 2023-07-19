@@ -41,10 +41,12 @@ const UpdateCommande: React.FC<UpdateCommandeProps>  = ({commandeId}) => {
   const [prenomDest,setPrenomDest]=useState('')
   const [phoneDest,setPhoneDest]=useState('');
   const [prixArticle,setPrixArticle]=useState<number>(0)
+
   useEffect(() => {
     const fetchCommandeById = async () => {
       const data = await getCommandeById(commandeId);
       setCommande(data)
+      setArticles(data.articles)
     }; 
     const fetchLivreus=async()=>{
       const data=await fetchAllLivreurs()
@@ -67,7 +69,6 @@ const UpdateCommande: React.FC<UpdateCommandeProps>  = ({commandeId}) => {
       prixArticle:prixArticle||commande.prixArticle,
       articles:articles||commande.articles,
       livreurId:livreur||commande.livreurId,
-
     }
     try{
       updateCommandeById(commandeId,commandeUpdated)
@@ -94,6 +95,7 @@ const UpdateCommande: React.FC<UpdateCommandeProps>  = ({commandeId}) => {
                   <label htmlFor="exampleInputEmail1">Articles</label>
                   <input
                     onChange={(e)=>{setArticles(e.target.value)}}
+                    value={articles}
                     type="text"
                     className="form-control"
                     id="exampleInputEmail1"
