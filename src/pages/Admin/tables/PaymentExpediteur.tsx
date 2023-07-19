@@ -7,8 +7,7 @@ import {
   GET_CLIENT_BY_ID,
 } from "../../../../apiUrls.jsx";
 import axios from "axios";
-import Swal from 'sweetalert2';
-
+import Swal from "sweetalert2";
 
 type PaymentExpediteur = {
   idPayment: number;
@@ -19,9 +18,10 @@ type PaymentExpediteur = {
 
 type Commande = {
   idCommande: number;
-  name: string;
   paymentStatus: string;
   commandeStatus: string;
+  prixArticle:number;
+  articles:string
 };
 
 const PaymentExpediteur = () => {
@@ -30,13 +30,13 @@ const PaymentExpediteur = () => {
   >([]);
   const [clientById, setClientById] = useState<any[]>([]);
   const [dataFetched, setDataFetched] = useState(false);
+  const [selectedListCollis, setSelectedListCollis] = useState<Commande[]>([]);
 
   useEffect(() => {
     fetchPaymentExpediteur();
   }, []);
 
   useEffect(() => {
-    
     const fetchData = async () => {
       console.log("fetch data payment expediteur", paymentExpediteurs);
       const paymentExpediteursData = paymentExpediteurs.map(
@@ -57,13 +57,10 @@ const PaymentExpediteur = () => {
 
     fetchData();
     setDataFetched(true);
-    
   }, [paymentExpediteurs]);
 
-
   useEffect(() => {
-    if(clientById.length != 0)
-    {
+    if (clientById.length != 0) {
       const script = document.createElement("script");
       script.src = "js/tablePaymentExpediteur.js";
       script.async = true;
@@ -74,8 +71,7 @@ const PaymentExpediteur = () => {
         document.body.removeChild(script);
       };
     }
-  }, [clientById])
-  
+  }, [clientById]);
 
   const fetchPaymentExpediteur = async () => {
     await axios
@@ -104,43 +100,54 @@ const PaymentExpediteur = () => {
     }
   };
 
-  const deletePaymentExpediteurById = async (idPaymentExpediteur:number) => {
+  const deletePaymentExpediteurById = async (idPaymentExpediteur: number) => {
     try {
-      const response = await fetch(DELETE_PAYMENTEXPEDITEUR(idPaymentExpediteur), {
-        method: 'DELETE',
-      });
-  
+      const response = await fetch(
+        DELETE_PAYMENTEXPEDITEUR(idPaymentExpediteur),
+        {
+          method: "DELETE",
+        }
+      );
+
       if (!response.ok) {
-        throw new Error('Failed to delete user.')
+        throw new Error("Failed to delete user.");
       }
-  
-      const data = await response.json()
-      console.log(data)
+
+      const data = await response.json();
+      console.log(data);
     } catch (error) {
-      throw error
+      throw error;
     }
-  }
+  };
 
-  const removePaymentExpediteur = async (idPaymentExpediteur:number) => {
-    setPaymentExpediteur((prevPaymentExpediteur) => prevPaymentExpediteur.filter((paymentExpediteur) => paymentExpediteur.idPayment !== idPaymentExpediteur));
-  }
+  const removePaymentExpediteur = async (idPaymentExpediteur: number) => {
+    setPaymentExpediteur((prevPaymentExpediteur) =>
+      prevPaymentExpediteur.filter(
+        (paymentExpediteur) =>
+          paymentExpediteur.idPayment !== idPaymentExpediteur
+      )
+    );
+  };
 
-
-  const deletePaymentExpediteur = (idPaymentExpediteur:number) =>{
+  const deletePaymentExpediteur = (idPaymentExpediteur: number) => {
     Swal.fire({
-      title: 'Supprimer un utilisateur',
+      title: "Supprimer un utilisateur",
       text: `Etes vous sur de supprimer l'expedition " ${idPaymentExpediteur} " ?`,
-      icon: 'error',
+      icon: "error",
       showCancelButton: true,
-      confirmButtonText: 'Supprimer',
-      cancelButtonText: 'Retour'
+      confirmButtonText: "Supprimer",
+      cancelButtonText: "Retour",
     }).then((result) => {
       if (result.isConfirmed) {
-        deletePaymentExpediteurById(idPaymentExpediteur)
-        window.location.href = window.location.href
+        deletePaymentExpediteurById(idPaymentExpediteur);
+        window.location.href = window.location.href;
       }
     });
-  }
+  };
+
+  const listCollisHandler = (commandes:Commande[]) => {
+    setSelectedListCollis(commandes)
+  };
 
   if (!dataFetched) {
     return <div>Loading...</div>;
@@ -186,15 +193,18 @@ const PaymentExpediteur = () => {
                           </td>
                           <td>
                             <a
+                              onClick={() => {
+                                listCollisHandler(data.client.passedCommandeIfClient);
+                              }}
                               data-toggle="modal"
-                              data-target="#modal-list-collis"
+                              data-target="#modal-lg"
                             >
                               List des collis
                             </a>
                           </td>
                           <td>
                             {
-                              data.client.passedCommandeIfClient.filter(
+                              data.client.passedCommandeIfClient?.filter(
                                 (commande: any) =>
                                   commande.commandeStatus === "livré"
                               ).length
@@ -202,19 +212,19 @@ const PaymentExpediteur = () => {
                           </td>
                           <td>
                             {
-                              data.client.passedCommandeIfClient.filter(
+                              data.client.passedCommandeIfClient?.filter(
                                 (commande: any) =>
                                   commande.commandeStatus === "annulé"
                               ).length
                             }
                           </td>
                           <td>
-                            {data.client.passedCommandeIfClient.filter(
+                            {data.client.passedCommandeIfClient?.filter(
                               (commande: any) =>
                                 commande.commandeStatus === "livré"
                             ).length *
                               data.client.livraison +
-                              data.client.passedCommandeIfClient.filter(
+                              data.client.passedCommandeIfClient?.filter(
                                 (commande: any) =>
                                   commande.commandeStatus === "annulé"
                               ).length *
@@ -223,7 +233,15 @@ const PaymentExpediteur = () => {
                           </td>
                           <td className="d-flex justify-content-center">
                             <div className="btn-group">
-                              <button onClick={()=>{deletePaymentExpediteur(data.paymentExpediteur.idPayment)}} type="button" className="btn btn-danger">
+                              <button
+                                onClick={() => {
+                                  deletePaymentExpediteur(
+                                    data.paymentExpediteur.idPayment
+                                  );
+                                }}
+                                type="button"
+                                className="btn btn-danger"
+                              >
                                 <i className="fa fa-trash"></i>
                               </button>
                             </div>
@@ -232,28 +250,15 @@ const PaymentExpediteur = () => {
                       ))
                     ) : (
                       <tr>
-                          <td>
-                            none
-                          </td>
-                          <td>
-                            none
-                          </td>
-                          <td>
-                            none
-                          </td>
-                          <td>
-                             none
-                             
-                          </td>
-                          <td>
-                            none
-                          </td>
-                          <td>
-                            none
-                          </td>
-                        </tr>
+                        <td>none</td>
+                        <td>none</td>
+                        <td>none</td>
+                        <td>none</td>
+                        <td>none</td>
+                        <td>none</td>
+                      </tr>
                     )}
-                  </tbody> 
+                  </tbody>
                   <tfoot>
                     <tr>
                       <th>Date Payment</th>
@@ -275,6 +280,60 @@ const PaymentExpediteur = () => {
         {/* /.row */}
       </div>
       {/* /.container-fluid */}
+      <div className="modal fade" id="modal-lg">
+        <div className="modal-dialog modal-lg">
+          <div className="modal-content">
+            <div className="modal-header">
+              <h4 className="modal-title">Large Modal</h4>
+              <button
+                type="button"
+                className="close"
+                data-dismiss="modal"
+                aria-label="Close"
+              >
+                <span style={{color:"black"}} aria-hidden="true">×</span>
+              </button>
+            </div>
+            <div className="modal-body">
+              <table className="table table-striped">
+                <thead>
+                  <tr>
+                    <th className="text-center" scope="col">Articles</th>
+                    <th className="text-center" scope="col">Prix</th>
+                    <th className="text-center" scope="col">Status Commande</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {selectedListCollis.map((commande) =>(
+                    <tr>
+                      <td className="text-center">{commande.articles}</td>
+                      <td className="text-center">{commande.prixArticle + "DT"}</td>
+                      <td className="pill-td">
+                        <a>
+                          <span className="badge bg-warning">{commande.paymentStatus}</span>
+                        </a>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+            <div className="modal-footer justify-content-between">
+              <a></a>
+              <button
+                type="button"
+                className="btn btn-default"
+                data-dismiss="modal"
+              >
+                <a style={{color:"black"}}>Close</a>
+              </button>
+            </div>
+          </div>
+          {/* /.modal-content */}
+        </div>
+        {/* /.modal-dialog */}
+      </div>
+      {/* /.modal */}
     </>
   );
 };

@@ -111,6 +111,7 @@ const Users = () => {
                 >
                   <thead>
                     <tr>
+                      <th>User Id</th>
                       <th>Nom Prenom</th>
                       <th>Email</th>
                       <th>Telephone</th>
@@ -134,11 +135,13 @@ const Users = () => {
                         <td className="text-center">Pas d'utilisateur</td>
                         <td className="text-center">Pas d'utilisateur</td>
                         <td className="text-center">Pas d'utilisateur</td>
+                        <td className="text-center">Pas d'utilisateur</td>
                       </tr>
                     ):(
                       users.map((user)=>{
                         return(
-                          <tr key={user.idUser}>
+                            <tr key={user.idUser}>
+                            <td>{user.idUser}</td>
                             <td>{user.firstName + user.lastName}</td>
                             <td>{user.email}</td>
                             <td>{user.phone}</td>
@@ -171,19 +174,6 @@ const Users = () => {
                       })
                     )}
                   </tbody>
-                  <tfoot>
-                    <tr>
-                      <th>Nom Prenom</th>
-                      <th>Email</th>
-                      <th>Telephone</th>
-                      <th>Role</th>
-                      <th>Prix Livraison</th>
-                      <th>Prix Retour</th>
-                      <th>Caisse</th>
-                      <th>Date d'inscription</th>
-                      <th>Actions</th>
-                    </tr>
-                  </tfoot>
                 </table>
               </div>
               {/* /.card-body */}
