@@ -48,7 +48,9 @@ const AjoutCommandes = () => {
   const [phoneDestError, setPhoneDestError] = useState("");
   const [articlesError, setArticlesError] = useState("");
   const [destinationError, setDestinationError] = useState("");
+  const [villeDestinationError, setVilleDestinationError] = useState("");
   const [departError, setDepartError] = useState("");
+  const [villeDepartError, setVilleDepartError] = useState("");
   const [nomDestError, setNomDestError] = useState("");
   const [prenomDestError, setPrenomDestError] = useState("");
   const [prixArticleError, setPrixArticleError] = useState("");
@@ -98,6 +100,20 @@ const AjoutCommandes = () => {
 
     if (depart == "") {
       setDepartError("Veuillez entrer depart");
+      isValid = false;
+    } else {
+      setDepartError("");
+    }
+
+    if (departVille == "") {
+      setDepartError("Veuillez entrer la ville de depart");
+      isValid = false;
+    } else {
+      setDepartError("");
+    }
+
+    if (destinationVille == "") {
+      setDepartError("Veuillez entrer la ville de destination");
       isValid = false;
     } else {
       setDepartError("");
@@ -254,6 +270,15 @@ const AjoutCommandes = () => {
                     <option disabled selected>Selectinner Ville</option>
                     {ville.map(ville=>(<option value={ville}>{ville}</option>))}
                   </select>
+                  {villeDepartError && (
+                    <div className="error">
+                      {villeDepartError}
+                      <i
+                        style={{ fontSize: "14px" }}
+                        className="fas fa-exclamation ml-2"
+                      ></i>
+                    </div>
+                  )}
                 </div>
                 <div className="col-md-6">
                   <label>Ville de déstinateur</label>
@@ -267,6 +292,15 @@ const AjoutCommandes = () => {
                     <option disabled selected>Selectionner Role</option>
                     {ville.map(ville=>(<option value={ville}>{ville}</option>))}
                   </select>
+                  {villeDestinationError && (
+                    <div className="error">
+                      {villeDestinationError}
+                      <i
+                        style={{ fontSize: "14px" }}
+                        className="fas fa-exclamation ml-2"
+                      ></i>
+                    </div>
+                  )}
                 </div>
               </div>
             </div>

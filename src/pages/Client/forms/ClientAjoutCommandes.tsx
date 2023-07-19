@@ -6,6 +6,7 @@ import { addCommande } from "../../../pages/Admin/tables/CommandesService.js";
 import { fetchAllLivreurs } from "../../../pages/Admin/tables/UsersService";
 import { ContentHeader } from "@app/components";
 import { getCurrentUser } from "@app/services/auth";
+import { ville } from "@app/pages/Admin/forms/ville";
 
 interface Livreur {
   idUser:number
@@ -23,11 +24,16 @@ const ClientAjoutCommande = () => {
   const [prenomDest,setPrenomDest]=useState('')
   const [phoneDest,setPhoneDest]=useState('');
   const [prixArticle,setPrixArticle]=useState<number>(0)
+  const [departVille, setDepartVille] = useState("");
+  const [destinationVille, setDestinationVille] = useState("");
+
+
   const [phoneDestError, setPhoneDestError] = useState("");
   const [articlesError, setArticlesError] = useState("");
   const [destinationError, setDestinationError] = useState("");
+  const [villeDestinationError, setVilleDestinationError] = useState("");
   const [departError, setDepartError] = useState("");
-  const [nomDestError, setNomDestError] = useState("");
+  const [villeDepartError, setVilleDepartError] = useState("");  const [nomDestError, setNomDestError] = useState("");
   const [prenomDestError, setPrenomDestError] = useState("");
   const [prixArticleError, setPrixArticleError] = useState("");
 
@@ -60,6 +66,20 @@ const ClientAjoutCommande = () => {
 
     if (depart == "") {
       setDepartError("Please enter the departure");
+      isValid = false;
+    } else {
+      setDepartError("");
+    }
+
+    if (departVille == "") {
+      setDepartError("Veuillez entrer la ville de depart");
+      isValid = false;
+    } else {
+      setDepartError("");
+    }
+
+    if (destinationVille == "") {
+      setDepartError("Veuillez entrer la ville de destination");
       isValid = false;
     } else {
       setDepartError("");
@@ -98,8 +118,10 @@ const ClientAjoutCommande = () => {
     }
 
     const commandeToSend={
-      depart:depart,
-      destination:destination,
+      depart: depart,
+      departVille:departVille,
+      destination: destination,
+      destinationVille:destinationVille,
       delivredAt:selectedDateTime,
       clientId: getCurrentUser().idUser,
       nomDestinataire:nomDest,
@@ -140,25 +162,94 @@ const ClientAjoutCommande = () => {
                 <div className="col-md-6">
                   <label htmlFor="exampleInputEmail1">Adresse De Départ</label>
                   <input
-                    onChange={(e)=>{setDepart(e.target.value)}}
+                    onChange={(e) => {
+                      setDepart(e.target.value);
+                    }}
                     type="text"
                     className="form-control"
                     id="exampleInputEmail1"
                     placeholder="Choisir votre depart"
                   />
-                  {departError && <div className="error">{departError}<i style={{fontSize:"14px"}} className="fas fa-exclamation ml-2"></i></div>}
+                  {departError && (
+                    <div className="error">
+                      {departError}
+                      <i
+                        style={{ fontSize: "14px" }}
+                        className="fas fa-exclamation ml-2"
+                      ></i>
+                    </div>
+                  )}
                 </div>
                 <div className="col-md-6">
-                  <label htmlFor="exampleInputEmail1">Adresse De Destination</label>
+                  <label htmlFor="exampleInputEmail1">
+                    Adresse De Destination
+                  </label>
                   <input
-                    onChange={(e)=>{setDestination(e.target.value)}}
+                    onChange={(e) => {
+                      setDestination(e.target.value);
+                    }}
                     type="text"
                     className="form-control"
                     id="exampleInputEmail1"
                     placeholder="Choisir votre destination"
                   />
-                  {destinationError && <div className="error">{destinationError}<i style={{fontSize:"14px"}} className="fas fa-exclamation ml-2"></i></div>}
-
+                  {destinationError && (
+                    <div className="error">
+                      {destinationError}
+                      <i
+                        style={{ fontSize: "14px" }}
+                        className="fas fa-exclamation ml-2"
+                      ></i>
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+            <div className="form-group">
+              <div className="row">
+                <div className="col-md-6">
+                  <label>Ville de départ</label>
+                  <select
+                    className="form-control"
+                    onChange={(e) => {
+                      setDepartVille(e.target.value);
+                      console.log(departVille);
+                    }}
+                  >
+                    <option disabled selected>Selectinner Ville</option>
+                    {ville.map(ville=>(<option value={ville}>{ville}</option>))}
+                  </select>
+                  {villeDepartError && (
+                    <div className="error">
+                      {villeDepartError}
+                      <i
+                        style={{ fontSize: "14px" }}
+                        className="fas fa-exclamation ml-2"
+                      ></i>
+                    </div>
+                  )}
+                </div>
+                <div className="col-md-6">
+                  <label>Ville de déstinateur</label>
+                  <select
+                    className="form-control"
+                    onChange={(e) => {
+                      setDestinationVille(e.target.value);
+                      console.log(destinationVille);
+                    }}
+                  >
+                    <option disabled selected>Selectionner Role</option>
+                    {ville.map(ville=>(<option value={ville}>{ville}</option>))}
+                  </select>
+                  {villeDestinationError && (
+                    <div className="error">
+                      {villeDestinationError}
+                      <i
+                        style={{ fontSize: "14px" }}
+                        className="fas fa-exclamation ml-2"
+                      ></i>
+                    </div>
+                  )}
                 </div>
               </div>
             </div>

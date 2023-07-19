@@ -58,6 +58,7 @@ const Commandes = () => {
   const [currentDate, setCurrentDate] = useState<string>(new Date().toISOString().split("T")[0]);
   const [valueOfTheCommandeStatus, setValueOfTheCommandeStatus] = useState<string[]>(['en préparation','en attente pickup','en dépot','en cours de livraison','livré','annulé']);
   const [tableInit,setTableInit] = useState(false);
+  const [filterState,setFilterState] = useState(false);
   
   const downloadPDF = (depart:string,dest:string,dateLiv:string,dateCre:string,nomDest:string,phone:string) => {
       const pdf = new jsPDF();
@@ -132,6 +133,7 @@ const Commandes = () => {
       }
       return false;
     });
+    setFilterState(true)
     setFilteredCommandes(filtered);
   };
 
@@ -143,6 +145,7 @@ const Commandes = () => {
       const commandeDate = new Date(commande.createdAt);
       return isWithinInterval(commandeDate, { start, end });
     });
+    setFilterState(true)
     setFilteredCommandes(filtered);
   };
 
@@ -154,6 +157,7 @@ const Commandes = () => {
       const commandeDate = new Date(commande.createdAt);
       return isWithinInterval(commandeDate, { start, end });
     });
+    setFilterState(true)
     setFilteredCommandes(filtered);
   };
 
@@ -173,6 +177,16 @@ const Commandes = () => {
     });
   }
 
+  const handleRetourFilter = ()=> {
+    const getAllCommande = async () => {
+      const data = await fetchCommandes();
+      setCommandes(data);
+      setFilteredCommandes(data);
+    };
+    setFilterState(false)
+    getAllCommande();
+  }
+
   return (
     <>
       <ContentHeader title="List Commandes" />
@@ -186,7 +200,12 @@ const Commandes = () => {
               </div>
               {/* /.card-header */}
               <div className="card-header">
+                  {filterState && (<div style={{cursor:"pointer"}} className="d-flex justify-content-start">
+                      <div style={{color:"grey"}} onClick={()=>{handleRetourFilter()}}><i className="fas fa-long-arrow-alt-left mr-1"></i>Retourner</div>
+                      
+                  </div>)}
                   <div className="d-flex justify-content-end">
+
                       <div style={{marginRight:20}}>
                         <ThisMonthFilter onFilterByThisMonth={handleFilterByThisMonth}/>
                       </div>
@@ -379,12 +398,13 @@ const Commandes = () => {
                               <button onClick={() => handleUpdateClick(commande.idCommande)} type="button" className="btn btn-warning">
                                 <i className="fas fa-pen"></i>
                               </button>
+                              <button onClick={()=>{downloadPDF(commande.depart,commande.destination,commande.delivredAt,commande.createdAt,commande.nomDestinataire,commande.phoneDestinataire)}} type="button" className="btn btn-info">
+                                <i className="fas fa-file-alt"></i>
+                              </button>
                               <button type="button" className="btn btn-danger" onClick={()=>{deleteCommande(commande.idCommande)}}>
                                 <i className="fa fa-trash"></i>
                               </button>
-                              <button onClick={()=>{downloadPDF(commande.depart,commande.destination,commande.delivredAt,commande.createdAt,commande.nomDestinataire,commande.phoneDestinataire)}} type="button" className="btn btn-warning">
-                                PDF
-                              </button>
+                              
                             </div>
                           </td>
                         </tr>

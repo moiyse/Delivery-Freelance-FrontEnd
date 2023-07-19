@@ -7,6 +7,7 @@ import { deleteUserById } from "@app/pages/Admin/tables/UsersService";
 import { ContentHeader } from "@app/components";
 import { sleep } from "@app/utils/helpers";
 import Swal from 'sweetalert2';
+import { toast } from "react-toastify";
 type User = {
   idUser: number;
   firstName: string;
@@ -26,6 +27,7 @@ const Users = () => {
   const [loading, setLoading] = useState(true);
   const [openDialog, setOpenDialog] = useState(false);
   const [selectedUserId, setSelectedUserId] = useState<number | null>(null);
+  const script = document.createElement("script");
   
   const handleUpdateClick = (userId:number) => {
     setSelectedUserId(userId);
@@ -33,6 +35,7 @@ const Users = () => {
   };
   const handleCloseDialog = () => {
     setOpenDialog(false);
+    fetchUsers()
   };
    
  
@@ -41,9 +44,11 @@ const Users = () => {
   }, []);
 
   useEffect(() => {
-    if(users.length != 0)
+      
+    if(users.length != 0 && !document.body.contains(script))
     {
-      const script = document.createElement("script");
+      console.log("here")
+      
       script.src = "js/table.js";
       script.async = true;
       document.body.appendChild(script);
@@ -66,21 +71,30 @@ const Users = () => {
     }
   };
 
-  const deleteUser = (idUser:number,firstName:string,lastName:String) => {
-    Swal.fire({
-      title: 'Supprimer un utilisateur',
-      text: `Etes vous sur de supprimer l'utilisateur " ${firstName} ${lastName} " ?`,
-      icon: 'error',
-      showCancelButton: true,
-      confirmButtonText: 'Supprimer',
-      cancelButtonText: 'Retour'
-    }).then(async (result) => {
-      if (result.isConfirmed) {
-        await deleteUserById(idUser)
-        setUsers((prevUsers) => prevUsers.filter((user) => user.idUser !== idUser));
-        //window.location.href = window.location.href
-      }
-    });
+  const deleteUser = (idUser:number,firstName:string,lastName:String,role:String) => {
+    if(role == "superAdmin")
+    {
+      toast.error("Utilisateur est un uper Admin")
+    }
+    else
+    {
+      Swal.fire({
+        title: 'Supprimer un utilisateur',
+        text: `Etes vous sur de supprimer l'utilisateur " ${firstName} ${lastName} " ?`,
+        icon: 'error',
+        showCancelButton: true,
+        confirmButtonText: 'Supprimer',
+        cancelButtonText: 'Retour'
+      }).then(async (result) => {
+        if (result.isConfirmed) {
+          await deleteUserById(idUser)
+          setUsers((prevUsers) => prevUsers.filter((user) => user.idUser !== idUser));
+          window.location.href = window.location.href
+         
+        }
+      });
+    }
+    
     
   }
   
@@ -156,7 +170,7 @@ const Users = () => {
                                 <button onClick={() => handleUpdateClick(user.idUser)} type="button" className="btn btn-warning">
                                   <i className="fas fa-pen"></i>
                                 </button>
-                                <button type="button" className="btn btn-danger" onClick={()=>{deleteUser(user.idUser,user.firstName,user.lastName)}}>
+                                <button type="button" className="btn btn-danger" onClick={()=>{deleteUser(user.idUser,user.firstName,user.lastName,user.role)}}>
                                   <i className="fa fa-trash"></i>
                                 </button>
                               </div>
