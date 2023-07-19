@@ -6,8 +6,8 @@ import { ContentHeader } from "@app/components";
 import { Button, Dialog, DialogTitle, DialogContent, DialogActions } from '@material-ui/core';
 import UpdateCommande from "../../forms/UpdateCommande";
 import CommandeFilter from "@app/pages/Admin/tables/filtre/CommandeFilter";
-import ThisDayFilter from "@app/pages/Admin/tables/filtre/ThisDayFilter";
-import NextWeekFilter from "@app/pages/Admin/tables/filtre/NextWeekFilter";
+import ThisDayFilter from "@app/pages/Admin/tables/filtre/ThisWeekFilter";
+import NextWeekFilter from "@app/pages/Admin/tables/filtre/ThisMonthFilter";
 export interface Commande{
   idCommande:number,
   depart:string,

@@ -17,10 +17,13 @@ import {
 } from "@material-ui/core";
 import UpdateCommande from "../forms/UpdateCommande";
 import CommandeFilter from "@app/pages/Admin/tables/filtre/CommandeFilter";
-import { FloatButton } from "antd";
-import ThisDayFilter from "@app/pages/Admin/tables/filtre/ThisDayFilter";
-import NextWeekFilter from "@app/pages/Admin/tables/filtre/NextWeekFilter";
-import Swal from "sweetalert2";
+import {FloatButton} from 'antd'
+import ThisWeekFilter from "@app/pages/Admin/tables/filtre/ThisWeekFilter";
+import ThisMonthFilter from "@app/pages/Admin/tables/filtre/ThisMonthFilter";
+import Swal from 'sweetalert2';
+import jsPDF from 'jspdf';
+import { template } from "./pdfExport/PdfTamplate";
+import { startOfMonth, endOfMonth,startOfWeek, endOfWeek, isWithinInterval } from 'date-fns';
 
 export interface Commande {
   idCommande: number;
@@ -52,22 +55,20 @@ const Commandes = () => {
   );
   const [openDialog, setOpenDialog] = useState(false);
   const [filteredCommandes, setFilteredCommandes] = useState<Commande[]>([]); // State for filtered commandes
-  const [currentDate, setCurrentDate] = useState<string>(
-    new Date().toISOString().split("T")[0]
-  );
-  const [valueOfTheCommandeStatus, setValueOfTheCommandeStatus] = useState<
-    string[]
-  >([
-    "en préparation",
-    "en attente pickup",
-    "en dépot",
-    "en cours de livraison",
-    "livré",
-    "annulé",
-  ]);
-  const [tableInit, setTableInit] = useState(false);
+  const [currentDate, setCurrentDate] = useState<string>(new Date().toISOString().split("T")[0]);
+  const [valueOfTheCommandeStatus, setValueOfTheCommandeStatus] = useState<string[]>(['en préparation','en attente pickup','en dépot','en cours de livraison','livré','annulé']);
+  const [tableInit,setTableInit] = useState(false);
+  
+  const downloadPDF = (depart:string,dest:string,dateLiv:string,dateCre:string,nomDest:string,phone:string) => {
+      const pdf = new jsPDF();
+      pdf.html(template(depart,dest,dateLiv,dateCre,nomDest,phone), {
+        callback: () => {
+          pdf.save('facture.pdf');
+        }
+      });
+  }
 
-  const handleUpdateClick = (commandeId: number) => {
+  const handleUpdateClick = (commandeId:number) => {
     setSelectedCommandeId(commandeId);
     setOpenDialog(true);
   };
@@ -83,7 +84,6 @@ const Commandes = () => {
       document.body.appendChild(script);
       setTableInit(true);
       return () => {
-        // Clean up the added script when the component unmounts
         document.body.removeChild(script);
       };
     }
@@ -116,54 +116,50 @@ const Commandes = () => {
       }
       updateUserById(commande.livreurId, livreur);
     }
+    updateCommandeStatus(idCommande,value)
+    window.location.reload()
+  }
 
-    updateCommandeStatus(idCommande, value);
-    window.location.reload();
-  };
-  const updateLivreurOfTheCommande = async (
-    livreurId: number,
-    commadeId: number
-  ) => {
-    updateCommandeLivreur(livreurId, commadeId);
-    window.location.reload();
-  };
-  const removeCommande = (commandeId: number) => {
-    setFilteredCommandes((prevUsers) =>
-      prevUsers.filter((commande) => commande.idCommande !== commandeId)
-    );
-  };
+  const updateLivreurOfTheCommande=async(livreurId:number,commadeId:number)=>{
+      updateCommandeLivreur(livreurId,commadeId)
+      window.location.reload()
+  }
+
   const filterCommandesByDate = (startDate: string, endDate: string) => {
     const filtered = commandes.filter((commande) => {
-      if (commande.delivredAt >= startDate && commande.delivredAt <= endDate) {
+      if (commande.createdAt >= startDate && commande.createdAt <= endDate) {
         return true;
       }
       return false;
     });
     setFilteredCommandes(filtered);
   };
-  const filterCommandesByThisDay = () => {
-    const filtered = commandes.filter(
-      (commande) => commande.delivredAt.split("T")[0] === currentDate
-    );
-    setFilteredCommandes(filtered);
-  };
-  const handleFilterByNextWeek = () => {
-    const nextWeekStartDate = new Date();
-    nextWeekStartDate.setDate(nextWeekStartDate.getDate() + 7);
-    const nextWeekEndDate = new Date();
-    nextWeekEndDate.setDate(nextWeekEndDate.getDate() + 14);
+
+  const filterCommandesByThisWeek = () => {
+    const currentDate = new Date();
+    const start = startOfWeek(currentDate);
+    const end = endOfWeek(currentDate);
     const filtered = commandes.filter((commande) => {
-      const delivredAtDate = new Date(commande.delivredAt);
-      return (
-        delivredAtDate >= nextWeekStartDate && delivredAtDate <= nextWeekEndDate
-      );
+      const commandeDate = new Date(commande.createdAt);
+      return isWithinInterval(commandeDate, { start, end });
     });
     setFilteredCommandes(filtered);
   };
 
-  const deleteCommande = (idCommande: number) => {
+  const handleFilterByThisMonth = () => {
+    const currentDate = new Date();
+    const start = startOfMonth(currentDate);
+    const end = endOfMonth(currentDate);
+    const filtered = commandes.filter((commande) => {
+      const commandeDate = new Date(commande.createdAt);
+      return isWithinInterval(commandeDate, { start, end });
+    });
+    setFilteredCommandes(filtered);
+  };
+
+  const deleteCommande = (idCommande:number) => {
     Swal.fire({
-      title: "Supprimer un utilisateur",
+      title: 'Supprimer Une Commande',
       text: `Etes vous sûr de supprimer la commande avec l'ID : ${idCommande} " ?`,
       icon: "error",
       showCancelButton: true,
@@ -171,11 +167,11 @@ const Commandes = () => {
       cancelButtonText: "Retour",
     }).then((result) => {
       if (result.isConfirmed) {
-        deleteCommandeById(idCommande);
-        window.location.href = window.location.href;
+        deleteCommandeById(idCommande)
+        setFilteredCommandes((prevUsers) => prevUsers.filter((commande) => commande.idCommande !== idCommande));
       }
     });
-  };
+  }
 
   return (
     <>
@@ -190,23 +186,19 @@ const Commandes = () => {
               </div>
               {/* /.card-header */}
               <div className="card-header">
-                <div className="d-flex justify-content-end">
-                  <div style={{ marginRight: 20 }}>
-                    <NextWeekFilter
-                      onFilterByNextWeek={handleFilterByNextWeek}
-                    />
+                  <div className="d-flex justify-content-end">
+                      <div style={{marginRight:20}}>
+                        <ThisMonthFilter onFilterByThisMonth={handleFilterByThisMonth}/>
+                      </div>
+                      <div style={{marginRight:20}}>
+                        <ThisWeekFilter onFilterByThisWeek={filterCommandesByThisWeek} />
+                      </div>
+                     <CommandeFilter
+                        onFilter={(startDate, endDate) => filterCommandesByDate(startDate, endDate)}
+                      />  
                   </div>
-                  <div style={{ marginRight: 20 }}>
-                    <ThisDayFilter onFilterByDay={filterCommandesByThisDay} />
-                  </div>
-                  <CommandeFilter
-                    onFilter={(startDate, endDate) =>
-                      filterCommandesByDate(startDate, endDate)
-                    }
-                  />
-                </div>
               </div>
-              <div className="card-body">
+              <div id="pdf-template" className="card-body">
                 <table
                   id="example1"
                   className="table table-bordered table-striped"
@@ -380,32 +372,23 @@ const Commandes = () => {
                                     </a>
                                   ))
                                 )}
-                              </div>
-                            </td>
-                            <td>
-                              <div className="btn-group">
-                                <button
-                                  onClick={() =>
-                                    handleUpdateClick(commande.idCommande)
-                                  }
-                                  type="button"
-                                  className="btn btn-warning"
-                                >
-                                  <i className="fas fa-pen"></i>
-                                </button>
-                                <button
-                                  type="button"
-                                  className="btn btn-danger"
-                                  onClick={() => {
-                                    deleteCommande(commande.idCommande);
-                                  }}
-                                >
-                                  <i className="fa fa-trash"></i>
-                                </button>
-                              </div>
-                            </td>
-                          </tr>
-                        );
+                            </div>
+                          </td>
+                          <td>
+                            <div className="btn-group">
+                              <button onClick={() => handleUpdateClick(commande.idCommande)} type="button" className="btn btn-warning">
+                                <i className="fas fa-pen"></i>
+                              </button>
+                              <button type="button" className="btn btn-danger" onClick={()=>{deleteCommande(commande.idCommande)}}>
+                                <i className="fa fa-trash"></i>
+                              </button>
+                              <button onClick={()=>{downloadPDF(commande.depart,commande.destination,commande.delivredAt,commande.createdAt,commande.nomDestinataire,commande.phoneDestinataire)}} type="button" className="btn btn-warning">
+                                PDF
+                              </button>
+                            </div>
+                          </td>
+                        </tr>
+                        )
                       })
                     )}
                   </tbody>
