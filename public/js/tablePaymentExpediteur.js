@@ -17,6 +17,7 @@ $(function () {
         },
       ],
     });
+    $("#example1_wrapper").css("min-width", "600px");
     $("#example2").DataTable({
       paging: true,
       lengthChange: false,
