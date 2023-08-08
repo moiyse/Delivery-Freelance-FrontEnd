@@ -10,7 +10,7 @@ import axios from "axios";
 import Swal from "sweetalert2";
 
 type PaymentExpediteur = {
-  idPayment: number;
+  idPaymentExpediteur: number;
   createdAt: Date;
   PaymentExpediteurLivreurId: number;
   PaymentExpediteurClientId: number;
@@ -124,7 +124,7 @@ const PaymentExpediteur = () => {
     setPaymentExpediteur((prevPaymentExpediteur) =>
       prevPaymentExpediteur.filter(
         (paymentExpediteur) =>
-          paymentExpediteur.idPayment !== idPaymentExpediteur
+          paymentExpediteur.idPaymentExpediteur !== idPaymentExpediteur
       )
     );
   };
@@ -140,7 +140,7 @@ const PaymentExpediteur = () => {
     }).then((result) => {
       if (result.isConfirmed) {
         deletePaymentExpediteurById(idPaymentExpediteur);
-        window.location.href = window.location.href;
+        window.location.reload()
       }
     });
   };
@@ -165,7 +165,7 @@ const PaymentExpediteur = () => {
                 <h3 className="card-title">Status commandes et payments</h3>
               </div>
               {/* /.card-header */}
-              <div className="card-body">
+              <div style={{overflow:"auto"}} className="card-body">
                 <table
                   id="example1"
                   className="table table-bordered table-striped"
@@ -236,7 +236,7 @@ const PaymentExpediteur = () => {
                               <button
                                 onClick={() => {
                                   deletePaymentExpediteur(
-                                    data.paymentExpediteur.idPayment
+                                    data.paymentExpediteur.idPaymentExpediteur
                                   );
                                 }}
                                 type="button"

@@ -77,3 +77,7 @@
 	height:109px;
 	overflow-y: auto;
 }
+
+.table th, .table td {
+    width: 30px;
+}

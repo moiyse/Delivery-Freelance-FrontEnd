@@ -183,7 +183,7 @@ const Livree = () => {
                                 ):(
                                   livreurs.map((liv)=>(
                                     <a  style={{ backgroundColor: liv.idUser === commande.livreurId ? 'red' : '' }}
-                                        onClick={()=>{updateLivreurOfTheCommande(liv.idUser,commande.idCommande)}} className="dropdown-item" href="#">
+                                        onClick={()=>{updateLivreurOfTheCommande(liv.idUser,commande.idCommande)}} className="dropdown-item" >
                                       {liv.firstName +" "+liv.lastName}
                                     </a>
                                   ))

@@ -4,6 +4,7 @@ $(function () {
       lengthChange: false,
       info: false,
       autoWidth: false,
+      bDestroy: true,
       language: {
         emptyTable: " ",
       },

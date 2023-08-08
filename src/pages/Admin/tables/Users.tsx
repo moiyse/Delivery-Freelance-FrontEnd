@@ -110,7 +110,7 @@ const Users = () => {
                 <h3 className="card-title">Tous les utilisateurs</h3>
               </div>
               {/* /.card-header */}
-              <div className="card-body">
+              <div style={{overflow:"auto"}} className="card-body">
                 <table
                   id="userTable"
                   className="table table-bordered table-striped"
