@@ -132,6 +132,7 @@ const Commandes = () => {
   }
 
   const updateLivreurOfTheCommande=async(livreurId:number,commadeId:number)=>{
+      console.log("livId : ",livreurId,"cmd ID : ",commadeId)
       updateCommandeLivreur(livreurId,commadeId)
       window.location.reload()
   }
@@ -183,6 +184,7 @@ const Commandes = () => {
       if (result.isConfirmed) {
         deleteCommandeById(idCommande)
         setFilteredCommandes((prevUsers) => prevUsers.filter((commande) => commande.idCommande !== idCommande));
+        window.location.reload()
       }
     });
   }
@@ -227,7 +229,7 @@ const Commandes = () => {
                       />  
                   </div>
               </div>
-              <div id="pdf-template" className="card-body">
+              <div id="pdf-template" style={{overflow:"auto"}} className="card-body">
                 <table
                   id="example1"
                   className="table table-bordered table-striped"
@@ -303,6 +305,7 @@ const Commandes = () => {
                               <div className="dropdown-overflow dropdown-menu commande-status-pill">
                                 {valueOfTheCommandeStatus.map((val) => (
                                   <a
+                                  href="/"
                                     className={
                                       val === commande.commandeStatus
                                         ? "badge bg-warning"
@@ -313,7 +316,6 @@ const Commandes = () => {
                                       justifyContent: "center",
                                       alignItems: "center",
                                     }}
-                                    href="#"
                                     onClick={() => {
                                       updateStatusCommande(
                                         commande,
@@ -417,7 +419,7 @@ const Commandes = () => {
                                         );
                                       }}
                                       className="dropdown-item"
-                                      href="#"
+                                      href=""
                                     >
                                       {liv.idUser === commande.livreurId
                                         ? "selected: " +
@@ -432,7 +434,7 @@ const Commandes = () => {
                           </td>
                           <td>
                             <div className="btn-group">
-                              <button onClick={() => handleUpdateClick(commande.idCommande)} type="button" className="btn btn-warning">
+                              <button  onClick={() => handleUpdateClick(commande.idCommande)} className="btn btn-warning">
                                 <i className="fas fa-pen"></i>
                               </button>
                               <button onClick={()=>{downloadPDF(commande.depart,commande.destination,commande.delivredAt,commande.createdAt,commande.nomDestinataire,commande.phoneDestinataire)}} type="button" className="btn btn-info">

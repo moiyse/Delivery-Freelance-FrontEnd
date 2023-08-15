@@ -1,8 +1,9 @@
 import { useState,useEffect } from "react";
 import "./forms.css";
 import {GET_USER_BY_ID_URL} from '../../../../apiUrls'
-import { updateUserById } from "../tables/UsersService";
+import { getUserById, updateUserById } from "../tables/UsersService";
 import { toast } from 'react-toastify';
+import { User } from "oidc-client-ts";
 interface UpdateUserProps {
     userId: number | null;
 }
@@ -29,7 +30,16 @@ const UpdateUser: React.FC<UpdateUserProps> = ({userId}) => {
   const [retour, setRetour] = useState("");
   const [livraison, setLivraison] = useState("");
   const [caisse, setCaisse] = useState("");
+  const [currentUser, setCurrentUser] = useState<User>();
 
+
+  useEffect(() => {
+    getCurrentUser()
+  }, [])
+
+  const getCurrentUser = async() => {
+    setCurrentUser(await getUserById())
+  }
 
   useEffect(() => {
     console.log(userId)

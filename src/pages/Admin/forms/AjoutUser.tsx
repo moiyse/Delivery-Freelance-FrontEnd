@@ -50,6 +50,11 @@ const AjoutUser = () => {
     const regex = /^\d{10}$/; // Assuming the phone number should be 10 digits long
     return regex.test(phone);
   };
+
+  useEffect(() => {
+    getCurrentUser()
+  }, [])
+  
   
 
   const saveData = async (e: any) => {

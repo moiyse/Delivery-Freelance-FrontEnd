@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, HashRouter } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
 import Main from '@modules/main/Main';
 import Login from '@modules/login/Login';
@@ -89,11 +89,11 @@ const App = () => {
   }, [windowSize]);
 
   if (isAppLoading) {
-    return <p>Loading</p>;
+    return <p>Loading...</p>;
   }
 
   return (
-    <BrowserRouter>
+    <HashRouter>
       <Routes>
         <Route path="/delivery">
           <Route path="/delivery/" element={<FrontMain />}>
@@ -183,7 +183,7 @@ const App = () => {
         rtl={false}
         pauseOnHover
       />
-    </BrowserRouter>
+    </HashRouter>
   );
 };
 

@@ -106,17 +106,17 @@ const AjoutCommandes = () => {
     }
 
     if (departVille == "") {
-      setDepartError("Veuillez entrer la ville de depart");
+      setVilleDepartError("Veuillez entrer la ville de depart");
       isValid = false;
     } else {
-      setDepartError("");
+      setVilleDepartError("");
     }
 
     if (destinationVille == "") {
-      setDepartError("Veuillez entrer la ville de destination");
+      setVilleDestinationError("Veuillez entrer la ville de destination");
       isValid = false;
     } else {
-      setDepartError("");
+      setVilleDestinationError("");
     }
 
     if (nomDest == "") {
@@ -289,7 +289,7 @@ const AjoutCommandes = () => {
                       console.log(destinationVille);
                     }}
                   >
-                    <option disabled selected>Selectionner Role</option>
+                    <option disabled selected>Selectionner ville déstinateur</option>
                     {ville.map(ville=>(<option value={ville}>{ville}</option>))}
                   </select>
                   {villeDestinationError && (
@@ -462,7 +462,7 @@ const AjoutCommandes = () => {
                       //console.log(client);
                     }}
                   >
-                    <option disabled selected>Selectionner Role</option>
+                    <option disabled selected>Selectionner Client</option>
                     {clients.map(client=><option value={client.idUser}>{client.firstName + " "+client.lastName}</option>)}
                   </select>
                 </div>
