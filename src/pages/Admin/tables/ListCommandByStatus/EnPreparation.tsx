@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import "../users.css";
-import { deleteCommandeById, fetchCommandes, getCommandeOfTodayByStatus, updateCommandeLivreur, updateCommandeStatus } from "../../tables/CommandesService.js";
+import { deleteCommandeById, fetchCommandes, getCommandeOfTodayByStatus, updateCommandeLivreur, updateCommandeStatus, updatePaymentStatus } from "../../tables/CommandesService.js";
 import { fetchAllLivreurs } from "../UsersService";
 import { ContentHeader } from "@app/components";
 import { Button, Dialog, DialogTitle, DialogContent, DialogActions } from '@material-ui/core';
@@ -34,6 +34,7 @@ const EnPreparation = () => {
   const [filteredCommandes, setFilteredCommandes] = useState<Commande[]>([]); // State for filtered commandes
   const [currentDate, setCurrentDate] = useState<string>(new Date().toISOString().split("T")[0]);
   const [valueOfTheCommandeStatus, setValueOfTheCommandeStatus] = useState<string[]>(['en préparation','en attente pickup','en dépot','en cours de livraison','livré','annulé']);
+  const [valueOfThePaymentStatus, setValueOfThePaymentStatus] = useState<string[]>(['payé','nonPayé']);
 
   const handleUpdateClick = (commandeId:number) => {
     setSelectedCommandeId(commandeId);
@@ -84,6 +85,13 @@ const EnPreparation = () => {
   const removeCommande = (commandeId:number) => {
     setFilteredCommandes((prevUsers) => prevUsers.filter((commande) => commande.idCommande !== commandeId));
   };
+  const updateStatusPayment = async (
+    idCommande: number,
+    value: string
+  ) => {
+    updatePaymentStatus(idCommande,value)
+    window.location.reload()
+  }
 
   return (
     <>
@@ -110,6 +118,7 @@ const EnPreparation = () => {
                       <th>Deliver At</th>
                       <th>Destination</th>
                       <th>Status Commande</th>
+                      <th>Status Paiement</th>
                       <th>Livreur</th>
                       <th>Actions</th>
                     </tr>
@@ -118,7 +127,7 @@ const EnPreparation = () => {
                     {filteredCommandes.length===0 ? (
                       <tr>
                       <td  className="text-center">
-                        No commands found.
+                        Aucune commande trouvée.
                       </td>
                     </tr>
                     ):(
@@ -165,29 +174,88 @@ const EnPreparation = () => {
                                   }           
                             </div>
                           </td>
-                          <td>
-                            <a
-                              style={{ textDecoration: "none",color: commande.livreurId ? "black" : "red" }}
-                              className="dropdown-toggle dropdown-icon"
-                              data-toggle="dropdown"
-                              aria-expanded="true"
-                            >
-                              {commande.livreurId ? "Voir Livreur": "No Livreur"}
-                            </a>
-                            <div className="dropdown-menu">
-                              
-                                {livreurs.length===0 ?(
+                          <td className="pill-td">
+                              <a
+                                  className="dropdown-toggle dropdown-icon"
+                                  data-toggle="dropdown"
+                                  aria-expanded="true"
+                                >
+                                  <span className="badge bg-warning">
+                                    {commande.paymentStatus}
+                                  </span>
+                              </a>
+                              <div className="dropdown-overflow dropdown-menu commande-status-pill">
+                                {valueOfThePaymentStatus.map((val) => (
+                                  <a
+                                    className={
+                                      val === commande.paymentStatus
+                                        ? "badge bg-warning"
+                                        : "dropdown-item"
+                                    }
+                                    style={{
+                                      display: "flex",
+                                      justifyContent: "center",
+                                      alignItems: "center",
+                                    }}
+                                    href="#"
+                                    onClick={() => {
+                                      updateStatusPayment(
+                                        commande.idCommande,
+                                        val
+                                      );
+                                    }}
+                                  >
+                                    {val}
+                                  </a>
+                                ))}
+                              </div>
+                            </td>
+                          <td>      
+                          <a
+                                style={{
+                                  textDecoration: "none",
+                                  color: commande.livreurId ? "black" : "red",
+                                }}
+                                className="dropdown-toggle dropdown-icon"
+                                data-toggle="dropdown"
+                                aria-expanded="true"
+                              >
+                                {commande.livreurId
+                                  ? "Voir Livreur"
+                                  : "No Livreur"}
+                              </a>
+                              <div className="dropdown-overflow dropdown-menu">
+                                {livreurs.length === 0 ? (
                                   <a className="dropdown-item">Vide</a>
-                                ):(
-                                  livreurs.map((liv)=>(
-                                    <a  style={{ backgroundColor: liv.idUser === commande.livreurId ? 'red' : '' }}
-                                        onClick={()=>{updateLivreurOfTheCommande(liv.idUser,commande.idCommande)}} className="dropdown-item" href="#">
-                                      {liv.firstName +" "+liv.lastName}
+                                ) : (
+                                  livreurs.map((liv) => (
+                                    <a
+                                      style={{
+                                        backgroundColor:
+                                          liv.idUser === commande.livreurId
+                                            ? "lightblue"
+                                            : "",
+                                      }}
+                                      onClick={() => {
+                                        updateLivreurOfTheCommande(
+                                          liv.idUser,
+                                          commande.idCommande
+                                        );
+                                      }}
+                                      className="dropdown-item"
+                                      href="#"
+                                    >
+                                      {liv.idUser === commande.livreurId
+                                        ? "selected: " +
+                                          liv.firstName +
+                                          " " +
+                                          liv.lastName
+                                        : liv.firstName + " " + liv.lastName}
                                     </a>
                                   ))
                                 )}
-                              
                             </div>
+
                           </td>
                           <td>
                             <div className="btn-group">
@@ -214,6 +282,7 @@ const EnPreparation = () => {
                       <th>Deliver At</th>
                       <th>Destination</th>
                       <th>Status Commande</th>
+                      <th>Status Paiement</th>
                       <th>Livreur</th>
                       <th>Actions</th>
                     </tr>

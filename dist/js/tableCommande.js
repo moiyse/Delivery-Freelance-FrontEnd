@@ -4,6 +4,7 @@ $(function () {
       lengthChange: false,
       info: false,
       autoWidth: false,
+      bDestroy: true,
       language: {
         emptyTable: " ",
       },
@@ -16,7 +17,7 @@ $(function () {
         { responsivePriority: 2, targets: 7 },
         { responsivePriority: 3, targets: 5 },
         {
-          targets: [7] /* column index */,
+          targets: [-1] /* column index */,
           orderable: false /* true or false */,
         },
       ],

@@ -5,6 +5,7 @@ import {
   fetchCommandes,
   updateCommandeLivreur,
   updateCommandeStatus,
+  updatePaymentStatus,
 } from "../tables/CommandesService.js";
 import { fetchAllLivreurs, getUserById, updateUserById } from "./UsersService";
 import { ContentHeader } from "@app/components";
@@ -57,6 +58,7 @@ const Commandes = () => {
   const [filteredCommandes, setFilteredCommandes] = useState<Commande[]>([]); // State for filtered commandes
   const [currentDate, setCurrentDate] = useState<string>(new Date().toISOString().split("T")[0]);
   const [valueOfTheCommandeStatus, setValueOfTheCommandeStatus] = useState<string[]>(['en préparation','en attente pickup','en dépot','en cours de livraison','livré','annulé']);
+  const [valueOfThePaymentStatus, setValueOfThePaymentStatus] = useState<string[]>(['payé','nonPayé']);
   const [tableInit,setTableInit] = useState(false);
   const [filterState,setFilterState] = useState(false);
   
@@ -118,6 +120,14 @@ const Commandes = () => {
       updateUserById(commande.livreurId, livreur);
     }
     updateCommandeStatus(idCommande,value)
+    window.location.reload()
+  }
+
+  const updateStatusPayment = async (
+    idCommande: number,
+    value: string
+  ) => {
+    updatePaymentStatus(idCommande,value)
     window.location.reload()
   }
 
@@ -230,7 +240,7 @@ const Commandes = () => {
                       <th>Deliver At</th>
                       <th>Destination</th>
                       <th>Status Commande</th>
-                      <th>Status Payment</th>
+                      <th>Status Paiement</th>
                       <th>Status Demande</th>
                       <th>Livreur</th>
                       <th>Actions</th>
@@ -318,13 +328,40 @@ const Commandes = () => {
                               </div>
                             </td>
                             <td className="pill-td">
-                              <a>
-                                {
+                              <a
+                                  className="dropdown-toggle dropdown-icon"
+                                  data-toggle="dropdown"
+                                  aria-expanded="true"
+                                >
                                   <span className="badge bg-warning">
                                     {commande.paymentStatus}
                                   </span>
-                                }
                               </a>
+                              <div className="dropdown-overflow dropdown-menu commande-status-pill">
+                                {valueOfThePaymentStatus.map((val) => (
+                                  <a
+                                    className={
+                                      val === commande.paymentStatus
+                                        ? "badge bg-warning"
+                                        : "dropdown-item"
+                                    }
+                                    style={{
+                                      display: "flex",
+                                      justifyContent: "center",
+                                      alignItems: "center",
+                                    }}
+                                    href="#"
+                                    onClick={() => {
+                                      updateStatusPayment(
+                                        commande.idCommande,
+                                        val
+                                      );
+                                    }}
+                                  >
+                                    {val}
+                                  </a>
+                                ))}
+                              </div>
                             </td>
                             <td className="pill-td">
                               <a>

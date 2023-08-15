@@ -4,11 +4,12 @@ $(function () {
       lengthChange: false,
       info: false,
       autoWidth: false,
+      bDestroy: true,
       columnDefs: [
         { responsivePriority: 1, targets: 0 },
         { responsivePriority: 1, targets: -1 },
         {
-          targets: [4] /* column index */,
+          targets: [-1] /* column index */,
           orderable: false /* true or false */,
         },
       ],
