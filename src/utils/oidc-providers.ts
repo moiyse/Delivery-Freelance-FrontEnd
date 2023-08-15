@@ -50,7 +50,7 @@ export const authLogin = (email: any, password: string) => {
     else
     {
       console.log("wrong")
-      return rej({ message: 'Credentials are wrongggg!' });
+      return rej({ message: 'Mot de passe entré incorrect. !' });
     }
 
     /*if (email === 'admin@admin.com' && password === 'admin') {

@@ -165,26 +165,48 @@ const Annulee = () => {
                           </td>
                           <td>
                             <a
-                              style={{ textDecoration: "none",color: commande.livreurId ? "black" : "red" }}
-                              className="dropdown-toggle dropdown-icon"
-                              data-toggle="dropdown"
-                              aria-expanded="true"
-                            >
-                              {commande.livreurId ? "Voir Livreur": "No Livreur"}
-                            </a>
-                            <div className="dropdown-menu">
-                              
-                                {livreurs.length===0 ?(
+                                style={{
+                                  textDecoration: "none",
+                                  color: commande.livreurId ? "black" : "red",
+                                }}
+                                className="dropdown-toggle dropdown-icon"
+                                data-toggle="dropdown"
+                                aria-expanded="true"
+                              >
+                                {commande.livreurId
+                                  ? "Voir Livreur"
+                                  : "No Livreur"}
+                              </a>
+                              <div className="dropdown-overflow dropdown-menu">
+                                {livreurs.length === 0 ? (
                                   <a className="dropdown-item">Vide</a>
-                                ):(
-                                  livreurs.map((liv)=>(
-                                    <a  style={{ backgroundColor: liv.idUser === commande.livreurId ? 'red' : '' }}
-                                        onClick={()=>{updateLivreurOfTheCommande(liv.idUser,commande.idCommande)}} className="dropdown-item" href="#">
-                                      {liv.firstName +" "+liv.lastName}
+                                ) : (
+                                  livreurs.map((liv) => (
+                                    <a
+                                      style={{
+                                        backgroundColor:
+                                          liv.idUser === commande.livreurId
+                                            ? "lightblue"
+                                            : "",
+                                      }}
+                                      onClick={() => {
+                                        updateLivreurOfTheCommande(
+                                          liv.idUser,
+                                          commande.idCommande
+                                        );
+                                      }}
+                                      className="dropdown-item"
+                                      href="#"
+                                    >
+                                      {liv.idUser === commande.livreurId
+                                        ? "selected: " +
+                                          liv.firstName +
+                                          " " +
+                                          liv.lastName
+                                        : liv.firstName + " " + liv.lastName}
                                     </a>
                                   ))
                                 )}
-                              
                             </div>
                           </td>
                           <td>
