@@ -5,6 +5,8 @@ import { ContentHeader } from "@app/components";
 import { Button, Dialog, DialogTitle, DialogContent, DialogActions } from '@material-ui/core';
 import UpdateCommandeLivreur from "./UpdateCommandeClient";
 import { getCurrentUser } from "@app/services/auth";
+import Swal from 'sweetalert2';
+
 export interface Commande{
   idCommande:number,
   depart:string,
@@ -116,7 +118,7 @@ const ClientCommandes = () => {
                     {filteredCommandes.length===0 ? (
                       <tr>
                       <td  className="text-center">
-                        No commands found.
+                      Aucune commande trouvée.
                       </td>
                     </tr>
                     ):(
@@ -162,7 +164,21 @@ const ClientCommandes = () => {
                               <button disabled={commande.demandeStatus === "demandé" && (commande.commandeStatus != "livré" && commande.commandeStatus != "annulé")} onClick={() => handlePaymentClick(commande.idCommande)} type="button" title="Demande d'être payer" className="btn btn-success">
                                 <i className="fas fa-money-bill-wave"></i>
                               </button>
-                              {commande.commandeStatus == "en préparation" && <button type="button" className="btn btn-danger" onClick={()=>{deleteCommandeById(commande.idCommande);removeCommande(commande.idCommande)}}>
+                              {commande.commandeStatus == "en préparation" && <button type="button" className="btn btn-danger" onClick={()=>{ 
+                                                                                                                                              Swal.fire({
+                                                                                                                                                title: 'Supprimer Une Commande',
+                                                                                                                                                text: `Etes vous sûr de supprimer la commande avec l'ID : ${commande.idCommande} " ?`,
+                                                                                                                                                icon: "error",
+                                                                                                                                                showCancelButton: true,
+                                                                                                                                                confirmButtonText: "Supprimer",
+                                                                                                                                                cancelButtonText: "Retour",
+                                                                                                                                              }).then((result) => {
+                                                                                                                                                if (result.isConfirmed) {
+                                                                                                                                                  deleteCommandeById(commande.idCommande)
+                                                                                                                                                  removeCommande(commande.idCommande)
+                                                                                                                                                }
+                                                                                                                                              });
+                                                                                                                                              }}>
                                 <i className="fa fa-trash"></i>
                               </button>}
                             </div>
