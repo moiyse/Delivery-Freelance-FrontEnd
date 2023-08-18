@@ -148,7 +148,7 @@ const AjoutUser = () => {
       const resposeData=response.json()
       toast.success('Utilisateur Ajouté avec Succés');
       console.log(resposeData)
-      window.location.href = "/users";
+      window.location.href = "/#/users";
     }catch(errorr){
       toast.error('Failed');
       throw(errorr)

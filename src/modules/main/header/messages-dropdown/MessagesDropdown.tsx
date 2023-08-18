@@ -34,7 +34,7 @@ const MessagesDropdown = () => {
         <span className="badge badge-danger navbar-badge">3</span>
       </div>
       <div slot="menu">
-        <Link to="/" className="dropdown-item">
+        <Link to="/#/" className="dropdown-item">
           <div className="media">
             <PfImage
               src="/img/default-profile.png"
@@ -64,7 +64,7 @@ const MessagesDropdown = () => {
           </div>
         </Link>
         <div className="dropdown-divider" />
-        <Link to="/" className="dropdown-item">
+        <Link to="/#/" className="dropdown-item">
           <div className="media">
             <PfImage
               src="/img/default-profile.png"
@@ -94,7 +94,7 @@ const MessagesDropdown = () => {
           </div>
         </Link>
         <div className="dropdown-divider" />
-        <Link to="/" className="dropdown-item">
+        <Link to="/#/" className="dropdown-item">
           <div className="media">
             <PfImage
               src="/img/default-profile.png"
@@ -124,7 +124,7 @@ const MessagesDropdown = () => {
           </div>
         </Link>
         <div className="dropdown-divider" />
-        <Link to="/" className="dropdown-item dropdown-footer">
+        <Link to="/#/" className="dropdown-item dropdown-footer">
           {t<string>('header.messages.seeAll')}
         </Link>
       </div>

@@ -31,7 +31,7 @@ const ForgotPassword = () => {
     <div className="login-box">
       <div className="card card-outline card-primary">
         <div className="card-header text-center">
-          <Link to="/" className="h1">
+          <Link to="/#/" className="h1">
             <b>Admin</b>
             <span>LTE</span>
           </Link>
@@ -76,7 +76,7 @@ const ForgotPassword = () => {
             </div>
           </form>
           <p className="mt-3 mb-1">
-            <Link to="/login">{t<string>('login.button.signIn.label')}</Link>
+            <Link to="/#/login">{t<string>('login.button.signIn.label')}</Link>
           </p>
         </div>
       </div>

@@ -109,7 +109,7 @@ const LivreurPaymentExpediteur = () => {
       .put(UPDATE_CLIENT_COMMANDS_TO_PAYED(idClient,idPaymentExpediteur))
       .then((res) => {
         console.log("success message : ", res.data);
-        window.location.href = "/livreurPaymentExpediteur";
+        window.location.href = "/#/livreurPaymentExpediteur";
       })
       .catch((error) => {
         console.log(error);

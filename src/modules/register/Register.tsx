@@ -65,7 +65,7 @@ const Register = () => {
     <div className="register-box">
       <div className="card card-outline card-primary">
         <div className="card-header text-center">
-          <Link to="/" className="h1">
+          <Link to="/#/" className="h1">
             <b>Admin</b>
             <span>LTE</span>
           </Link>
@@ -155,7 +155,7 @@ const Register = () => {
               <div className="col-7">
                 <PfCheckbox checked={false}>
                   <span>I agree to the </span>
-                  <Link to="/">terms</Link>
+                  <Link to="/#/">terms</Link>
                 </PfCheckbox>
               </div>
               <div className="col-5">
@@ -172,7 +172,7 @@ const Register = () => {
           </form>
           <div className="social-auth-links text-center">
           </div>
-          <Link to="/login" className="text-center">
+          <Link to="/#/login" className="text-center">
             {t<string>('register.alreadyHave')}
           </Link>
         </div>

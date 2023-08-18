@@ -192,7 +192,7 @@ const AjoutCommandes = () => {
                   onChange={(e) => {
                     setArticles(e.target.value);
                   }}
-                  type="text"
+                  type="textArea"
                   className="form-control"
                   id="exampleInputEmail1"
                   placeholder="Merci De Séparer Les Articles Avec -"

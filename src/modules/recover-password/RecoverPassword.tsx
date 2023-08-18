@@ -39,7 +39,7 @@ const RecoverPassword = () => {
     <div className="login-box">
       <div className="card card-outline card-primary">
         <div className="card-header text-center">
-          <Link to="/" className="h1">
+          <Link to="/#/" className="h1">
             <b>FASTO</b>
           </Link>
         </div>

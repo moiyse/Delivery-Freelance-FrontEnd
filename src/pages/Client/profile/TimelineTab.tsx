@@ -30,7 +30,7 @@ const TimelineTab = ({isActive}: {isActive: boolean}) => {
               <span> 12:05</span>
             </span>
             <h3 className="timeline-header">
-              <Link to="/">Support Team</Link>
+              <Link to="/#/">Support Team</Link>
               <span> sent you an email</span>
             </h3>
             <div className="timeline-body">
@@ -40,10 +40,10 @@ const TimelineTab = ({isActive}: {isActive: boolean}) => {
               quora plaxo ideeli hulu weebly balihoo...
             </div>
             <div className="timeline-footer">
-              <Link to="/" className="btn btn-primary btn-sm">
+              <Link to="/#/" className="btn btn-primary btn-sm">
                 Read more
               </Link>
-              <Link to="/" className="btn btn-danger btn-sm">
+              <Link to="/#/" className="btn btn-danger btn-sm">
                 Delete
               </Link>
             </div>
@@ -59,7 +59,7 @@ const TimelineTab = ({isActive}: {isActive: boolean}) => {
               <span> 5 mins ago</span>
             </span>
             <h3 className="timeline-header border-0">
-              <Link to="/">Sarah Young</Link>
+              <Link to="/#/">Sarah Young</Link>
               <span> accepted your friend request</span>
             </h3>
           </div>
@@ -74,7 +74,7 @@ const TimelineTab = ({isActive}: {isActive: boolean}) => {
               <span> 27 mins ago</span>
             </span>
             <h3 className="timeline-header">
-              <Link to="/">Jay White</Link>
+              <Link to="/#/">Jay White</Link>
               <span> commented on your post</span>
             </h3>
             <div className="timeline-body">
@@ -82,7 +82,7 @@ const TimelineTab = ({isActive}: {isActive: boolean}) => {
               more like Germany, ambitious and misunderstood!
             </div>
             <div className="timeline-footer">
-              <Link to="/" className="btn btn-warning btn-flat btn-sm">
+              <Link to="/#/" className="btn btn-warning btn-flat btn-sm">
                 View comment
               </Link>
             </div>
@@ -103,7 +103,7 @@ const TimelineTab = ({isActive}: {isActive: boolean}) => {
               <span> 2 days ago</span>
             </span>
             <h3 className="timeline-header">
-              <Link to="/">Mina Lee</Link>
+              <Link to="/#/">Mina Lee</Link>
               <span> uploaded new photos</span>
             </h3>
             <div className="timeline-body">

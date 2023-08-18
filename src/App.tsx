@@ -170,6 +170,12 @@ const App = () => {
             <Route path="/"  element={<RoleAuth allowedRole={["admin","superAdmin"]} />} >
               <Route path="/" element={<Dashboard />} />
             </Route>
+            <Route path="/"  element={<RoleAuth allowedRole={["client"]} />} >
+              <Route path="/" element={<Blank />} />
+            </Route>
+            <Route path="/"  element={<RoleAuth allowedRole={["livreur"]} />} >
+              <Route path="/" element={<Blank />} />
+            </Route>
           </Route>
         </Route>
       </Routes>

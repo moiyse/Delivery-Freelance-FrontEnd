@@ -119,7 +119,7 @@ const AjoutPaymentExpediteur = () => {
         },
       }).then(function (response) {
         console.log(response.data)
-        window.location.href = "/listPaymentExpediteur";
+        window.location.href = "/#/listPaymentExpediteur";
         
     });
     } catch (error) {

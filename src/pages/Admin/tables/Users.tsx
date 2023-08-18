@@ -74,7 +74,7 @@ const Users = () => {
   const deleteUser = (idUser:number,firstName:string,lastName:String,role:String) => {
     if(role == "superAdmin")
     {
-      toast.error("Utilisateur est un uper Admin")
+      toast.error("Utilisateur est un super Admin")
     }
     else
     {
@@ -89,8 +89,7 @@ const Users = () => {
         if (result.isConfirmed) {
           await deleteUserById(idUser)
           setUsers((prevUsers) => prevUsers.filter((user) => user.idUser !== idUser));
-          window.location.href = window.location.href
-         
+          window.location.reload()
         }
       });
     }

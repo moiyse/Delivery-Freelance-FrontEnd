@@ -21,8 +21,8 @@ const Post = ({isClearfix = false}: {isClearfix?: boolean}) => {
           rounded
         />
         <span className="username">
-          <Link to="/">Jonathan Burke Jr.</Link>
-          <Link to="/" className="float-right btn-tool">
+          <Link to="/#/">Jonathan Burke Jr.</Link>
+          <Link to="/#/" className="float-right btn-tool">
             <i className="fas fa-times" />
           </Link>
         </span>
@@ -36,16 +36,16 @@ const Post = ({isClearfix = false}: {isClearfix?: boolean}) => {
         for everyone from bacon lovers to Charlie Sheen fans.
       </p>
       <p>
-        <Link to="/" className="link-black text-sm mr-2">
+        <Link to="/#/" className="link-black text-sm mr-2">
           <i className="fas fa-share mr-1" />
           Share
         </Link>
-        <Link to="/" className="link-black text-sm">
+        <Link to="/#/" className="link-black text-sm">
           <i className="far fa-thumbs-up mr-1" />
           Like
         </Link>
         <span className="float-right">
-          <Link to="/" className="link-black text-sm">
+          <Link to="/#/" className="link-black text-sm">
             <i className="far fa-comments mr-1" />
             Comments (5)
           </Link>

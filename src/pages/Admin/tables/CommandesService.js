@@ -15,7 +15,7 @@ const addCommande=async(commade)=>{
         }
         const resposeData=response.json()
         toast.success('Commande Ajouté avec Succés');
-        window.location.href="/commandes"
+        window.location.href="/#/commandes"
       }catch(errorr){
         toast.error('Failed');
         throw(errorr)

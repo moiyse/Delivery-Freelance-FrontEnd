@@ -82,7 +82,7 @@ const SettingsTab = ({isActive}: {isActive: boolean}) => {
               />
               <label htmlFor="agreeTerms">
                 <span>I agree to the </span>
-                <Link to="/">terms and condition</Link>
+                <Link to="/#/">terms and condition</Link>
               </label>
             </div>
           </div>

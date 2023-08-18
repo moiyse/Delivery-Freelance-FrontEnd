@@ -38,7 +38,7 @@ const NotificationsDropdown = () => {
           {t<string>('header.notifications.count', {quantity: '15'})}
         </span>
         <div className="dropdown-divider " />
-        <Link to="/" className="dropdown-item header-notification-style">
+        <Link to="/#/" className="dropdown-item header-notification-style">
           <i className="fas fa-envelope mr-2" />
           <span>
             {t<string>('header.notifications.newMessagesCount', {
@@ -53,7 +53,7 @@ const NotificationsDropdown = () => {
           </span>
         </Link>
         <div className="dropdown-divider" />
-        <Link to="/" className="dropdown-item header-notification-style">
+        <Link to="/#/" className="dropdown-item header-notification-style">
           <i className="fas fa-users mr-2" />
           <span>
             {t<string>('header.notifications.friendRequestsCount', {
@@ -68,7 +68,7 @@ const NotificationsDropdown = () => {
           </span>
         </Link>
         <div className="dropdown-divider " />
-        <Link to="/" className="dropdown-item header-notification-style">
+        <Link to="/#/" className="dropdown-item header-notification-style">
           <i className="fas fa-file mr-2" />
           <span>
             {t<string>('header.notifications.reportsCount', {
@@ -83,7 +83,7 @@ const NotificationsDropdown = () => {
           </span>
         </Link>
         <div className="dropdown-divider " />
-        <Link to="/" className="dropdown-item dropdown-footer header-notification-style">
+        <Link to="/#/" className="dropdown-item dropdown-footer header-notification-style">
           {t<string>('header.notifications.seeAll')}
         </Link>
       </div>
