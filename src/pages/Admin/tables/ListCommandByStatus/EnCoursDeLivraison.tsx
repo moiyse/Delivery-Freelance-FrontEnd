@@ -63,26 +63,30 @@ const EnCours = () => {
     
   }, [filteredCommandes]);
 
+  const getEnCoursCommandeOfToday=async()=>{
+    const data = await getCommandeOfTodayByStatus('en cours de livraison')
+    setCommandes(data)
+    setFilteredCommandes(data);
+  }
+const getAllLivreur=async()=>{
+  const data=await fetchAllLivreurs()
+  setLivreurs(data)
+}
+
   useEffect(() => {
-    const getEnCoursCommandeOfToday=async()=>{
-        const data = await getCommandeOfTodayByStatus('en cours de livraison')
-        setCommandes(data)
-        setFilteredCommandes(data);
-      }
-    const getAllLivreur=async()=>{
-      const data=await fetchAllLivreurs()
-      setLivreurs(data)
-    }
+    
     getEnCoursCommandeOfToday()
     getAllLivreur()
   }, [currentDate]);
   const updateStatusCommande=async(idCommande:number,value:string)=>{
-    updateCommandeStatus(idCommande,value)
-    window.location.reload()
+    await updateCommandeStatus(idCommande,value)
+    getEnCoursCommandeOfToday()
+    getAllLivreur()
   }
   const updateLivreurOfTheCommande=async(livreurId:number,commadeId:number)=>{
-      updateCommandeLivreur(livreurId,commadeId)
-      window.location.reload()
+      await updateCommandeLivreur(livreurId,commadeId)
+      getEnCoursCommandeOfToday()
+    getAllLivreur()
   }
   const removeCommande = (commandeId:number) => {
     setFilteredCommandes((prevUsers) => prevUsers.filter((commande) => commande.idCommande !== commandeId));
@@ -91,8 +95,9 @@ const EnCours = () => {
     idCommande: number,
     value: string
   ) => {
-    updatePaymentStatus(idCommande,value)
-    window.location.reload()
+    await updatePaymentStatus(idCommande,value)
+    getEnCoursCommandeOfToday()
+    getAllLivreur()
   }
   return (
     <>
@@ -106,7 +111,7 @@ const EnCours = () => {
                 <h3 className="card-title">Commandes En Cours</h3>
               </div>
               {/* /.card-header */}
-              <div className="card-body">
+              <div style={{overflow:"auto"}} className="card-body">
                 <table
                   id="example1"
                   className="table table-bordered table-striped"
@@ -275,19 +280,6 @@ const EnCours = () => {
 
                     
                   </tbody>
-                  <tfoot>
-                    <tr>
-                      <th>Client</th>
-                      <th>Collis</th>
-                      <th>Created At</th>
-                      <th>Deliver At</th>
-                      <th>Destination</th>
-                      <th>Status Commande</th>
-                      <th>Status Paiement</th>
-                      <th>Livreur</th>
-                      <th>Actions</th>
-                    </tr>
-                  </tfoot>
                 </table>
               </div>
               {/* /.card-body */}

@@ -109,7 +109,7 @@ const LivreurPaymentExpediteur = () => {
       .put(UPDATE_CLIENT_COMMANDS_TO_PAYED(idClient,idPaymentExpediteur))
       .then((res) => {
         console.log("success message : ", res.data);
-        window.location.href = "/livreurPaymentExpediteur";
+        window.location.href = "/#/livreurPaymentExpediteur";
       })
       .catch((error) => {
         console.log(error);
@@ -138,7 +138,7 @@ const LivreurPaymentExpediteur = () => {
                 <h3 className="card-title">Status commandes et payments</h3>
               </div>
               {/* /.card-header */}
-              <div className="card-body">
+              <div style={{overflow:"auto"}} className="card-body">
                 <table
                   id="example1"
                   className="table table-bordered table-striped"
@@ -210,16 +210,7 @@ const LivreurPaymentExpediteur = () => {
                           </td>
                         </tr>
                     )}
-                  </tbody> 
-                  <tfoot>
-                    <tr>
-                      <th>Date De Création</th>
-                      <th>Collis Livrer</th>
-                      <th>Collis Annuler</th>
-                      <th>Total</th>
-                      <th>Actions</th>
-                    </tr>
-                  </tfoot>
+                  </tbody>
                 </table>
               </div>
               {/* /.card-body */}

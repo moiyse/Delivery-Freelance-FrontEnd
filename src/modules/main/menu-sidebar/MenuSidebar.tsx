@@ -197,7 +197,7 @@ const MenuSidebar = () => {
 
   return (
     <aside className={`main-sidebar elevation-4 ${sidebarSkin}`}>
-      <Link to="/" className="brand-link">
+      <Link to="/#/" className="brand-link">
         <span className="brand-text">FASTO</span>
       </Link>
       <div className="sidebar">
@@ -213,7 +213,7 @@ const MenuSidebar = () => {
             />
           </div>
           <div className="info">
-            <Link to="/profile" className="d-block">
+            <Link to="/#/profile" className="d-block">
               {authentication.profile.email}
             </Link>
           </div>

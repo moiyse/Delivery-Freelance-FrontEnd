@@ -8,6 +8,7 @@ import { ContentHeader } from "@app/components";
 import { sleep } from "@app/utils/helpers";
 import Swal from 'sweetalert2';
 import { toast } from "react-toastify";
+import { getCurrentUser } from "@app/services/auth";
 type User = {
   idUser: number;
   firstName: string;
@@ -21,17 +22,32 @@ type User = {
   status: string;
   createdAt: string;
 };
+
 const Users = () => {
   const [users,setUsers]=useState<User[]>([])
   const [searchTerm, setSearchTerm] = useState("");
   const [loading, setLoading] = useState(true);
   const [openDialog, setOpenDialog] = useState(false);
+  const [currentUser, setCurrentUser] = useState<User>();
   const [selectedUserId, setSelectedUserId] = useState<number | null>(null);
   const script = document.createElement("script");
   
-  const handleUpdateClick = (userId:number) => {
-    setSelectedUserId(userId);
-    setOpenDialog(true);
+  const handleUpdateClick = (userId:number,role:string) => {
+    if(role == "superAdmin")
+    {
+      toast.error("Utilisateur est un superAdmin !")
+    }
+    else{
+      if(role == "admin" && currentUser?.role == "admin")
+      {
+        toast.error("Il faut être superAdmin !")
+      }
+      else{
+        setSelectedUserId(userId);
+        setOpenDialog(true);
+      }
+    }
+    
   };
   const handleCloseDialog = () => {
     setOpenDialog(false);
@@ -41,10 +57,11 @@ const Users = () => {
  
   useEffect(() => {
     fetchUsers();
+    setCurrentUser(getCurrentUser())
   }, []);
 
+
   useEffect(() => {
-      
     if(users.length != 0 && !document.body.contains(script))
     {
       console.log("here")
@@ -74,25 +91,31 @@ const Users = () => {
   const deleteUser = (idUser:number,firstName:string,lastName:String,role:String) => {
     if(role == "superAdmin")
     {
-      toast.error("Utilisateur est un uper Admin")
+      toast.error("Utilisateur est un super Admin")
     }
     else
     {
-      Swal.fire({
-        title: 'Supprimer un utilisateur',
-        text: `Etes vous sur de supprimer l'utilisateur " ${firstName} ${lastName} " ?`,
-        icon: 'error',
-        showCancelButton: true,
-        confirmButtonText: 'Supprimer',
-        cancelButtonText: 'Retour'
-      }).then(async (result) => {
-        if (result.isConfirmed) {
-          await deleteUserById(idUser)
-          setUsers((prevUsers) => prevUsers.filter((user) => user.idUser !== idUser));
-          window.location.href = window.location.href
-         
-        }
-      });
+      if(role == "admin" && currentUser?.role == "admin")
+      {
+        toast.error("Il faut être superAdmin !")
+      }
+      else{
+        Swal.fire({
+          title: 'Supprimer un utilisateur',
+          text: `Etes vous sur de supprimer l'utilisateur " ${firstName} ${lastName} " ?`,
+          icon: 'error',
+          showCancelButton: true,
+          confirmButtonText: 'Supprimer',
+          cancelButtonText: 'Retour'
+        }).then(async (result) => {
+          if (result.isConfirmed) {
+            await deleteUserById(idUser)
+            setUsers((prevUsers) => prevUsers.filter((user) => user.idUser !== idUser));
+            window.location.reload()
+          }
+        });
+      }
+      
     }
     
     
@@ -148,7 +171,7 @@ const Users = () => {
                         return(
                             <tr key={user.idUser}>
                             <td>{user.idUser}</td>
-                            <td>{user.firstName + user.lastName}</td>
+                            <td>{user.firstName +" "+ user.lastName}</td>
                             <td>{user.email}</td>
                             <td>{user.phone}</td>
                             <td>{user.role}</td>
@@ -167,7 +190,7 @@ const Users = () => {
                             <td>{user.createdAt}</td>
                             <td>
                               <div className="btn-group">
-                                <button onClick={() => handleUpdateClick(user.idUser)} type="button" className="btn btn-warning">
+                                <button onClick={() => handleUpdateClick(user.idUser,user.role)} type="button" className="btn btn-warning">
                                   <i className="fas fa-pen"></i>
                                 </button>
                                 <button type="button" className="btn btn-danger" onClick={()=>{deleteUser(user.idUser,user.firstName,user.lastName,user.role)}}>

@@ -60,26 +60,30 @@ const EnAttentePickUp = () => {
     
   }, [filteredCommandes]);
 
+  const getAttentePickUpCommandeOfToday=async()=>{
+    const data = await getCommandeOfTodayByStatus('en attente pickup')
+    setCommandes(data)
+    setFilteredCommandes(data);
+  }
+  const getAllLivreur=async()=>{
+    const data=await fetchAllLivreurs()
+    setLivreurs(data)
+  }
+
   useEffect(() => {
-    const getAttentePickUpCommandeOfToday=async()=>{
-      const data = await getCommandeOfTodayByStatus('en attente pickup')
-      setCommandes(data)
-      setFilteredCommandes(data);
-    }
-    const getAllLivreur=async()=>{
-      const data=await fetchAllLivreurs()
-      setLivreurs(data)
-    }
+    
     getAttentePickUpCommandeOfToday()
     getAllLivreur()
   }, [currentDate]);
   const updateStatusCommande=async(idCommande:number,value:string)=>{
-    updateCommandeStatus(idCommande,value)
-    window.location.reload()
+    await updateCommandeStatus(idCommande,value)
+    getAttentePickUpCommandeOfToday()
+    getAllLivreur()
   }
   const updateLivreurOfTheCommande=async(livreurId:number,commadeId:number)=>{
-      updateCommandeLivreur(livreurId,commadeId)
-      window.location.reload()
+      await updateCommandeLivreur(livreurId,commadeId)
+      getAttentePickUpCommandeOfToday()
+    getAllLivreur()
   }
 
   const removeCommande = (commandeId:number) => {
@@ -89,8 +93,9 @@ const EnAttentePickUp = () => {
     idCommande: number,
     value: string
   ) => {
-    updatePaymentStatus(idCommande,value)
-    window.location.reload()
+    await updatePaymentStatus(idCommande,value)
+    getAttentePickUpCommandeOfToday()
+    getAllLivreur()
   }
   return (
     <>
@@ -105,7 +110,7 @@ const EnAttentePickUp = () => {
               </div>
               {/* /.card-header */}
               
-              <div className="card-body">
+              <div style={{overflow:"auto"}} className="card-body">
                 <table
                   id="example1"
                   className="table table-bordered table-striped"
@@ -274,19 +279,6 @@ const EnAttentePickUp = () => {
 
                     
                   </tbody>
-                  <tfoot>
-                    <tr>
-                      <th>Client</th>
-                      <th>Collis</th>
-                      <th>Created At</th>
-                      <th>Deliver At</th>
-                      <th>Destination</th>
-                      <th>Status Commande</th>
-                      <th>Status Paiement</th>
-                      <th>Livreur</th>
-                      <th>Actions</th>
-                    </tr>
-                  </tfoot>
                 </table>
               </div>
               {/* /.card-body */}

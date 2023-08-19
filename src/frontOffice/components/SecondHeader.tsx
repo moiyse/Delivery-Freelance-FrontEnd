@@ -59,7 +59,7 @@ const SecondHeader = () => {
               </li>
               <li>
                 <a className="getstarted scrollto">
-                <Link style={{padding:"0"}} to="/login">
+                <Link style={{padding:"0"}} to="/#/login">
                   Se Connecter
                 </Link>
                 </a>

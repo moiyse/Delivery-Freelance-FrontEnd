@@ -74,18 +74,18 @@ const ChangePassword = () => {
                 toast.success("Mot de passe changer")
                 if(res.data.role == "admin" || res.data.role == "superAdmin")
                 {
-                  window.location.href = "/"
+                  window.location.href = "/#/"
                 }
                 else if(res.data.role == "client")
                 { 
-                  window.location.href = "/clientProfile"
+                  window.location.href = "/#/clientProfile"
                 }else if(res.data.role == "livreur")
                 {
-                  window.location.href = "/livreurCommande"
+                  window.location.href = "/#/livreurCommande"
                 }
                 else
                 {
-                  window.location.href = "/"
+                  window.location.href = "/#/"
                 }
                 
             })

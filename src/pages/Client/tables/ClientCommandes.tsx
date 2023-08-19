@@ -6,6 +6,7 @@ import { Button, Dialog, DialogTitle, DialogContent, DialogActions } from '@mate
 import UpdateCommandeLivreur from "./UpdateCommandeClient";
 import { getCurrentUser } from "@app/services/auth";
 import Swal from 'sweetalert2';
+import { toast } from "react-toastify";
 
 export interface Commande{
   idCommande:number,
@@ -34,7 +35,9 @@ const ClientCommandes = () => {
   const [selectedCommandeId, setSelectedCommandeId] = useState<number | null>(null);
   const [openDialog, setOpenDialog] = useState(false);
   const [filteredCommandes, setFilteredCommandes] = useState<Commande[]>([]); // State for filtered commandes
-  
+  const script = document.createElement("script");
+
+
   const handleUpdateClick = (commandeId:number) => {
     setSelectedCommandeId(commandeId);
     setOpenDialog(true);
@@ -49,16 +52,18 @@ const ClientCommandes = () => {
 
 
   useEffect(() => {
-    const script = document.createElement("script");
+    if(filteredCommandes.length != 0 && !document.body.contains(script))
+    {
       script.src = "js/tableCommande.js";
       script.async = true;
-    if(commandes.length != 0 && !document.body.contains(script))
-    {
-      importTable()
+      document.body.appendChild(script);
+
+      return () => {
+        // Clean up the added script when the component unmounts
+        document.body.removeChild(script);
+      };
     }
-    
-  }, [commandes])
-  
+  }, [filteredCommandes])
 
 
   const getAllMyOwnCommande=async()=>{
@@ -67,7 +72,6 @@ const ClientCommandes = () => {
     setFilteredCommandes(data);
   }
 
- 
   
   const removeCommande = (commandeId:number) => {
     setFilteredCommandes((prevUsers) => prevUsers.filter((commande) => commande.idCommande !== commandeId));
@@ -78,12 +82,21 @@ const ClientCommandes = () => {
     getAllMyOwnCommande()
   }
 
-  const importTable = ()=> {
-    const script = document.createElement("script");
-      script.src = "js/tableCommande.js";
-      script.async = true;
-      document.body.appendChild(script);
+  const handleAllPaymentClick =async() => {
+    let state = false
+    if(commandes.length !=0){
+      commandes.forEach(async commande => {
+        if(commande.commandeStatus == "livré" || commande.commandeStatus == "annulé")
+        {
+          state = true
+          await updateDemandeStatus(commande.idCommande,"demandé")
+        }
+      })
+      state == false ? toast.error("Aucune commande livré ou annulé !") : toast.success("Demande payment envoyé !")
+    }
+    getAllMyOwnCommande()
   }
+
 
   return (
     <>
@@ -96,19 +109,26 @@ const ClientCommandes = () => {
               <div className="card-header">
                 <h3 className="card-title">Tous Mes commandes</h3>
               </div>
+              
               {/* /.card-header */}
-              <div className="card-body">
+              <div style={{overflow:"auto"}} className="card-body">
+                <div>
+                  <button onClick={() => handleAllPaymentClick()} type="button" title="Demande d'être payer" className="btn btn-success">
+                  <i className="fas fa-money-bill-wave"></i> Demandé pour être payé 
+                  </button>
+                </div>
                 <table
-                  id="example1"
+                  id="commandeTableClient"
                   className="table table-bordered table-striped"
                 >
                   <thead>
                     <tr>
                       <th>Collis</th>
-                      <th>Created At</th>
                       <th>Deliver At</th>
-                      <th>Départ</th>
-                      <th>Destination</th>
+                      <th>Déstinateur</th>
+                      <th>Déstination</th>
+                      <th>Prix Collis</th>
+                      <th>Téléphone Destinateur</th>
                       <th>Commande Paiement</th>
                       <th>Status Commande</th>
                       <th>Actions</th>
@@ -142,10 +162,11 @@ const ClientCommandes = () => {
                             ))}
                             </div>
                           </td>
-                          <td>{commande.createdAt}</td>
                           <td>{commande.delivredAt}</td>
-                          <td>{commande.depart}</td>
+                          <td>{commande.nomDestinataire + " " + commande.prenomDestinataire}</td>
                           <td>{commande.destination}</td>
+                          <td>{commande.prixArticle}</td>
+                          <td>{commande.phoneDestinataire}</td>
                           <td className="pill-td">
                             <a>
                               <span className="badge bg-warning">{commande.paymentStatus}</span>
@@ -158,13 +179,10 @@ const ClientCommandes = () => {
                           </td>
                           <td>
                             <div className="btn-group">
-                              {commande.commandeStatus == "en préparation" && <button onClick={() => handleUpdateClick(commande.idCommande)} type="button" className="btn btn-warning">
+                              <button disabled={commande.commandeStatus != "en préparation"} onClick={() => handleUpdateClick(commande.idCommande)} type="button" className="btn btn-warning">
                                 <i className="fas fa-pen"></i>
-                              </button>}
-                              <button disabled={commande.demandeStatus === "demandé" && (commande.commandeStatus != "livré" && commande.commandeStatus != "annulé")} onClick={() => handlePaymentClick(commande.idCommande)} type="button" title="Demande d'être payer" className="btn btn-success">
-                                <i className="fas fa-money-bill-wave"></i>
                               </button>
-                              {commande.commandeStatus == "en préparation" && <button type="button" className="btn btn-danger" onClick={()=>{ 
+                              <button disabled={commande.commandeStatus != "en préparation"} type="button" className="btn btn-danger" onClick={()=>{ 
                                                                                                                                               Swal.fire({
                                                                                                                                                 title: 'Supprimer Une Commande',
                                                                                                                                                 text: `Etes vous sûr de supprimer la commande avec l'ID : ${commande.idCommande} " ?`,
@@ -176,11 +194,12 @@ const ClientCommandes = () => {
                                                                                                                                                 if (result.isConfirmed) {
                                                                                                                                                   deleteCommandeById(commande.idCommande)
                                                                                                                                                   removeCommande(commande.idCommande)
+                                                                                                                                                  window.location.reload()
                                                                                                                                                 }
                                                                                                                                               });
                                                                                                                                               }}>
                                 <i className="fa fa-trash"></i>
-                              </button>}
+                              </button>
                             </div>
                           </td>
                         </tr>

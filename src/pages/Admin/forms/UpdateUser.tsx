@@ -58,11 +58,11 @@ const UpdateUser: React.FC<UpdateUserProps> = ({userId}) => {
         }
       };
       getUserById()
-      if(user.idUser == 0){
+      if(user.role == "superAdmin"){
         toast.error("Utilisateur est un Super Admin")
       }
       console.log("user gotten",user)
-  }, [userId]);
+  }, [user]);
 
   const handleUpdateButton=async()=>{
     const userUpdated={

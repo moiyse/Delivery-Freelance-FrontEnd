@@ -23,8 +23,18 @@ const RoleAuth = ({ allowedRole }: { allowedRole: string[] }) => {
 
     //!allowedRoles.includes(currentUser)
     
+    if(currentRole == "client")
+    {
+      return allowedRole.includes(currentRole) ?  <Outlet /> : <Navigate to="/clientProfile" />;
+    }
+    else if(currentRole == "livreur")
+    {
+      return allowedRole.includes(currentRole) ?  <Outlet /> : <Navigate to="/livreurCommandes" />;
+    }else if(currentRole == "admin" || currentRole == "superAdmin"){
+      return allowedRole.includes(currentRole) ?  <Outlet /> : <Navigate to="/users" />;
+    }else
+    return allowedRole.includes(currentRole) ?  <Outlet /> : <Navigate to="/delivrey" />;
     
-    return allowedRole.includes(currentRole) ?  <Outlet /> : <Navigate to="/" />;
     
 };
 

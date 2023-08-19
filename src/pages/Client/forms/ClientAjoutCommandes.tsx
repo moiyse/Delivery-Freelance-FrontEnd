@@ -147,9 +147,9 @@ const ClientAjoutCommande = () => {
           <div className="form-group">
               <div className="row">
                   <label htmlFor="exampleInputEmail1">Articles</label>
-                  <input
+                  <textarea
                     onChange={(e)=>{setArticles(e.target.value)}}
-                    type="text"
+                    style={{height: "90px"}}
                     className="form-control"
                     id="exampleInputEmail1"
                     placeholder="Merci De Séparer Les Articles Avec -"
@@ -238,7 +238,7 @@ const ClientAjoutCommande = () => {
                       console.log(destinationVille);
                     }}
                   >
-                    <option disabled selected>Selectionner Role</option>
+                    <option disabled selected>Selectionner Ville</option>
                     {ville.map(ville=>(<option value={ville}>{ville}</option>))}
                   </select>
                   {villeDestinationError && (
@@ -297,13 +297,13 @@ const ClientAjoutCommande = () => {
                   </div>
                 </div>
                 <div className="col-md-6">
-                  <label htmlFor="exampleInputEmail1">Prix De L'article</label>
+                  <label htmlFor="exampleInputEmail1">Prix De La Collis</label>
                   <input
                     onChange={(e)=>{setPrixArticle(Number(e.target.value))}}
                     type="number"
                     className="form-control"
                     id="exampleInputEmail1"
-                    placeholder="Prix De L'article"
+                    placeholder="Prix De La Collis"
                   />
                   {prixArticleError && <div className="error">{prixArticleError}<i style={{fontSize:"14px"}} className="fas fa-exclamation ml-2"></i></div>}
                 </div>
@@ -312,7 +312,7 @@ const ClientAjoutCommande = () => {
             <div className="form-group">
               <div className="row">
                 <div className="col-md-6">
-                  <label htmlFor="exampleInputEmail1">Nom Du Distinateur</label>
+                  <label htmlFor="exampleInputEmail1">Nom Du Destinateur</label>
                   <input
                     onChange={(e)=>{setNomDest(e.target.value)}}
                     type="text"
@@ -323,7 +323,7 @@ const ClientAjoutCommande = () => {
                   {nomDestError && <div className="error">{nomDestError}<i style={{fontSize:"14px"}} className="fas fa-exclamation ml-2"></i></div>}
                 </div>
                 <div className="col-md-6">
-                  <label htmlFor="exampleInputEmail1">Prenom Du Distinateur</label>
+                  <label htmlFor="exampleInputEmail1">Prenom Du Destinateur</label>
                   <input
                     onChange={(e)=>{setPrenomDest(e.target.value)}}
                     type="text"

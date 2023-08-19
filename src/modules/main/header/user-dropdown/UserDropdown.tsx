@@ -117,7 +117,7 @@ const UserDropdown = () => {
       dispatch(setAuthentication(undefined));
       
     localStorage.removeItem('authentication');
-    window.location.href = '/login';
+    window.location.href = '/#/login';
   };
   
 

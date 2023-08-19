@@ -259,16 +259,6 @@ const PaymentExpediteur = () => {
                       </tr>
                     )}
                   </tbody>
-                  <tfoot>
-                    <tr>
-                      <th>Date Payment</th>
-                      <th>Collis Client</th>
-                      <th>Collis Livrer</th>
-                      <th>Collis Annuler</th>
-                      <th>Total</th>
-                      <th>Actions</th>
-                    </tr>
-                  </tfoot>
                 </table>
               </div>
               {/* /.card-body */}
