@@ -34,7 +34,6 @@ import ClientCommandes from './pages/Client/tables/ClientCommandes';
 import ClientAjoutCommandes from './pages/Client/forms/ClientAjoutCommandes';
 import ClientProfile from './pages/Client/profile/ClientProfile';
 import LivreurCommandes from './pages/Livreur/tables/LivreurCommandes';
-import LivreurPayments from './pages/Livreur/tables/LivreurPayments';
 import AjoutPaymentExpediteur from './pages/Admin/forms/AjoutPaymentExpediteur';
 import PaymentExpediteur from './pages/Admin/tables/PaymentExpediteur';
 import LivreurPaymentExpediteur from './pages/Livreur/tables/LivreurPaymentExpediteur';import RoleAuth from './routes/RoleAuth';
