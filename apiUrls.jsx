@@ -32,8 +32,10 @@ export const GET_COMMANDE_OF_TODAY_BY_STATUS=(statusCommande)=>`${BASE_URL}/comm
 export const GET_MY_OWN_COMMANDE=(idAuthentificated)=>`${BASE_URL}/commande/getMyOwnCommande/${idAuthentificated}`
 export const GET_MY_OWN_COMMANDES=(idAuthentificated)=>`${BASE_URL}/commande/getAllMyOwnCommande/${idAuthentificated}`
 export const GET_COMMANDE_BY_USer_ID=(idUser)=>`${BASE_URL}/commande/getCommandeByClientId/${idUser}`
+export const CHECK_USER_IF_EXIST=(login)=>`${BASE_URL}/user/checkUserIfExist/${login}`
 
 
 /////////////////Auth//////////////////
 export const LOGIN_AUTHENTIFICATION=`${BASE_URL}/auth/login`
 export const CHANGE_PASSWORD=`${BASE_URL}/auth/changePassword`
+export const UPDATE_PASSWORD=(id)=>`${BASE_URL}/user/changePassword/${id}`

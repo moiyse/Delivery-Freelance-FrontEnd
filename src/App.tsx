@@ -47,6 +47,8 @@ import EnCours from './pages/Admin/tables/ListCommandByStatus/EnCoursDeLivraison
 import Livree from './pages/Admin/tables/ListCommandByStatus/Livree';
 import Annulee from './pages/Admin/tables/ListCommandByStatus/Annulee';
 import Livreur from './pages/Admin/tables/Livreur';
+import ForgotPassword from '@modules/forgot-password/ForgotPassword';
+import UpdatePassword from './modules/forgot-password/UpdatePassword';
 
 declare const FB: any;
 
@@ -101,6 +103,7 @@ const App = () => {
             <Route path="/delivery/register" element={<Register />} />
           </Route>
         </Route>
+        <Route path='/forgot' element={<ForgotPassword/>}/>
         <Route path="/ajoutUser/changePassword/:password/:id" element={<ChangePassword />} />
         <Route path="/login" element={<PublicRoute />}>
           <Route path="/login" element={<Login />} />
@@ -178,6 +181,7 @@ const App = () => {
             </Route>
           </Route>
         </Route>
+        <Route path='/updatePassword/:id' element={<UpdatePassword/>}/>
       </Routes>
       <ToastContainer
         autoClose={3000}

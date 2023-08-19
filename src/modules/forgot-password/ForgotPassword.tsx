@@ -1,87 +1,65 @@
-import React from 'react';
-import {Link} from 'react-router-dom';
+import React, { useState } from 'react';
+import {Link,useNavigate} from 'react-router-dom';
 import {toast} from 'react-toastify';
-import {useTranslation} from 'react-i18next';
 import {setWindowClass} from '@app/utils/helpers';
-import * as Yup from 'yup';
-import {useFormik} from 'formik';
 import {Form, InputGroup} from 'react-bootstrap';
-import {PfButton} from '@profabric/react-components';
+import { checkUser } from '@app/pages/Admin/tables/UsersService';
 
 const ForgotPassword = () => {
-  const [t] = useTranslation();
-
-  const {handleChange, values, handleSubmit, touched, errors} = useFormik({
-    initialValues: {
-      email: ''
-    },
-    validationSchema: Yup.object({
-      email: Yup.string().email('Invalid email address').required('Required')
-    }),
-    onSubmit: (values) => {
-      toast.warn('Not yet functional');
-      // eslint-disable-next-line no-console
-      console.log('values', values);
-    }
-  });
-
+  const navigate=useNavigate()
+  const [login,setLogin]=useState('')
   setWindowClass('hold-transition login-page');
+  const handlClick=async()=>{
+    const check=await checkUser(login)
+    const x=3
+    if(check===true){
+      navigate(`/updatePassword/${x}`)
+    }else{
+      toast.error('Invalide Login! verifier votre adresse')
+    }
+  }
 
-  return (
-    <div className="login-box">
+
+    return (
+        <div className="login-box">
       <div className="card card-outline card-primary">
         <div className="card-header text-center">
-          <Link to="/#/" className="h1">
-            <b>Admin</b>
-            <span>LTE</span>
+          <Link to="/delivery" className="h1">
+            <b>FASTO</b>
           </Link>
         </div>
-        <div className="card-body">
-          <p className="login-box-msg">
-            {t<string>('recover.forgotYourPassword')}
-          </p>
-          <form onSubmit={handleSubmit}>
+        <div className="card-body login-body">
+          <p className="login-box-msg">Entrez votre Login</p>
+          <form >
             <div className="mb-3">
-              <InputGroup className="mb-3">
+              <InputGroup className="mb-3 login-input">
                 <Form.Control
-                  id="email"
-                  name="email"
-                  type="email"
-                  placeholder="Email"
-                  onChange={handleChange}
-                  value={values.email}
-                  isValid={touched.email && !errors.email}
-                  isInvalid={touched.email && !!errors.email}
+                  id="password"
+                  name="password"
+                  type="text"
+                  placeholder="Login"
+                  onChange={(e)=>{setLogin(e.target.value)}}
                 />
-                {touched.email && errors.email ? (
-                  <Form.Control.Feedback type="invalid">
-                    {errors.email}
-                  </Form.Control.Feedback>
-                ) : (
                   <InputGroup.Append>
                     <InputGroup.Text>
                       <i className="fas fa-envelope" />
                     </InputGroup.Text>
                   </InputGroup.Append>
-                )}
               </InputGroup>
             </div>
-            <div className="row">
-              <div className="col-12">
-                <PfButton type="submit" block>
-                  {/* @ts-ignore */}
-                  {t<string>('recover.requestNewPassword')}
-                </PfButton>
+            <div className="row text-center login-button">
+              <div className="col">
+                <button onClick={handlClick} type="button" className='btn btn-primary'>
+                  Changer mot de passe
+                </button>
               </div>
             </div>
           </form>
-          <p className="mt-3 mb-1">
-            <Link to="/#/login">{t<string>('login.button.signIn.label')}</Link>
-          </p>
         </div>
       </div>
     </div>
-  );
-};
+    )
+}
+
 
 export default ForgotPassword;
