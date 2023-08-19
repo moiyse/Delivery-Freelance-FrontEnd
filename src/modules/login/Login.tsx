@@ -64,7 +64,7 @@ const Login = () => {
     <div className="login-box">
       <div className="card card-outline card-primary">
         <div className="card-header text-center">
-          <Link to="/" className="h1">
+          <Link to="/delivery" className="h1">
             <b>FASTO</b>
           </Link>
         </div>
@@ -121,7 +121,9 @@ const Login = () => {
                 )}
               </InputGroup>
             </div>
-
+            <div>
+              <Link to='/forgot'>Mot de passe oublié ?</Link>
+            </div>
             <div className="row text-center login-button">
               <div className="col">
                 <button type='submit' className='btn btn-primary'>

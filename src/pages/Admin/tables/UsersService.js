@@ -1,4 +1,5 @@
-import {DELETE_USER_BY_ID_URL,UPDATE_USER_BY_ID,GET_ALL_LIVREUR,GET_USER_BY_ID_URL} from '../../../../apiUrls.jsx'
+import { toast } from 'react-toastify';
+import {DELETE_USER_BY_ID_URL,UPDATE_USER_BY_ID,GET_ALL_LIVREUR,GET_USER_BY_ID_URL, CHECK_USER_IF_EXIST, CHANGE_PASSWORD, UPDATE_PASSWORD} from '../../../../apiUrls.jsx'
 
 const deleteUserById = async (userId) => {
     try {
@@ -60,8 +61,44 @@ const deleteUserById = async (userId) => {
 
   }
   
+  const checkUser=async(login)=>{
+    try {
+      const response = await fetch(CHECK_USER_IF_EXIST(login));
+      if (response.ok) {
+        const check = await response.json();
+        return check
+      } else {
+        console.log('Error:', response.status);
+        toast.error('Oppps')
+      }
+    } catch (error) {
+      console.error('Error:', error);
+    }
+  }
+
+  const updatePassword = async (userId, newPassword) => {
+    try {
+      const response = await fetch(UPDATE_PASSWORD(userId), {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ password: newPassword }),
+      });
+  
+      if (response.ok) {
+        // Password updated successfully
+        toast.success('Mot de passe modifier avec succés')
+      } else {
+        // Handle error
+        toast.error('Erreur')
+      }
+    } catch (error) {
+      console.error('An error occurred:', error);
+    }
+  };
  
-  export{deleteUserById,updateUserById,fetchAllLivreurs,getUserById}
+  export{updatePassword,checkUser,deleteUserById,updateUserById,fetchAllLivreurs,getUserById}
   
   
   
