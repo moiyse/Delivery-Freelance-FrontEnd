@@ -107,7 +107,7 @@ const Livreur = () => {
                 <h3 className="card-title">Tous les Livreur</h3>
               </div>
               {/* /.card-header */}
-              <div className="card-body">
+              <div style={{overflow:"auto"}} className="card-body">
                 <table
                   id="userTable"
                   className="table table-bordered table-striped"
@@ -134,7 +134,7 @@ const Livreur = () => {
                       users.map((user)=>{
                         return(
                           <tr key={user.idUser}>
-                            <td>{user.firstName + user.lastName}</td>
+                            <td>{user.firstName +" "+ user.lastName}</td>
                             <td>{user.email}</td>
                             <td>{user.phone}</td>
                             <td>
@@ -153,15 +153,6 @@ const Livreur = () => {
                       })
                     )}
                   </tbody>
-                  <tfoot>
-                    <tr>
-                      <th>Nom Prenom</th>
-                      <th>Email</th>
-                      <th>Telephone</th>
-                      <th>Caisse</th>
-                      <th>Actions</th>
-                    </tr>
-                  </tfoot>
                 </table>
               </div>
               {/* /.card-body */}

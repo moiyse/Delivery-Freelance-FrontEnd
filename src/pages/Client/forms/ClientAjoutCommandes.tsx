@@ -297,13 +297,13 @@ const ClientAjoutCommande = () => {
                   </div>
                 </div>
                 <div className="col-md-6">
-                  <label htmlFor="exampleInputEmail1">Prix De L'article</label>
+                  <label htmlFor="exampleInputEmail1">Prix De La Collis</label>
                   <input
                     onChange={(e)=>{setPrixArticle(Number(e.target.value))}}
                     type="number"
                     className="form-control"
                     id="exampleInputEmail1"
-                    placeholder="Prix De L'article"
+                    placeholder="Prix De La Collis"
                   />
                   {prixArticleError && <div className="error">{prixArticleError}<i style={{fontSize:"14px"}} className="fas fa-exclamation ml-2"></i></div>}
                 </div>

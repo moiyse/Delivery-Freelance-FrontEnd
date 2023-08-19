@@ -15,7 +15,7 @@ const addCommande=async(commade)=>{
         }
         const resposeData=response.json()
         toast.success('Commande Ajouté avec Succés');
-        window.location.href="/#/commandes"
+        window.location.href="/#/clientCommandes"
       }catch(errorr){
         toast.error('Failed');
         throw(errorr)
@@ -80,7 +80,7 @@ const updateCommandeStatus=async(commandeId,statusValue)=>{
 const updateDemandeStatus=async(commandeId,statusValue)=>{
   try {
     const updatedCommande={
-      demandeStatus:statusValue
+      paymentStatus:statusValue
     }
     const response = await fetch(UPDATE_COMMANDE_BY_ID(commandeId), {
       method: 'PUT',
@@ -93,7 +93,6 @@ const updateDemandeStatus=async(commandeId,statusValue)=>{
       throw new Error('Failed to update commande.')
     }
     const data = await response.json()
-    toast.success('Demande de payment à été envoyer');
   } catch (error) {
     toast.error('!Failed')
     throw error

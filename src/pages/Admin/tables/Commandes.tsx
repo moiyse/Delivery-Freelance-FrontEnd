@@ -93,15 +93,7 @@ const Commandes = () => {
   }, [filteredCommandes]);
 
   useEffect(() => {
-    const getAllCommande = async () => {
-      const data = await fetchCommandes();
-      setCommandes(data);
-      setFilteredCommandes(data);
-    };
-    const getAllLivreur = async () => {
-      const data = await fetchAllLivreurs();
-      setLivreurs(data);
-    };
+    
     getAllCommande();
     getAllLivreur();
   }, [currentDate]);
@@ -119,22 +111,36 @@ const Commandes = () => {
       }
       updateUserById(commande.livreurId, livreur);
     }
-    updateCommandeStatus(idCommande,value)
-    window.location.reload()
+    await updateCommandeStatus(idCommande,value)
+    getAllCommande();
+    getAllLivreur();
+    //window.location.reload()
   }
+
+  const getAllCommande = async () => {
+    const data = await fetchCommandes();
+    setCommandes(data);
+    setFilteredCommandes(data);
+  };
+  const getAllLivreur = async () => {
+    const data = await fetchAllLivreurs();
+    setLivreurs(data);
+  };
 
   const updateStatusPayment = async (
     idCommande: number,
     value: string
   ) => {
-    updatePaymentStatus(idCommande,value)
-    window.location.reload()
+    await updatePaymentStatus(idCommande,value)
+    getAllCommande();
+    getAllLivreur();
   }
 
   const updateLivreurOfTheCommande=async(livreurId:number,commadeId:number)=>{
       console.log("livId : ",livreurId,"cmd ID : ",commadeId)
-      updateCommandeLivreur(livreurId,commadeId)
-      window.location.reload()
+      await updateCommandeLivreur(livreurId,commadeId)
+      getAllCommande();
+      getAllLivreur();
   }
 
   const filterCommandesByDate = (startDate: string, endDate: string) => {
@@ -243,7 +249,6 @@ const Commandes = () => {
                       <th>Destination</th>
                       <th>Status Commande</th>
                       <th>Status Paiement</th>
-                      <th>Status Demande</th>
                       <th>Livreur</th>
                       <th>Actions</th>
                     </tr>
@@ -251,7 +256,6 @@ const Commandes = () => {
                   <tbody>
                     {filteredCommandes.length === 0 ? (
                       <tr>
-                        <td className="text-center">Pas de commande</td>
                         <td className="text-center">Pas de commande</td>
                         <td className="text-center">Pas de commande</td>
                         <td className="text-center">Pas de commande</td>
@@ -305,7 +309,6 @@ const Commandes = () => {
                               <div className="dropdown-overflow dropdown-menu commande-status-pill">
                                 {valueOfTheCommandeStatus.map((val) => (
                                   <a
-                                  href="/"
                                     className={
                                       val === commande.commandeStatus
                                         ? "badge bg-warning"
@@ -335,9 +338,23 @@ const Commandes = () => {
                                   data-toggle="dropdown"
                                   aria-expanded="true"
                                 >
+                                  {commande.paymentStatus != "demandé" ? (
                                   <span className="badge bg-warning">
                                     {commande.paymentStatus}
                                   </span>
+                                  ) : (
+                                  <span
+                                    style={{
+                                      color: "white",
+                                      fontWeight: "700",
+                                      lineHeight: "1",
+                                      textAlign: "center",
+                                    }}
+                                    className="badge blob red"
+                                  >
+                                    {commande.paymentStatus}
+                                  </span>
+                                  )}
                               </a>
                               <div className="dropdown-overflow dropdown-menu commande-status-pill">
                                 {valueOfThePaymentStatus.map((val) => (
@@ -352,7 +369,6 @@ const Commandes = () => {
                                       justifyContent: "center",
                                       alignItems: "center",
                                     }}
-                                    href="#"
                                     onClick={() => {
                                       updateStatusPayment(
                                         commande.idCommande,
@@ -364,27 +380,6 @@ const Commandes = () => {
                                   </a>
                                 ))}
                               </div>
-                            </td>
-                            <td className="pill-td">
-                              <a>
-                                {commande.demandeStatus === "neutre" ? (
-                                  <span className="badge bg-secondary">
-                                    {commande.demandeStatus}
-                                  </span>
-                                ) : (
-                                  <span
-                                    style={{
-                                      color: "white",
-                                      fontWeight: "700",
-                                      lineHeight: "1",
-                                      textAlign: "center",
-                                    }}
-                                    className="badge blob red"
-                                  >
-                                    {commande.demandeStatus}
-                                  </span>
-                                )}
-                              </a>
                             </td>
                             <td>
                               <a

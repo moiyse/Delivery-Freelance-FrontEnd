@@ -239,7 +239,7 @@ const UpdateCommande: React.FC<UpdateCommandeProps>  = ({commandeId}) => {
                   />
                 </div>
                 <div className="col-md-6">
-                  <label htmlFor="exampleInputEmail1">Prix De L'article</label>
+                  <label htmlFor="exampleInputEmail1">Prix De La Collis</label>
                   <input
                     onChange={(e)=>{setPrixArticle(Number(e.target.value))}}
                     type="number"

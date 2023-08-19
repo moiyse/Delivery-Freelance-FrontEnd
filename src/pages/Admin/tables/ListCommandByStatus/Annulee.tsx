@@ -59,26 +59,30 @@ const Annulee = () => {
     
   }, [filteredCommandes]);
 
+  const getCommandeAnnulerOfToday=async()=>{
+    const data = await getCommandeOfTodayByStatus('annulé')
+    setCommandes(data)
+    setFilteredCommandes(data);
+  }
+  const getAllLivreur=async()=>{
+    const data=await fetchAllLivreurs()
+    setLivreurs(data)
+  }
+
   useEffect(() => {
-    const getCommandeAnnulerOfToday=async()=>{
-        const data = await getCommandeOfTodayByStatus('annulé')
-        setCommandes(data)
-        setFilteredCommandes(data);
-      }
-    const getAllLivreur=async()=>{
-      const data=await fetchAllLivreurs()
-      setLivreurs(data)
-    }
+    
     getCommandeAnnulerOfToday()
     getAllLivreur()
   }, [currentDate]);
   const updateStatusCommande=async(idCommande:number,value:string)=>{
-    updateCommandeStatus(idCommande,value)
-    window.location.reload()
+    await updateCommandeStatus(idCommande,value)
+    getCommandeAnnulerOfToday()
+    getAllLivreur()
   }
   const updateLivreurOfTheCommande=async(livreurId:number,commadeId:number)=>{
-      updateCommandeLivreur(livreurId,commadeId)
-      window.location.reload()
+    await updateCommandeLivreur(livreurId,commadeId)
+    getCommandeAnnulerOfToday()
+    getAllLivreur()
   }
   const removeCommande = (commandeId:number) => {
     setFilteredCommandes((prevUsers) => prevUsers.filter((commande) => commande.idCommande !== commandeId));
@@ -95,7 +99,7 @@ const Annulee = () => {
                 <h3 className="card-title">Commandes Annulées</h3>
               </div>
               {/* /.card-header */}
-              <div className="card-body">
+              <div style={{overflow:"auto"}} className="card-body">
                 <table
                   id="example1"
                   className="table table-bordered table-striped"
@@ -226,18 +230,6 @@ const Annulee = () => {
 
                     
                   </tbody>
-                  <tfoot>
-                    <tr>
-                      <th>Client</th>
-                      <th>Collis</th>
-                      <th>Created At</th>
-                      <th>Deliver At</th>
-                      <th>Destination</th>
-                      <th>Status Commande</th>
-                      <th>Livreur</th>
-                      <th>Actions</th>
-                    </tr>
-                  </tfoot>
                 </table>
               </div>
               {/* /.card-body */}

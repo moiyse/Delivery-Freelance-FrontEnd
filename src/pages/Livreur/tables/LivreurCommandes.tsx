@@ -5,6 +5,7 @@ import { ContentHeader } from "@app/components";
 import { Button, Dialog, DialogTitle, DialogContent, DialogActions } from '@material-ui/core';
 import UpdateCommande from "../../Admin/forms/UpdateCommande";
 import { getCurrentUser } from "@app/services/auth";
+import { User } from "oidc-client-ts";
 
 export interface Commande{
   idCommande:number,
@@ -29,6 +30,10 @@ const LivreurCommandes  = () => {
   const [filteredCommandes, setFilteredCommandes] = useState<Commande[]>([]); // State for filtered commandes
   const [currentDate, setCurrentDate] = useState<string>(new Date().toISOString().split("T")[0]);
   const [valueOfTheCommandeStatus, setValueOfTheCommandeStatus] = useState<string[]>(['en préparation','en attente pickup','en dépot','en cours de livraison','livré','annulé']);
+  const [selectedClient, setSelectedClient] = useState<User>();
+  const [stateClient, setStateClient] = useState(false);
+
+
   const handleCloseDialog = () => {
     setOpenDialog(false);
   };
@@ -39,13 +44,19 @@ const LivreurCommandes  = () => {
     
   }, [currentDate]);
 
+  useEffect(() => {
+    
+    setStateClient(true)
+    
+  }, [selectedClient]);
+
   const getMyOwnCommande=async()=>{
     const data = await getCommandeByIdAuthentificated(getCurrentUser().idUser)
     setFilteredCommandes(data);
   }
 
   const updateStatusCommande=async(idCommande:number,value:string)=>{
-    updateCommandeStatus(idCommande,value)
+    await updateCommandeStatus(idCommande,value)
     getMyOwnCommande();
   }
   return (
@@ -60,7 +71,17 @@ const LivreurCommandes  = () => {
                 <h3 className="card-title">Tous Les Commandes D'aujourd'hui</h3>
               </div>
               {/* /.card-header */}
-              <div className="card-body">
+              <div style={{overflow:"auto"}} className="card-body">
+                {/*<select
+                  className="form-control"
+                  onChange={(e) => {
+                    setDestinationVille(e.target.value);
+                    console.log(destinationVille);
+                  }}
+                >
+                  <option disabled selected>Selectionner Ville</option>
+                  {ville.map(ville=>(<option value={ville}>{ville}</option>))}
+                </select>*/}
                 <table
                   id="example1"
                   className="table table-bordered table-striped"
@@ -139,18 +160,6 @@ const LivreurCommandes  = () => {
 
                     
                   </tbody>
-                  <tfoot>
-                    <tr>
-                      <th>Collis</th>
-                      <th>Created At</th>
-                      <th>Deliver At</th>
-                      <th>Destination</th>
-                      <th>Nom Distinataire</th>
-                      <th>Phone Distinataire</th>
-                      <th>Status Commande</th>
-                      <th>Paiement Status</th>
-                    </tr>
-                  </tfoot>
                 </table>
               </div>
               {/* /.card-body */}
