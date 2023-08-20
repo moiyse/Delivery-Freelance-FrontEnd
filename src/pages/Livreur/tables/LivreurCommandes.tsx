@@ -32,11 +32,26 @@ const LivreurCommandes  = () => {
   const [valueOfTheCommandeStatus, setValueOfTheCommandeStatus] = useState<string[]>(['en préparation','en attente pickup','en dépot','en cours de livraison','livré','annulé']);
   const [selectedClient, setSelectedClient] = useState<User>();
   const [stateClient, setStateClient] = useState(false);
+  const script = document.createElement("script");
 
 
   const handleCloseDialog = () => {
     setOpenDialog(false);
   };
+
+  useEffect(() => {
+    if(filteredCommandes.length != 0 && !document.body.contains(script))
+    {
+      script.src = "js/tableCommande.js";
+      script.async = true;
+      document.body.appendChild(script);
+
+      return () => {
+        // Clean up the added script when the component unmounts
+        document.body.removeChild(script);
+      };
+    }
+  }, [filteredCommandes])
 
   useEffect(() => {
     
@@ -83,19 +98,19 @@ const LivreurCommandes  = () => {
                   {ville.map(ville=>(<option value={ville}>{ville}</option>))}
                 </select>*/}
                 <table
-                  id="example1"
+                  id="commandeTableLivreur"
                   className="table table-bordered table-striped"
                 >
                   <thead>
                     <tr>
                       <th>Collis</th>
-                      <th>Created At</th>
                       <th>Deliver At</th>
                       <th>Destination</th>
-                      <th>Nom Distinataire</th>
-                      <th>Phone Distinataire</th>
+                      <th>Déstinateur</th>
+                      <th>Prix Collis</th>
+                      <th>Téléphone Destinateur</th>
                       <th>Status Commande</th>
-                      <th>Paiement Status</th>
+                      <th>Status Paiement</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -126,10 +141,10 @@ const LivreurCommandes  = () => {
                             ))}
                             </div>
                           </td>
-                          <td>{commande.createdAt}</td>
                           <td>{commande.delivredAt}</td>
                           <td>{commande.destination}</td>
-                          <td>{commande.nomDestinataire} {commande.prenomDestinataire}</td>
+                          <td>{commande.nomDestinataire +" " +commande.prenomDestinataire}</td>
+                          <td>{commande.prixArticle + " DT"}</td>
                           <td>{commande.phoneDestinataire}</td>
                           <td className="pill-td">
                             <a className="dropdown-toggle dropdown-icon"

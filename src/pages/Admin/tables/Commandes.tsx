@@ -244,9 +244,11 @@ const Commandes = () => {
                     <tr>
                       <th>Client Id</th>
                       <th>Collis</th>
-                      <th>Created At</th>
                       <th>Deliver At</th>
-                      <th>Destination</th>
+                      <th>Déstinateur</th>
+                      <th>Déstination</th>
+                      <th>Prix Collis</th>
+                      <th>Téléphone Destinateur</th>
                       <th>Status Commande</th>
                       <th>Status Paiement</th>
                       <th>Livreur</th>
@@ -256,6 +258,8 @@ const Commandes = () => {
                   <tbody>
                     {filteredCommandes.length === 0 ? (
                       <tr>
+                        <td className="text-center">Pas de commande</td>
+                        <td className="text-center">Pas de commande</td>
                         <td className="text-center">Pas de commande</td>
                         <td className="text-center">Pas de commande</td>
                         <td className="text-center">Pas de commande</td>
@@ -293,9 +297,11 @@ const Commandes = () => {
                                   ))}
                               </div>
                             </td>
-                            <td>{commande.createdAt}</td>
                             <td>{commande.delivredAt}</td>
+                            <td>{commande.nomDestinataire + " " + commande.prenomDestinataire}</td>
                             <td>{commande.destination}</td>
+                            <td>{commande.prixArticle + " DT"}</td>
+                            <td>{commande.phoneDestinataire}</td>
                             <td className="pill-td">
                               <a
                                 className="dropdown-toggle dropdown-icon"

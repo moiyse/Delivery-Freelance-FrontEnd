@@ -129,8 +129,8 @@ const ClientCommandes = () => {
                       <th>Déstination</th>
                       <th>Prix Collis</th>
                       <th>Téléphone Destinateur</th>
-                      <th>Commande Paiement</th>
                       <th>Status Commande</th>
+                      <th>Status Paiement</th>
                       <th>Actions</th>
                     </tr>
                   </thead>
@@ -165,18 +165,19 @@ const ClientCommandes = () => {
                           <td>{commande.delivredAt}</td>
                           <td>{commande.nomDestinataire + " " + commande.prenomDestinataire}</td>
                           <td>{commande.destination}</td>
-                          <td>{commande.prixArticle}</td>
+                          <td>{commande.prixArticle +" DT"}</td>
                           <td>{commande.phoneDestinataire}</td>
-                          <td className="pill-td">
-                            <a>
-                              <span className="badge bg-warning">{commande.paymentStatus}</span>
-                            </a>
-                          </td>
                           <td className="pill-td">
                             <a>
                               <span className="badge bg-warning">{commande.commandeStatus}</span>
                             </a>
                           </td>
+                          <td className="pill-td">
+                            <a>
+                              <span className="badge bg-warning">{commande.paymentStatus}</span>
+                            </a>
+                          </td>
+                          
                           <td>
                             <div className="btn-group">
                               <button disabled={commande.commandeStatus != "en préparation"} onClick={() => handleUpdateClick(commande.idCommande)} type="button" className="btn btn-warning">

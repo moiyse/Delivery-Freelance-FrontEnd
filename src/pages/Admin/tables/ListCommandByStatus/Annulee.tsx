@@ -1,10 +1,13 @@
 import { useEffect, useState } from "react";
 import "../users.css";
-import { deleteCommandeById, fetchCommandes, getCommandeOfTodayByStatus, updateCommandeLivreur, updateCommandeStatus } from "../../tables/CommandesService.js";
-import { fetchAllLivreurs } from "../UsersService";
+import { deleteCommandeById, fetchCommandes, getCommandeOfTodayByStatus, updateCommandeLivreur, updateCommandeStatus, updatePaymentStatus } from "../../tables/CommandesService.js";
+import { fetchAllLivreurs, getUserById, updateUserById } from "../UsersService";
 import { ContentHeader } from "@app/components";
 import { Button, Dialog, DialogTitle, DialogContent, DialogActions } from '@material-ui/core';
 import UpdateCommande from "../../forms/UpdateCommande";
+import jsPDF from "jspdf";
+import { template } from "../pdfExport/PdfTamplate";
+import Swal from "sweetalert2";
 export interface Commande{
   idCommande:number,
   depart:string,
@@ -34,6 +37,18 @@ const Annulee = () => {
   const [filteredCommandes, setFilteredCommandes] = useState<Commande[]>([]); // State for filtered commandes
   const [currentDate, setCurrentDate] = useState<string>(new Date().toISOString().split("T")[0]);
   const [valueOfTheCommandeStatus, setValueOfTheCommandeStatus] = useState<string[]>(['en préparation','en attente pickup','en dépot','en cours de livraison','livré','annulé']);
+  const [valueOfThePaymentStatus, setValueOfThePaymentStatus] = useState<string[]>(['payé','nonPayé']);
+
+
+
+  const downloadPDF = (depart:string,dest:string,dateLiv:string,dateCre:string,nomDest:string,phone:string) => {
+    const pdf = new jsPDF();
+    pdf.html(template(depart,dest,dateLiv,dateCre,nomDest,phone), {
+      callback: () => {
+        pdf.save('facture.pdf');
+      }
+    });
+  }
 
   const handleUpdateClick = (commandeId:number) => {
     setSelectedCommandeId(commandeId);
@@ -59,6 +74,15 @@ const Annulee = () => {
     
   }, [filteredCommandes]);
 
+  const updateStatusPayment = async (
+    idCommande: number,
+    value: string
+  ) => {
+    await updatePaymentStatus(idCommande,value)
+    getCommandeAnnulerOfToday()
+    getAllLivreur()
+  }
+
   const getCommandeAnnulerOfToday=async()=>{
     const data = await getCommandeOfTodayByStatus('annulé')
     setCommandes(data)
@@ -74,7 +98,20 @@ const Annulee = () => {
     getCommandeAnnulerOfToday()
     getAllLivreur()
   }, [currentDate]);
-  const updateStatusCommande=async(idCommande:number,value:string)=>{
+
+  const updateStatusCommande=async (
+    commande: Commande,
+    idCommande: number,
+    value: string
+  ) => {
+    if (commande.livreurId) {
+      let user = await getUserById(commande.clientId);
+      let livreur = await getUserById(commande.clientId);
+      if (commande.commandeStatus == "livré") {
+        livreur.caisse = livreur.caisse + commande.prixArticle;
+      }
+      updateUserById(commande.livreurId, livreur);
+    }
     await updateCommandeStatus(idCommande,value)
     getCommandeAnnulerOfToday()
     getAllLivreur()
@@ -87,6 +124,24 @@ const Annulee = () => {
   const removeCommande = (commandeId:number) => {
     setFilteredCommandes((prevUsers) => prevUsers.filter((commande) => commande.idCommande !== commandeId));
   };
+
+  const deleteCommande = (idCommande:number) => {
+    Swal.fire({
+      title: 'Supprimer Une Commande',
+      text: `Etes vous sûr de supprimer la commande avec l'ID : ${idCommande} " ?`,
+      icon: "error",
+      showCancelButton: true,
+      confirmButtonText: "Supprimer",
+      cancelButtonText: "Retour",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        deleteCommandeById(idCommande)
+        window.location.reload()
+      }
+    });
+  }
+
+  
   return (
     <>
     <ContentHeader title="List Commandes Annulées" />
@@ -106,12 +161,15 @@ const Annulee = () => {
                 >
                   <thead>
                     <tr>
-                      <th>Client</th>
+                      <th>Client Id</th>
                       <th>Collis</th>
-                      <th>Created At</th>
                       <th>Deliver At</th>
-                      <th>Destination</th>
+                      <th>Déstinateur</th>
+                      <th>Déstination</th>
+                      <th>Prix Collis</th>
+                      <th>Téléphone Destinateur</th>
                       <th>Status Commande</th>
+                      <th>Status Paiement</th>
                       <th>Livreur</th>
                       <th>Actions</th>
                     </tr>
@@ -119,56 +177,137 @@ const Annulee = () => {
                   <tbody>
                     {filteredCommandes.length===0 ? (
                       <tr>
-                      <td  className="text-center">
-                        Aucune commande trouvée.
-                      </td>
+                      <td className="text-center">Pas de commande</td>
+                      <td className="text-center">Pas de commande</td>
+                      <td className="text-center">Pas de commande</td>
+                      <td className="text-center">Pas de commande</td>
+                      <td className="text-center">Pas de commande</td>
+                      <td className="text-center">Pas de commande</td>
+                      <td className="text-center">Pas de commande</td>
+                      <td className="text-center">Pas de commande</td>
+                      <td className="text-center">Pas de commande</td>
+                      <td className="text-center">Pas de commande</td>
+                      <td className="text-center">Pas de commande</td>
                     </tr>
                     ):(
                       filteredCommandes.map((commande)=>{
                         return(
                           <tr>
-                          <td>
-                            clientId
-                          </td>
-                          <td>
-                            <a
-                              style={{ textDecoration: "none",color: "#212529" }}
-                              className="dropdown-toggle dropdown-icon"
-                              data-toggle="dropdown"
-                              aria-expanded="true"
-                            >
-                              Articles
-                            </a>
-                            <div className="dropdown-menu">
-                            {commande.articles.split('-').map((article, index) => (
-                              <a className="dropdown-item" key={index}>
-                                {article}
+                            <td>{commande.clientId}</td>
+                            <td>
+                              <a
+                                style={{
+                                  textDecoration: "none",
+                                  color: "#212529",
+                                }}
+                                className="dropdown-toggle dropdown-icon"
+                                data-toggle="dropdown"
+                                aria-expanded="true"
+                              >
+                                Articles
                               </a>
-                            ))}
-                            </div>
-                          </td>
-                          <td>{commande.createdAt}</td>
-                          <td>{commande.delivredAt}</td>
-                          <td>{commande.destination}</td>
-                          <td className="pill-td">
-                            <a className="dropdown-toggle dropdown-icon"
-                              data-toggle="dropdown"
-                              aria-expanded="true">
-                              <span className="badge bg-warning">{commande.commandeStatus}</span>
-                            </a>
-                            <div className="dropdown-menu">
-                                  {valueOfTheCommandeStatus.map((val)=>(
-                                    <a className={val===commande.commandeStatus? 'badge bg-warning' : 'dropdown-item'} 
-                                      style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }} href="#"
-                                      onClick={()=>{updateStatusCommande(commande.idCommande,val)}}>
-                                      {val}
+                              <div className="dropdown-menu dropdown-overflow">
+                                {commande.articles
+                                  .split("-")
+                                  .map((article, index) => (
+                                    <a className="dropdown-item" key={index}>
+                                      {article}
                                     </a>
-                                  ))
-                                  }           
-                            </div>
-                          </td>
-                          <td>
-                            <a
+                                  ))}
+                              </div>
+                            </td>
+                            <td>{commande.delivredAt}</td>
+                            <td>{commande.nomDestinataire + " " + commande.prenomDestinataire}</td>
+                            <td>{commande.destination}</td>
+                            <td>{commande.prixArticle + " DT"}</td>
+                            <td>{commande.phoneDestinataire}</td>
+                            <td className="pill-td">
+                              <a
+                                className="dropdown-toggle dropdown-icon"
+                                data-toggle="dropdown"
+                                aria-expanded="true"
+                              >
+                                <span className="badge bg-warning">
+                                  {commande.commandeStatus}
+                                </span>
+                              </a>
+                              <div className="dropdown-overflow dropdown-menu commande-status-pill">
+                                {valueOfTheCommandeStatus.map((val) => (
+                                  <a
+                                    className={
+                                      val === commande.commandeStatus
+                                        ? "badge bg-warning"
+                                        : "dropdown-item"
+                                    }
+                                    style={{
+                                      display: "flex",
+                                      justifyContent: "center",
+                                      alignItems: "center",
+                                    }}
+                                    onClick={() => {
+                                      updateStatusCommande(
+                                        commande,
+                                        commande.idCommande,
+                                        val
+                                      );
+                                    }}
+                                  >
+                                    {val}
+                                  </a>
+                                ))}
+                              </div>
+                            </td>
+                            <td className="pill-td">
+                              <a
+                                  className="dropdown-toggle dropdown-icon"
+                                  data-toggle="dropdown"
+                                  aria-expanded="true"
+                                >
+                                  {commande.paymentStatus != "demandé" ? (
+                                  <span className="badge bg-warning">
+                                    {commande.paymentStatus}
+                                  </span>
+                                  ) : (
+                                  <span
+                                    style={{
+                                      color: "white",
+                                      fontWeight: "700",
+                                      lineHeight: "1",
+                                      textAlign: "center",
+                                    }}
+                                    className="badge blob red"
+                                  >
+                                    {commande.paymentStatus}
+                                  </span>
+                                  )}
+                              </a>
+                              <div className="dropdown-overflow dropdown-menu commande-status-pill">
+                                {valueOfThePaymentStatus.map((val) => (
+                                  <a
+                                    className={
+                                      val === commande.paymentStatus
+                                        ? "badge bg-warning"
+                                        : "dropdown-item"
+                                    }
+                                    style={{
+                                      display: "flex",
+                                      justifyContent: "center",
+                                      alignItems: "center",
+                                    }}
+                                    onClick={() => {
+                                      updateStatusPayment(
+                                        commande.idCommande,
+                                        val
+                                      );
+                                    }}
+                                  >
+                                    {val}
+                                  </a>
+                                ))}
+                              </div>
+                            </td>
+                            <td>
+                              <a
                                 style={{
                                   textDecoration: "none",
                                   color: commande.livreurId ? "black" : "red",
@@ -200,7 +339,7 @@ const Annulee = () => {
                                         );
                                       }}
                                       className="dropdown-item"
-                                      href="#"
+                                      href=""
                                     >
                                       {liv.idUser === commande.livreurId
                                         ? "selected: " +
@@ -215,12 +354,16 @@ const Annulee = () => {
                           </td>
                           <td>
                             <div className="btn-group">
-                              <button onClick={() => handleUpdateClick(commande.idCommande)} type="button" className="btn btn-warning">
+                              <button  onClick={() => handleUpdateClick(commande.idCommande)} className="btn btn-warning">
                                 <i className="fas fa-pen"></i>
                               </button>
-                              <button type="button" className="btn btn-danger" onClick={()=>{deleteCommandeById(commande.idCommande);removeCommande(commande.idCommande)}}>
+                              <button onClick={()=>{downloadPDF(commande.depart,commande.destination,commande.delivredAt,commande.createdAt,commande.nomDestinataire,commande.phoneDestinataire)}} type="button" className="btn btn-info">
+                                <i className="fas fa-file-alt"></i>
+                              </button>
+                              <button type="button" className="btn btn-danger" onClick={()=>{deleteCommande(commande.idCommande)}}>
                                 <i className="fa fa-trash"></i>
                               </button>
+                              
                             </div>
                           </td>
                         </tr>
