@@ -1,19 +1,20 @@
 import React, { useState } from 'react';
-import {Link,useNavigate} from 'react-router-dom';
+import {Link} from 'react-router-dom';
 import {toast} from 'react-toastify';
 import {setWindowClass} from '@app/utils/helpers';
 import {Form, InputGroup} from 'react-bootstrap';
-import { checkUser } from '@app/pages/Admin/tables/UsersService';
+import { checkUser, sendMailForForgetPassword } from '@app/pages/Admin/tables/UsersService';
 
 const ForgotPassword = () => {
-  const navigate=useNavigate()
   const [login,setLogin]=useState('')
   setWindowClass('hold-transition login-page');
+  
   const handlClick=async()=>{
     const check=await checkUser(login)
-    const x=3
-    if(check===true){
-      navigate(`/updatePassword/${x}`)
+    if(check.exists===true){
+      const curentUrl=encodeURIComponent(window.location.href)
+      toast.success('un mail vous a envoyer contient votre nouvelle mot de passe')
+      await sendMailForForgetPassword(login,curentUrl,check.idUser)
     }else{
       toast.error('Invalide Login! verifier votre adresse')
     }
@@ -46,6 +47,7 @@ const ForgotPassword = () => {
                     </InputGroup.Text>
                   </InputGroup.Append>
               </InputGroup>
+              <Link to='/login'>S'authentifier</Link>
             </div>
             <div className="row text-center login-button">
               <div className="col">
