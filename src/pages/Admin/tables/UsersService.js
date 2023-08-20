@@ -1,5 +1,5 @@
 import { toast } from 'react-toastify';
-import {DELETE_USER_BY_ID_URL,UPDATE_USER_BY_ID,GET_ALL_LIVREUR,GET_USER_BY_ID_URL, CHECK_USER_IF_EXIST, CHANGE_PASSWORD, UPDATE_PASSWORD} from '../../../../apiUrls.jsx'
+import {DELETE_USER_BY_ID_URL,UPDATE_USER_BY_ID,GET_ALL_LIVREUR,GET_USER_BY_ID_URL, CHECK_USER_IF_EXIST, CHANGE_PASSWORD, UPDATE_PASSWORD, SEND_MAIL_FORGET_PASSWORD} from '../../../../apiUrls.jsx'
 
 const deleteUserById = async (userId) => {
     try {
@@ -97,8 +97,22 @@ const deleteUserById = async (userId) => {
       console.error('An error occurred:', error);
     }
   };
+
+  const sendMailForForgetPassword=async(email,curentUrl,idUser)=>{
+    try {
+      const response = await fetch(SEND_MAIL_FORGET_PASSWORD(email,curentUrl,idUser));
+      if (response.ok) {
+        console.log('mail envoyé avec succés')
+      } else {
+        console.log('Error:', response.status);
+      }
+    } catch (error) {
+      console.error('Error:', error);
+    }
+
+  }
  
-  export{updatePassword,checkUser,deleteUserById,updateUserById,fetchAllLivreurs,getUserById}
+  export{sendMailForForgetPassword,updatePassword,checkUser,deleteUserById,updateUserById,fetchAllLivreurs,getUserById}
   
   
   
