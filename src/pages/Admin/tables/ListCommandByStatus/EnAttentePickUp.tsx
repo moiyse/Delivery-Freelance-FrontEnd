@@ -141,7 +141,10 @@ const Annulee = () => {
     });
   }
 
-  
+  const getLivreurFirstName = (livreurId:number) => {
+    const livreur = livreurs.find((livreur) => livreur.idUser === livreurId);
+    return livreur ? livreur.firstName + " " +livreur.lastName : "Unknown Livreur";
+  };  
   return (
     <>
     <ContentHeader title="List Commandes Annulées" />
@@ -306,19 +309,28 @@ const Annulee = () => {
                                 ))}
                               </div>
                             </td>
-                            <td>
+                            <td className="pill-td">
                               <a
-                                style={{
-                                  textDecoration: "none",
-                                  color: commande.livreurId ? "black" : "red",
-                                }}
                                 className="dropdown-toggle dropdown-icon"
                                 data-toggle="dropdown"
                                 aria-expanded="true"
                               >
                                 {commande.livreurId
-                                  ? "Voir Livreur"
-                                  : "No Livreur"}
+                                  ? (<span className="badge bg-secondary">
+                                       {getLivreurFirstName(commande.livreurId)}
+                                    </span> )
+                                  : (<span
+                                    style={{
+                                      color: "white",
+                                      fontWeight: "700",
+                                      lineHeight: "1",
+                                      textAlign: "center",
+                                    }}
+                                    className="badge blob red"
+                                    >
+                                      No Livreur
+                                    </span>)
+                                  }
                               </a>
                               <div className="dropdown-overflow dropdown-menu">
                                 {livreurs.length === 0 ? (
@@ -350,8 +362,8 @@ const Annulee = () => {
                                     </a>
                                   ))
                                 )}
-                            </div>
-                          </td>
+                              </div>
+                            </td>
                           <td>
                             <div className="btn-group">
                               <button  onClick={() => handleUpdateClick(commande.idCommande)} className="btn btn-warning">

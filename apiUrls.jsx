@@ -11,6 +11,7 @@ export const GET_USER_BY_ID_URL=(userId)=>`${BASE_URL}/user/${userId}`
 export const GET_ALL_LIVREUR=`${BASE_URL}/user/getAllLivreur`
 export const GET_ALL_CLIENT_WITH_NOT_PAYED_COMMANDS=`${BASE_URL}/user/getAllClientWithNotPayedCommands`
 export const GET_ALL_CLIENTS=`${BASE_URL}/user/getAllClient`
+export const SEND_MAIL_FORGET_PASSWORD=(email,currentUrl,userId)=>`${BASE_URL}/user/${email}/${currentUrl}/${userId}`
 
 
 //////////////PaymentExediteur/////////////
