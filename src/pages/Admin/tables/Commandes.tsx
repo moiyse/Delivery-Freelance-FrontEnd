@@ -206,8 +206,10 @@ const Commandes = () => {
   }
   const getLivreurFirstName = (livreurId:number) => {
     const livreur = livreurs.find((livreur) => livreur.idUser === livreurId);
-    return livreur ? livreur.firstName + " " +livreur.lastName : "Unknown Livreur";
+    return livreur ? livreur.firstName + " " +livreur.lastName : "Livreur inconnu";
   };
+
+
   return (
     <>
       <ContentHeader title="List Commandes" />

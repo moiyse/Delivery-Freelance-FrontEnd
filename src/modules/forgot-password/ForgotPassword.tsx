@@ -13,7 +13,7 @@ const ForgotPassword = () => {
     const check=await checkUser(login)
     if(check.exists===true){
       const curentUrl=encodeURIComponent(window.location.href)
-      toast.success('un mail vous a envoyer contient votre nouvelle mot de passe')
+      toast.success('Un mail vous a été envoyer')
       await sendMailForForgetPassword(login,curentUrl,check.idUser)
     }else{
       toast.error('Invalide Login! verifier votre adresse')

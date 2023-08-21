@@ -18,6 +18,14 @@ type PaymentExpediteur = {
   PaymentExpediteurClientId: number;
 };
 
+type Commande = {
+  idCommande: number;
+  paymentStatus: string;
+  commandeStatus: string;
+  prixArticle:number;
+  articles:string
+};
+
 const LivreurPaymentExpediteur = () => {
   const [paymentExpediteurs, setPaymentExpediteur] = useState<
     PaymentExpediteur[]
@@ -109,7 +117,7 @@ const LivreurPaymentExpediteur = () => {
       .put(UPDATE_CLIENT_COMMANDS_TO_PAYED(idClient,idPaymentExpediteur))
       .then((res) => {
         console.log("success message : ", res.data);
-        window.location.href = "/#/livreurPaymentExpediteur";
+        window.location.reload()
       })
       .catch((error) => {
         console.log(error);
@@ -120,6 +128,19 @@ const LivreurPaymentExpediteur = () => {
     return client.passedCommandeIfClient
                             .filter((commande: any) => commande.commandeStatus === "livré").length * client.livraison + client.passedCommandeIfClient.filter( (commande: any) =>
                                   commande.commandeStatus === "annulé").length * client.retour
+  }
+
+  const totalCommandePrix = (commandes:Commande[]) => {
+    let totalPrix = 0 
+    if(commandes.length != 0)
+    {
+      commandes.forEach(commande => {
+        totalPrix = commande.prixArticle + totalPrix
+      });
+      return totalPrix
+    }else{
+      return totalPrix
+    }
   }
 
   if (!dataFetched) {
@@ -180,9 +201,9 @@ const LivreurPaymentExpediteur = () => {
                             }
                           </td>
                           <td>
-                            {countTotalPrixExpedition(data.client)}{" "} DT
+                            {totalCommandePrix(data.client.passedCommandeIfClient) - countTotalPrixExpedition(data.client)}{" "} DT
                           </td>
-                          <td className="d-flex justify-content-center">
+                          <td className="text-center">
                             <div className="btn-group">
                               <button onClick={async ()=>{await clientPayed(data.client,data.client.idUser,data.paymentExpediteur.idPaymentExpediteur,data.paymentExpediteur.PaymentExpediteurLivreurId)}} type="button" className="btn btn-success">
                                 Payer
