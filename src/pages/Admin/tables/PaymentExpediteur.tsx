@@ -149,6 +149,19 @@ const PaymentExpediteur = () => {
     setSelectedListCollis(commandes)
   };
 
+  const totalCommandePrix = (commandes:Commande[]) => {
+    let totalPrix = 0 
+    if(commandes.length != 0)
+    {
+      commandes.forEach(commande => {
+        totalPrix = commande.prixArticle + totalPrix
+      });
+      return totalPrix
+    }else{
+      return totalPrix
+    }
+  }
+
   if (!dataFetched) {
     return <div>Loading...</div>;
   }
@@ -198,6 +211,7 @@ const PaymentExpediteur = () => {
                               }}
                               data-toggle="modal"
                               data-target="#modal-lg"
+                              style={{color:"#0072ff",cursor:"pointer"}}
                             >
                               List des collis
                             </a>
@@ -219,7 +233,7 @@ const PaymentExpediteur = () => {
                             }
                           </td>
                           <td>
-                            {data.client.passedCommandeIfClient?.filter(
+                            {totalCommandePrix(data.client.passedCommandeIfClient) - (data.client.passedCommandeIfClient?.filter(
                               (commande: any) =>
                                 commande.commandeStatus === "livré"
                             ).length *
@@ -228,10 +242,10 @@ const PaymentExpediteur = () => {
                                 (commande: any) =>
                                   commande.commandeStatus === "annulé"
                               ).length *
-                                data.client.retour}{" "}
+                                data.client.retour)}{" "}
                             DT
                           </td>
-                          <td className="d-flex justify-content-center">
+                          <td className="text-center">
                             <div className="btn-group">
                               <button
                                 onClick={() => {
