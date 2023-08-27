@@ -188,15 +188,13 @@ const AjoutCommandes = () => {
             <div className="form-group">
               <div className="row">
                 <label htmlFor="exampleInputEmail1">Articles</label>
-                <input
-                  onChange={(e) => {
-                    setArticles(e.target.value);
-                  }}
-                  type="textArea"
-                  className="form-control"
-                  id="exampleInputEmail1"
-                  placeholder="Merci De Séparer Les Articles Avec -"
-                />
+                <textarea
+                    onChange={(e)=>{setArticles(e.target.value)}}
+                    style={{height: "90px"}}
+                    className="form-control"
+                    id="exampleInputEmail1"
+                    placeholder="Merci De Séparer Les Articles Avec -"
+                  />
                 {articlesError && (
                   <div className="error">
                     {articlesError}

@@ -114,10 +114,10 @@ const UserDropdown = () => {
     event.preventDefault();
     setDropdownOpen(false);
     console.log('authentication', authentication);
-      dispatch(setAuthentication(undefined));
+    dispatch(setAuthentication(undefined));
       
     localStorage.removeItem('authentication');
-    window.location.href = '/#/login';
+    // window.location.href = '/#/login';
   };
   
 
@@ -174,7 +174,7 @@ const UserDropdown = () => {
             className="btn btn-default btn-flat float-right button-user-header"
             onClick={logOut}
           >
-            {t<string>('login.button.signOut')}
+            Sign Out
           </button>
         </UserFooter>
       </div>

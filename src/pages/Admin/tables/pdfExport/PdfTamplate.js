@@ -1,5 +1,6 @@
 export const template=(depart,dest,dateLiv,dateCre,nomDest,phone)=>`
-<table>
+<div style="width:500px">
+<table style="font-size:10px">
 <tr>
   <td>Depart:</td>
   <td>${depart}</td>
@@ -13,10 +14,6 @@ export const template=(depart,dest,dateLiv,dateCre,nomDest,phone)=>`
   <td>${dateLiv}</td>
 </tr>
 <tr>
-  <td>Date Création:</td>
-  <td>${dateCre}</td>
-</tr>
-<tr>
   <td>Nom Destinateur:</td>
   <td>${nomDest}</td>
 </tr>
@@ -25,4 +22,5 @@ export const template=(depart,dest,dateLiv,dateCre,nomDest,phone)=>`
   <td>${phone}</td>
 </tr>
 </table>
+</div>
 `;

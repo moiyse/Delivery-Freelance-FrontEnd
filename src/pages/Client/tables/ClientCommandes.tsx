@@ -35,7 +35,9 @@ const ClientCommandes = () => {
   const [selectedCommandeId, setSelectedCommandeId] = useState<number | null>(null);
   const [openDialog, setOpenDialog] = useState(false);
   const [filteredCommandes, setFilteredCommandes] = useState<Commande[]>([]); // State for filtered commandes
-  const script = document.createElement("script");
+  const [tableInit,setTableInit] = useState(false);
+  const [valueOfTheCommandeStatus, setValueOfTheCommandeStatus] = useState<string[]>(['en attente pickup']);
+
 
 
   const handleUpdateClick = (commandeId:number) => {
@@ -52,14 +54,16 @@ const ClientCommandes = () => {
 
 
   useEffect(() => {
-    if(filteredCommandes.length != 0 && !document.body.contains(script))
+    if(filteredCommandes.length != 0 && tableInit === false)
     {
+      console.log("here")
+      const script = document.createElement("script");
       script.src = "js/tableCommande.js";
       script.async = true;
       document.body.appendChild(script);
+      setTableInit(true);
 
       return () => {
-        // Clean up the added script when the component unmounts
         document.body.removeChild(script);
       };
     }
@@ -82,6 +86,15 @@ const ClientCommandes = () => {
     getAllMyOwnCommande()
   }
 
+  const updateStatusCommande = async (
+    idCommande: number,
+    value: string
+  ) => {
+    await updateCommandeStatus(idCommande,value)
+    getAllMyOwnCommande();
+    //window.location.reload()
+  }
+
   const handleAllPaymentClick =async() => {
     let state = false
     if(commandes.length !=0){
@@ -96,6 +109,51 @@ const ClientCommandes = () => {
       state == false ? toast.error("Aucune commande livré ou annulé !") : toast.success("Demande payment envoyé !")
     }
     getAllMyOwnCommande()
+  }
+
+  const handleFiltrePayerClick = async () => {
+    const data = await getAllMyOwnCommandes(getCurrentUser().idUser)
+    let filteredData = data.filter((commande: { paymentStatus: string; }) => commande.paymentStatus == "payé")
+
+    if(filteredData.length <= 0)
+    {
+      toast.error("Pas de commande Payé")
+    }else{
+      setFilteredCommandes(filteredData)
+      console.log("payer :",filteredData)
+    }
+    
+  }
+
+  const handleFiltreNonPayerClick = async () => {
+    const data = await getAllMyOwnCommandes(getCurrentUser().idUser)
+    let filteredData = data.filter((commande: { paymentStatus: string; }) => commande.paymentStatus == "nonPayé")
+    if(filteredData.length <= 0)
+    {
+      toast.error("Pas de commande Non Payé")
+
+    }else{
+      setFilteredCommandes(filteredData)
+      console.log("nonPayer :",filteredData)
+    }
+    
+
+  }
+
+  const handleFiltreDemanderClick = async () => {
+    const data = await getAllMyOwnCommandes(getCurrentUser().idUser)
+    let filteredData = data.filter((commande: { paymentStatus: string; }) => commande.paymentStatus == "demandé")
+
+    if(filteredData.length <= 0)
+    {
+      toast.error("Pas de commande demandé")
+
+    }else{
+      setFilteredCommandes(filteredData)
+      console.log("demander :",filteredData)
+    }
+    
+
   }
 
 
@@ -113,11 +171,24 @@ const ClientCommandes = () => {
               
               {/* /.card-header */}
               <div style={{overflow:"auto"}} className="card-body">
-                <div>
+                <div className="mb-4">
                   <button onClick={() => handleAllPaymentClick()} type="button" title="Demande d'être payer" className="btn btn-success">
                   <i className="fas fa-money-bill-wave"></i> Demandé pour être payé 
                   </button>
+                  <div className="d-flex align-items-center float-right">
+                    <button onClick={() => handleFiltrePayerClick()} type="button" title="payer" className="btn btn-primary float-right mr-2">
+                    Payé
+                    </button>
+                    <button onClick={() => handleFiltreNonPayerClick()} type="button" title="non payer" className="btn btn-primary mr-2">
+                    Non payé
+                    </button>
+                    <button onClick={() => handleFiltreDemanderClick()} type="button" title="demander" className="btn btn-primary mr-2">
+                    Demandé 
+                    </button>
+                  </div>
+
                 </div>
+                  
                 <table
                   id="commandeTableClient"
                   className="table table-bordered table-striped"
@@ -138,10 +209,16 @@ const ClientCommandes = () => {
                   <tbody>
                     {filteredCommandes.length===0 ? (
                       <tr>
-                      <td  className="text-center">
-                      Aucune commande trouvée.
-                      </td>
-                    </tr>
+                        <td className="text-center">Pas de commande</td>
+                        <td className="text-center">Pas de commande</td>
+                        <td className="text-center">Pas de commande</td>
+                        <td className="text-center">Pas de commande</td>
+                        <td className="text-center">Pas de commande</td>
+                        <td className="text-center">Pas de commande</td>
+                        <td className="text-center">Pas de commande</td>
+                        <td className="text-center">Pas de commande</td>
+                        <td className="text-center">Pas de commande</td>
+                      </tr>
                     ):(
                       filteredCommandes.map((commande)=>{
                         return(
@@ -168,11 +245,47 @@ const ClientCommandes = () => {
                           <td>{commande.destination}</td>
                           <td>{commande.prixArticle +" DT"}</td>
                           <td>{commande.phoneDestinataire}</td>
-                          <td className="pill-td">
+                          {commande.commandeStatus != "en préparation" ? <td className="pill-td">
                             <a>
                               <span className="badge bg-warning">{commande.commandeStatus}</span>
                             </a>
                           </td>
+                          :
+                          <td className="pill-td">
+                              <a
+                                className="dropdown-toggle dropdown-icon"
+                                data-toggle="dropdown"
+                                aria-expanded="true"
+                              >
+                                <span className="badge bg-warning">
+                                  {commande.commandeStatus}
+                                </span>
+                              </a>
+                              <div className="dropdown-overflow dropdown-menu commande-status-pill">
+                                {valueOfTheCommandeStatus.map((val) => (
+                                  <a
+                                    className={
+                                      val === commande.commandeStatus
+                                        ? "badge bg-warning"
+                                        : "dropdown-item"
+                                    }
+                                    style={{
+                                      display: "flex",
+                                      justifyContent: "center",
+                                      alignItems: "center",
+                                    }}
+                                    onClick={() => {
+                                      updateStatusCommande(
+                                        commande.idCommande,
+                                        val
+                                      );
+                                    }}
+                                  >
+                                    {val}
+                                  </a>
+                                ))}
+                              </div>
+                          </td>}
                           <td className="pill-td">
                             <a>
                               <span className="badge bg-warning">{commande.paymentStatus}</span>
