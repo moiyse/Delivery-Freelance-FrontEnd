@@ -10,7 +10,7 @@ import { calculateWindowSize } from '@app/utils/helpers';
 import { useDispatch, useSelector } from 'react-redux';
 import { setWindowSize } from '@app/store/reducers/ui';
 
-import Dashboard from '@pages/Dashboard';
+import Dashboard from '@app/pages/Admin/Dashboard';
 import Blank from '@pages/Blank';
 import SubMenu from '@pages/SubMenu';
 import Profile from '@app/pages/Admin/profile/Profile';
@@ -47,6 +47,8 @@ import Livree from './pages/Admin/tables/ListCommandByStatus/Livree';
 import Annulee from './pages/Admin/tables/ListCommandByStatus/Annulee';
 import Livreur from './pages/Admin/tables/Livreur';
 import ForgotPassword from '@modules/forgot-password/ForgotPassword';
+import Demander from './pages/Admin/tables/ListCommandByStatus/Demander';
+import ClientDashboard from './pages/Client/ClientDashboard';
 
 declare const FB: any;
 
@@ -121,6 +123,9 @@ const App = () => {
             <Route path="/listPaymentExpediteur"  element={<RoleAuth allowedRole={["admin","superAdmin"]} />} >
               <Route path="/listPaymentExpediteur" element={<PaymentExpediteur />} />
             </Route>
+            <Route path="/dashboard"  element={<RoleAuth allowedRole={["admin","superAdmin"]} />} >
+              <Route path="/dashboard" element={<Dashboard />} />
+            </Route>
             <Route path="/commandes"  element={<RoleAuth allowedRole={["admin","superAdmin"]} />} >
               <Route path="/commandes" element={<Commandes />} />
             </Route>
@@ -151,6 +156,9 @@ const App = () => {
             <Route path="/annulee"  element={<RoleAuth allowedRole={["admin","superAdmin"]} />} >
               <Route path="/annulee" element={<Annulee />} />
             </Route>
+            <Route path="/demander"  element={<RoleAuth allowedRole={["admin","superAdmin"]} />} >
+              <Route path="/demander" element={<Demander />} />
+            </Route>
             <Route path="/suiviLivreur"  element={<RoleAuth allowedRole={["admin","superAdmin"]} />} >
               <Route path="/suiviLivreur" element={<Livreur />} />
             </Route>
@@ -163,6 +171,9 @@ const App = () => {
             <Route path="/clientProfile"  element={<RoleAuth allowedRole={["client"]} />} >
               <Route path="/clientProfile" element={<ClientProfile />} />
             </Route>
+            <Route path="/clientDashboard"  element={<RoleAuth allowedRole={["client"]} />} >
+              <Route path="/clientDashboard" element={<ClientDashboard />} />
+            </Route>
             <Route path="/livreurCommandes"  element={<RoleAuth allowedRole={["livreur"]} />} >
               <Route path="/livreurCommandes" element={<LivreurCommandes />} />
             </Route>
@@ -173,7 +184,7 @@ const App = () => {
               <Route path="/" element={<Dashboard />} />
             </Route>
             <Route path="/"  element={<RoleAuth allowedRole={["client"]} />} >
-              <Route path="/" element={<Blank />} />
+              <Route path="/" element={<ClientDashboard />} />
             </Route>
             <Route path="/"  element={<RoleAuth allowedRole={["livreur"]} />} >
               <Route path="/" element={<Blank />} />

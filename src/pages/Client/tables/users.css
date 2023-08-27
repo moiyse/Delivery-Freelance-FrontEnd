@@ -14,7 +14,7 @@
     border-radius: 50px;
 }
 
-.pill-td span a{
+.pill-td .dropdown-menu a{
     cursor: pointer;
 }
 

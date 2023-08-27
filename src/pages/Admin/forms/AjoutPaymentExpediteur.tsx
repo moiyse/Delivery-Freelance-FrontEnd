@@ -1,7 +1,7 @@
 import { ContentHeader } from "@app/components";
 import { useEffect, useState } from "react";
 import "./forms.css";
-import { CREATE_USER_URL,GET_ALL_LIVREUR,GET_ALL_CLIENT_WITH_NOT_PAYED_COMMANDS, Create_PaymentExpediteur } from "../../../../apiUrls.jsx";
+import { CREATE_USER_URL,GET_ALL_LIVREUR,GET_ALL_CLIENT_WITH_DEMANDER_COMMANDS, Create_PaymentExpediteur } from "../../../../apiUrls.jsx";
 import axios from "axios";
 import Select from "react-select";
 
@@ -37,7 +37,7 @@ const AjoutPaymentExpediteur = () => {
   const [clientSelected, setClientSelected] = useState("");
   const [livreurSelected, setLivreurSelected] = useState("");
   const [allLivreur, setAllLivreur] = useState<User[]>([]);
-  const [clientCommandeNotPayed, setClientCommandeNotPayed] = useState<User[]>([]);
+  const [clientCommandeDemanded, setClientCommandeDemanded] = useState<User[]>([]);
   const [clientSelectedError, setClientSelectedError] = useState("");
   const [livreurSelectedError, setLivreurSelectedError] = useState("");
 
@@ -53,9 +53,9 @@ const AjoutPaymentExpediteur = () => {
       });
 
     axios
-      .get(GET_ALL_CLIENT_WITH_NOT_PAYED_COMMANDS)
+      .get(GET_ALL_CLIENT_WITH_DEMANDER_COMMANDS)
       .then((res) => {
-        setClientCommandeNotPayed(res.data);
+        setClientCommandeDemanded(res.data);
         console.log("res client not payed : ", res.data);
       })
       .catch((error) => {
@@ -141,7 +141,7 @@ const AjoutPaymentExpediteur = () => {
     };
   });
 
-  const allClientOptions = clientCommandeNotPayed.map( (client: any) => {
+  const allClientOptions = clientCommandeDemanded.map( (client: any) => {
     return {
       value: client.idUser,
       label: (
@@ -150,9 +150,9 @@ const AjoutPaymentExpediteur = () => {
             Client: {client.firstName} {client.lastName}
           </div>
           <div className="ml-2">
-            Livrer non payé : {client.passedCommandeIfClient.filter((commande:any)=>commande.commandeStatus == "livré").length}
+            Livrer et demander : {client.passedCommandeIfClient.filter((commande:any)=>commande.commandeStatus == "livré").length}
             <br/>
-            Annuler non payé : {client.passedCommandeIfClient.filter((commande:any)=>commande.commandeStatus == "annulé").length}
+            Annuler et demander : {client.passedCommandeIfClient.filter((commande:any)=>commande.commandeStatus == "annulé").length}
           </div>
         </div>
       ),

@@ -1,5 +1,5 @@
 import { toast } from 'react-toastify';
-import {DELETE_USER_BY_ID_URL,UPDATE_USER_BY_ID,GET_ALL_LIVREUR,GET_USER_BY_ID_URL, CHECK_USER_IF_EXIST, CHANGE_PASSWORD, UPDATE_PASSWORD, SEND_MAIL_FORGET_PASSWORD} from '../../../../apiUrls.jsx'
+import {DELETE_USER_BY_ID_URL,UPDATE_USER_BY_ID,GET_ALL_LIVREUR,GET_USER_BY_ID_URL, CHECK_USER_IF_EXIST, CHANGE_PASSWORD, UPDATE_PASSWORD, SEND_MAIL_FORGET_PASSWORD, GET_ALL_CLIENTS} from '../../../../apiUrls.jsx'
 
 const deleteUserById = async (userId) => {
     try {
@@ -39,6 +39,16 @@ const deleteUserById = async (userId) => {
   const fetchAllLivreurs = async () => {
     try {
       const response = await fetch(GET_ALL_LIVREUR); 
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      return[]
+    }
+  };
+
+  const fetchAllClients = async () => {
+    try {
+      const response = await fetch(GET_ALL_CLIENTS); 
       const data = await response.json();
       return data;
     } catch (error) {
@@ -112,7 +122,7 @@ const deleteUserById = async (userId) => {
 
   }
  
-  export{sendMailForForgetPassword,updatePassword,checkUser,deleteUserById,updateUserById,fetchAllLivreurs,getUserById}
+  export{fetchAllClients,sendMailForForgetPassword,updatePassword,checkUser,deleteUserById,updateUserById,fetchAllLivreurs,getUserById}
   
   
   

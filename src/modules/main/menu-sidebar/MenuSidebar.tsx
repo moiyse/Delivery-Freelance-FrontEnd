@@ -18,6 +18,11 @@ export interface IMenuItem {
 export const MENU_ADMIN: IMenuItem[] = [
   
   {
+    name: "Dashboard",
+    icon: 'fa fa-user nav-icon',
+    path: '/dashboard'
+  },
+  {
     name: "Utilisateurs",
     icon: 'fa fa-users nav-icon',
     children: [
@@ -70,14 +75,19 @@ export const MENU_ADMIN: IMenuItem[] = [
         path: '/enCours'
       },
       {
-        name: "Livrés",
+        name: "Livrer",
         icon: 'far fa-check-circle',
         path: '/livree'
       },
       {
-        name: "Annulés",
+        name: "Annuler",
         icon: 'fas fa-chevron-circle-left',
         path: '/annulee'
+      },
+      {
+        name: "Demander",
+        icon: 'fas fa-exclamation-triangle',
+        path: '/demander'
       }
     ]
   },
@@ -108,6 +118,11 @@ export const MENU_ADMIN: IMenuItem[] = [
 
 export const MENU_CLIENT: IMenuItem[] = [
 
+  {
+    name: "Dashboard",
+    icon: 'fa fa-user nav-icon',
+    path: '/clientDashboard'
+  },
   {
     name: "Profile",
     icon: 'fa fa-user nav-icon',
