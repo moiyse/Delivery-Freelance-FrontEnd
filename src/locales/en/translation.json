@@ -62,9 +62,9 @@
     "notifications": {
       "count": "{{quantity}} Notifications",
       "newMessagesCount": "{{quantity}} new messages",
-      "friendRequestsCount": "{{quantity}} friend requests",
-      "reportsCount": "{{quantity}} new reports",
-      "seeAll": "See All Notifications"
+      "friendRequestsCount": "{{quantity}} nouvelles commandes",
+      "reportsCount": "{{quantity}} commandes demandés",
+      "seeAll": "Voir toutes les notifications"
     },
     "user": {
       "profile": "Profile",

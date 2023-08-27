@@ -1,8 +1,10 @@
-import React from 'react';
+import React, { useState,useEffect } from 'react';
 import {Link} from 'react-router-dom';
 import {useTranslation} from 'react-i18next';
 import styled from 'styled-components';
 import {PfDropdown} from '@profabric/react-components';
+import { getNumberOfCommandeNotViewed, getNumberOfCommandeNotViewedAndDemende, updateCommandsToViewed } from './NotificationService';
+import { FaPlus, FaBell } from 'react-icons/fa';
 
 export const StyledDropdown = styled(PfDropdown)`
   border: none;
@@ -26,59 +28,54 @@ export const StyledDropdown = styled(PfDropdown)`
 
 const NotificationsDropdown = () => {
   const [t] = useTranslation();
+  const [numberOfNotif,setNumberOfNotif]=useState('')
+  const [numberOfDemanderNotif,setNumberOfDemanderNotif]=useState('')
+  const [totaleNotif,setTotaleNotif]=useState(0)
 
+  useEffect(() => {
+    const getNumberOfNotif=async()=>{
+      const numberNotViewed=await getNumberOfCommandeNotViewed()
+      setNumberOfNotif(numberNotViewed)
+      const notViewedAndDemende=await getNumberOfCommandeNotViewedAndDemende()
+      setNumberOfDemanderNotif(notViewedAndDemende)
+    }
+    getNumberOfNotif()
+    const numberOfNotifInt = parseInt(numberOfNotif);
+    const numberOfDemanderNotifInt = parseInt(numberOfDemanderNotif);
+    const total = numberOfNotifInt + numberOfDemanderNotifInt;
+    setTotaleNotif(total);
+  }, [numberOfNotif, numberOfDemanderNotif]);
+
+  const updateAllCommandeToViewed=async()=>{
+    await updateCommandsToViewed() 
+    setTotaleNotif(0)
+  }
   return (
     <StyledDropdown hideArrow>
-      <div slot="button">
+      <div onClick={updateAllCommandeToViewed} slot="button">
         <i className="far fa-bell" />
-        <span className="badge badge-warning navbar-badge">15</span>
+        <span className="badge badge-warning navbar-badge">{totaleNotif}</span>
       </div>
       <div slot="menu">
         <span className="dropdown-item dropdown-header ">
-          {t<string>('header.notifications.count', {quantity: '15'})}
+          {t<string>('header.notifications.count', {quantity: totaleNotif})}
         </span>
         <div className="dropdown-divider " />
-        <Link to="/#/" className="dropdown-item header-notification-style">
-          <i className="fas fa-envelope mr-2" />
-          <span>
-            {t<string>('header.notifications.newMessagesCount', {
-              quantity: '4'
-            })}
-          </span>
-          <span className="float-right text-muted text-sm">
-            {t<string>('measurement.quantityUnit', {
-              quantity: '3',
-              unit: 'mins'
-            })}
-          </span>
-        </Link>
         <div className="dropdown-divider" />
         <Link to="/#/" className="dropdown-item header-notification-style">
-          <i className="fas fa-users mr-2" />
+          <FaBell style={{ color: 'red' }} />
           <span>
             {t<string>('header.notifications.friendRequestsCount', {
-              quantity: '5'
-            })}
-          </span>
-          <span className="float-right text-muted text-sm">
-            {t<string>('measurement.quantityUnit', {
-              quantity: '12',
-              unit: 'hours'
+              quantity: numberOfNotif
             })}
           </span>
         </Link>
         <div className="dropdown-divider " />
         <Link to="/#/" className="dropdown-item header-notification-style">
-          <i className="fas fa-file mr-2" />
+          <FaPlus style={{ color: 'red' }} />
           <span>
             {t<string>('header.notifications.reportsCount', {
-              quantity: '3'
-            })}
-          </span>
-          <span className="float-right text-muted text-sm">
-            {t<string>('measurement.quantityUnit', {
-              quantity: '2',
-              unit: 'days'
+              quantity: numberOfDemanderNotif
             })}
           </span>
         </Link>

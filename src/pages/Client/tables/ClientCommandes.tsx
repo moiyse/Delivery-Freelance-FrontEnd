@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import "./users.css";
-import { deleteCommandeById, fetchCommandes, getAllMyOwnCommandes, updateCommandeLivreur, updateCommandeStatus, updateDemandeStatus } from "../../Admin/tables/CommandesService"
+import { deleteCommandeById, fetchCommandes, getAllMyOwnCommandes, updateCommandeLivreur, updateCommandeStatus, updateDemandeStatus, updateDemandevue } from "../../Admin/tables/CommandesService"
 import { ContentHeader } from "@app/components";
 import { Button, Dialog, DialogTitle, DialogContent, DialogActions } from '@material-ui/core';
 import UpdateCommandeLivreur from "./UpdateCommandeClient";
@@ -86,10 +86,11 @@ const ClientCommandes = () => {
     let state = false
     if(commandes.length !=0){
       commandes.forEach(async commande => {
-        if(commande.commandeStatus == "livré" || commande.commandeStatus == "annulé")
+        if((commande.commandeStatus == "livré" || commande.commandeStatus == "annulé") && commande.paymentStatus!=="demandé")
         {
           state = true
           await updateDemandeStatus(commande.idCommande,"demandé")
+          await updateDemandevue(commande.idCommande,false)
         }
       })
       state == false ? toast.error("Aucune commande livré ou annulé !") : toast.success("Demande payment envoyé !")

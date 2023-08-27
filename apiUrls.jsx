@@ -40,3 +40,9 @@ export const CHECK_USER_IF_EXIST=(login)=>`${BASE_URL}/user/checkUserIfExist/${l
 export const LOGIN_AUTHENTIFICATION=`${BASE_URL}/auth/login`
 export const CHANGE_PASSWORD=`${BASE_URL}/auth/changePassword`
 export const UPDATE_PASSWORD=(id)=>`${BASE_URL}/user/changePassword/${id}`
+
+
+///////////notification//////////////
+export const COUNT_NOT_VIEWED_COMMANDE=`${BASE_URL}/commande/countCommandeNotViewed`
+export const COUNT_NOT_VIEWED_AND_DEMANDE_COMMANDE=`${BASE_URL}/commande/countNotViewedAndDemmandeCommande`
+export const UPDATE_ALL_COMMANDE_TO_VIEWED=`${BASE_URL}/commande/updateAllCommandsToViewed`

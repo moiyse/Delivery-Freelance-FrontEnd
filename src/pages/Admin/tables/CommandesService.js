@@ -98,6 +98,28 @@ const updateDemandeStatus=async(commandeId,statusValue)=>{
     throw error
   }
 }
+const updateDemandevue=async(commandeId,vueValue)=>{
+  try {
+    const updatedCommande={
+      vue:vueValue,
+      originOfVue:'fromChangeToDemende'
+    }
+    const response = await fetch(UPDATE_COMMANDE_BY_ID(commandeId), {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(updatedCommande),
+    });
+    if (!response.ok) {
+      throw new Error('Failed to update commande.')
+    }
+    const data = await response.json()
+  } catch (error) {
+    toast.error('!Failed')
+    throw error
+  }
+}
 
 const updatePaymentStatus=async(commandeId,statusValue)=>{
   try {
@@ -227,4 +249,4 @@ const getCollisCommandeByUserId=async(idUser)=>{
   }
 }
 
-export {updatePaymentStatus,updateDemandeStatus,getAllMyOwnCommandes,getCommandeByIdAuthentificated,updateCommandeStatus,getCommandeOfTodayByStatus,updateCommandeById,getCommandeById,addCommande,fetchCommandes,updateCommandeLivreur,deleteCommandeById}
+export {updateDemandevue,updatePaymentStatus,updateDemandeStatus,getAllMyOwnCommandes,getCommandeByIdAuthentificated,updateCommandeStatus,getCommandeOfTodayByStatus,updateCommandeById,getCommandeById,addCommande,fetchCommandes,updateCommandeLivreur,deleteCommandeById}
