@@ -67,6 +67,7 @@
     "react-datepicker": "^4.15.0",
     "react-dom": "0.0.0-experimental-c8369527e-20230420",
     "react-i18next": "12.2.0",
+    "react-icons": "^4.10.1",
     "react-pdf": "^7.1.2",
     "react-redux": "8.0.5",
     "react-router-dom": "6.10.0",

@@ -1,4 +1,4 @@
-import React, { useCallback } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
@@ -11,12 +11,14 @@ import NotificationsDropdown from "@app/modules/main/header/notifications-dropdo
 import LanguagesDropdown from "@app/modules/main/header/languages-dropdown/LanguagesDropdown";
 import UserDropdown from "@app/modules/main/header/user-dropdown/UserDropdown";
 import "./header.css";
+import { getCurrentUser } from "@app/services/auth";
 
 const Header = () => {
   const [t] = useTranslation();
   const dispatch = useDispatch();
   const navbarVariant = useSelector((state: any) => state.ui.navbarVariant);
   const headerBorder = useSelector((state: any) => state.ui.headerBorder);
+  const [userConnected,setUserConnected]=useState()
 
   const handleToggleMenuSidebar = () => {
     dispatch(toggleSidebarMenu());
@@ -107,6 +109,13 @@ const Header = () => {
       );
     }
   };*/
+  const user = getCurrentUser();
+  useEffect(() => {
+    //setUserConnected(getCurrentUser())
+    //const user=getCurrentUser()
+    //setUserConnected(user)
+    //console.log("this is the role " + userConnected)
+  }, []);
 
 
 
@@ -126,9 +135,8 @@ const Header = () => {
         
       </ul>
       <ul className="navbar-nav ml-auto">
-        <NotificationsDropdown />
+        {user.role === 'admin' && <NotificationsDropdown />}
         <UserDropdown />
-        
       </ul>
     </nav>
   );
