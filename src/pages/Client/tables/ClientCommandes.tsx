@@ -72,6 +72,7 @@ const ClientCommandes = () => {
 
   const getAllMyOwnCommande=async()=>{
     const data = await getAllMyOwnCommandes(getCurrentUser().idUser)
+    console.log("ownCommandes : ",data)
     setCommandes(data)
     setFilteredCommandes(data);
   }
@@ -171,11 +172,11 @@ const ClientCommandes = () => {
               
               {/* /.card-header */}
               <div style={{overflow:"auto"}} className="card-body">
-                <div className="mb-4">
+                <div className="mb-5">
                   <button onClick={() => handleAllPaymentClick()} type="button" title="Demande d'être payer" className="btn btn-success">
                   <i className="fas fa-money-bill-wave"></i> Demandé pour être payé 
                   </button>
-                  <div className="d-flex align-items-center float-right">
+                  <div className="d-flex align-items-center float-right mt-sm-5">
                     <button onClick={() => handleFiltrePayerClick()} type="button" title="payer" className="btn btn-primary float-right mr-2">
                     Payé
                     </button>
@@ -207,7 +208,7 @@ const ClientCommandes = () => {
                     </tr>
                   </thead>
                   <tbody>
-                    {filteredCommandes.length===0 ? (
+                    {filteredCommandes?.length==0 ? (
                       <tr>
                         <td className="text-center">Pas de commande</td>
                         <td className="text-center">Pas de commande</td>
