@@ -110,15 +110,6 @@ const Header = () => {
     }
   };*/
   const user = getCurrentUser();
-  useEffect(() => {
-    //setUserConnected(getCurrentUser())
-    //const user=getCurrentUser()
-    //setUserConnected(user)
-    //console.log("this is the role " + userConnected)
-  }, []);
-
-
-
 
   return (
     <nav style={{ padding: "0.5rem 0.5rem",display:"block" }} className={getContainerClasses()}>
@@ -134,11 +125,11 @@ const Header = () => {
           </button>
         </li>
       </div>
-      <div className="nav-item mx-auto">
-        <li>
+      <div style={{ display: 'flex', listStyle: 'none', padding: 0 }}>
+        <li style={{ marginRight: '10px',display:'flex',alignItems:'center' }}>
           {user.role === 'admin' && <NotificationsDropdown />}
         </li>
-        <li>
+        <li style={{ marginRight: '10px',display:'flex',alignItems:'center'}}>
           <UserDropdown />
         </li>
       </div>
