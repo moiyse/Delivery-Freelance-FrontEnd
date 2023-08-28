@@ -125,11 +125,11 @@ const Header = () => {
           </button>
         </li>
       </div>
-      <div className="nav-item mx-auto">
-        <li>
+      <div style={{ display: 'flex', listStyle: 'none', padding: 0 }}>
+        <li style={{ marginRight: '10px',display:'flex',alignItems:'center' }}>
           {user.role === 'admin' && <NotificationsDropdown />}
         </li>
-        <li>
+        <li style={{ marginRight: '10px',display:'flex',alignItems:'center'}}>
           <UserDropdown />
         </li>
       </div>
