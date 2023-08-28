@@ -110,15 +110,6 @@ const Header = () => {
     }
   };*/
   const user = getCurrentUser();
-  useEffect(() => {
-    //setUserConnected(getCurrentUser())
-    //const user=getCurrentUser()
-    //setUserConnected(user)
-    //console.log("this is the role " + userConnected)
-  }, []);
-
-
-
 
   return (
     <nav style={{ padding: "0.5rem 0.5rem" }} className={getContainerClasses()}>
