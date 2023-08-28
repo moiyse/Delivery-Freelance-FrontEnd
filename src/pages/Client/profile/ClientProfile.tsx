@@ -136,9 +136,9 @@ const ClientProfile = () => {
                       </div>
                     </div>
                     {/* /.card-body */}
-                    <div className="row text-center login-button">
-              <div style={{margin: "0px 95px"}} className="col">
-                <button onClick={updateUser} className='btn btn-primary'>
+                    <div className="row text-center">
+              <div style={{margin: "0px auto"}} className="col">
+                <button style={{backgroundColor:"#e93f47",border:"none"}} onClick={updateUser} className='btn btn-primary'>
                   Modifier
                 </button>
                 {/*<PfButton

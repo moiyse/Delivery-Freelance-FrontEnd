@@ -112,9 +112,10 @@ const Header = () => {
   const user = getCurrentUser();
 
   return (
-    <nav style={{ padding: "0.5rem 0.5rem" }} className={getContainerClasses()}>
-      <ul style={{ display: "flex" }} className="navbar-nav ">
-        <li className="nav-item">
+    <nav style={{ padding: "0.5rem 0.5rem",display:"block" }} className={getContainerClasses()}>
+    <ul style={{ display: "flex", justifyContent: "space-between" }} className="navbar-nav">
+      <div className="nav-item">
+        <li>
           <button
             onClick={handleToggleMenuSidebar}
             type="button"
@@ -123,13 +124,17 @@ const Header = () => {
             <i className="fas fa-bars" />
           </button>
         </li>
-        
-      </ul>
-      <ul className="navbar-nav ml-auto">
-        {user.role === 'admin' && <NotificationsDropdown />}
-        <UserDropdown />
-      </ul>
-    </nav>
+      </div>
+      <div className="nav-item mx-auto">
+        <li>
+          {user.role === 'admin' && <NotificationsDropdown />}
+        </li>
+        <li>
+          <UserDropdown />
+        </li>
+      </div>
+    </ul>
+  </nav>
   );
 };
 
