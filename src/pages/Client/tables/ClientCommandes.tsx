@@ -172,7 +172,7 @@ const ClientCommandes = () => {
               
               {/* /.card-header */}
               <div style={{overflow:"auto"}} className="card-body">
-                <div className="mb-5">
+                <div style={{marginBottom: "4rem"}}>
                   <button onClick={() => handleAllPaymentClick()} type="button" title="Demande d'être payer" className="btn btn-success">
                   <i className="fas fa-money-bill-wave"></i> Demandé pour être payé 
                   </button>
