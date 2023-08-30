@@ -227,22 +227,17 @@ const Commandes = () => {
                       <div style={{color:"grey"}} onClick={()=>{handleRetourFilter()}}><i className="fas fa-long-arrow-alt-left mr-1"></i>Retourner</div>
                       
                   </div>)}
-                  <div className="row justify-content-start">
-                      <div className="col">
+                  <div className="d-flex justify-content-end">
 
-                      </div>
-                      <div className="col-md-2 col" >
+                      <div style={{marginRight:20}}>
                         <ThisMonthFilter onFilterByThisMonth={handleFilterByThisMonth}/>
                       </div>
-                      <div className="col-md-2 col" >
+                      <div style={{marginRight:20}}>
                         <ThisWeekFilter onFilterByThisWeek={filterCommandesByThisWeek} />
                       </div>
-                      <div className="col-md-4 col text-right">
-                        <CommandeFilter
-                          onFilter={(startDate, endDate) => filterCommandesByDate(startDate, endDate)}
-                        />
-                      </div>
-                       
+                     <CommandeFilter
+                        onFilter={(startDate, endDate) => filterCommandesByDate(startDate, endDate)}
+                      />  
                   </div>
               </div>
               <div id="pdf-template" style={{overflow:"auto"}} className="card-body">
