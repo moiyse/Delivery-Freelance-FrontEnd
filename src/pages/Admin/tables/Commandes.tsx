@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState,useRef } from "react";
 import "./users.css";
 import {
   deleteCommandeById,
@@ -23,9 +23,11 @@ import ThisWeekFilter from "@app/pages/Admin/tables/filtre/ThisWeekFilter";
 import ThisMonthFilter from "@app/pages/Admin/tables/filtre/ThisMonthFilter";
 import Swal from 'sweetalert2';
 import jsPDF from 'jspdf';
-import { template } from "./pdfExport/PdfTamplate";
 import { startOfMonth, endOfMonth,startOfWeek, endOfWeek, isWithinInterval } from 'date-fns';
 import Livreur from "./Livreur";
+import Pdf from "./pdfExport/Pdf"
+import { renderToStaticMarkup } from 'react-dom/server'; // Import only the required function
+
 
 export interface Commande {
   idCommande: number;
@@ -65,14 +67,29 @@ const Commandes = () => {
   const [prixTotale,setPrixTotale]=useState(0)
   const [clients,setClients]=useState<Livreur[]>([])
 
-  const downloadPDF = (depart:string,dest:string,dateLiv:string,dateCre:string,nomDest:string,phone:string) => {
-      const pdf = new jsPDF();
-      pdf.html(template(depart,dest,dateLiv,dateCre,nomDest,phone), {
-        callback: () => {
-          pdf.save('facture.pdf');
-        }
-      });
-  }
+  const downloadPDF = (depart:string,dest:string,dateLiv:string,dateCre:string,nomDest:string,phone:string,clientName:string,livreurName:string) => {
+    const pdf = new jsPDF({
+      format: 'a4',
+      unit: 'px',
+    });
+    const data = {
+      depart,
+      dest,
+      dateLiv,
+      dateCre,
+      nomDest,
+      phone,
+      clientName,
+      livreurName,
+    };
+    const invoiceContent = renderToStaticMarkup(<Pdf {...data} />);
+    pdf.html(invoiceContent, {
+      callback: () => {
+        pdf.save('facture.pdf');
+      },
+    });
+  };
+    
 
   const handleUpdateClick = (commandeId:number) => {
     setSelectedCommandeId(commandeId);
@@ -483,7 +500,7 @@ const Commandes = () => {
                               <button  onClick={() => handleUpdateClick(commande.idCommande)} className="btn btn-warning">
                                 <i className="fas fa-pen"></i>
                               </button>
-                              <button onClick={()=>{downloadPDF(commande.depart,commande.destination,commande.delivredAt,commande.createdAt,commande.nomDestinataire,commande.phoneDestinataire)}} type="button" className="btn btn-info">
+                              <button onClick={()=>{downloadPDF(commande.depart,commande.destination,commande.delivredAt,commande.createdAt,commande.nomDestinataire,commande.phoneDestinataire,getClientFirstName(commande.clientId),getLivreurFirstName(commande.livreurId))}} type="button" className="btn btn-info">
                                 <i className="fas fa-file-alt"></i>
                               </button>
                               <button type="button" className="btn btn-danger" onClick={()=>{deleteCommande(commande.idCommande)}}>
