@@ -7,7 +7,7 @@ import {
   updateCommandeStatus,
   updatePaymentStatus,
 } from "../tables/CommandesService.js";
-import { fetchAllLivreurs, getUserById, updateUserById } from "./UsersService";
+import { fetchAllClients, fetchAllLivreurs, getUserById, updateUserById } from "./UsersService";
 import { ContentHeader } from "@app/components";
 import {
   Button,
@@ -25,6 +25,7 @@ import Swal from 'sweetalert2';
 import jsPDF from 'jspdf';
 import { template } from "./pdfExport/PdfTamplate";
 import { startOfMonth, endOfMonth,startOfWeek, endOfWeek, isWithinInterval } from 'date-fns';
+import Livreur from "./Livreur";
 
 export interface Commande {
   idCommande: number;
@@ -61,7 +62,9 @@ const Commandes = () => {
   const [valueOfThePaymentStatus, setValueOfThePaymentStatus] = useState<string[]>(['payé','nonPayé']);
   const [tableInit,setTableInit] = useState(false);
   const [filterState,setFilterState] = useState(false);
-  
+  const [prixTotale,setPrixTotale]=useState(0)
+  const [clients,setClients]=useState<Livreur[]>([])
+
   const downloadPDF = (depart:string,dest:string,dateLiv:string,dateCre:string,nomDest:string,phone:string) => {
       const pdf = new jsPDF();
       pdf.html(template(depart,dest,dateLiv,dateCre,nomDest,phone), {
@@ -90,13 +93,28 @@ const Commandes = () => {
         document.body.removeChild(script);
       };
     }
+    
   }, [filteredCommandes]);
 
   useEffect(() => {
     
     getAllCommande();
     getAllLivreur();
+    getAllClient()
   }, [currentDate]);
+
+  useEffect(() => {
+    const calculePrixTotale=async()=>{
+      let prix=0
+      for(const filtered of filteredCommandes){
+        //setPrixTotale(prixTotale+(filtered.prixArticle))
+        prix=prix+filtered.prixArticle
+      }
+      setPrixTotale(prix)
+    }
+    calculePrixTotale()
+  
+  }, [filteredCommandes]);
 
   const updateStatusCommande = async (
     commande: Commande,
@@ -126,6 +144,10 @@ const Commandes = () => {
     const data = await fetchAllLivreurs();
     setLivreurs(data);
   };
+  const getAllClient=async()=>{
+    const data=await fetchAllClients()
+    setClients(data)
+  }
 
   const updateStatusPayment = async (
     idCommande: number,
@@ -208,7 +230,10 @@ const Commandes = () => {
     const livreur = livreurs.find((livreur) => livreur.idUser === livreurId);
     return livreur ? livreur.firstName + " " +livreur.lastName : "Livreur inconnu";
   };
-
+  const getClientFirstName = (clientId:number) => {
+    const client = clients.find((client) => client.idUser === clientId);
+    return client ? client.firstName + " " +client.lastName : "client inconnu";
+  };
 
   return (
     <>
@@ -219,26 +244,32 @@ const Commandes = () => {
             {/* /.card */}
             <div className="card">
               <div className="card-header">
-                <h3 className="card-title">Tous les commandes</h3>
+                <h3 className="card-title">Tous les commandes</h3> <br/>
+                <h3 className="card-title"><p style={{color:'red'}}>Prix Totale : {prixTotale}</p></h3>
               </div>
               {/* /.card-header */}
               <div className="card-header">
                   {filterState && (<div style={{cursor:"pointer"}} className="d-flex justify-content-start">
                       <div style={{color:"grey"}} onClick={()=>{handleRetourFilter()}}><i className="fas fa-long-arrow-alt-left mr-1"></i>Retourner</div>
-                      
                   </div>)}
-                  <div className="d-flex justify-content-end">
-
-                      <div style={{marginRight:20}}>
-                        <ThisMonthFilter onFilterByThisMonth={handleFilterByThisMonth}/>
-                      </div>
-                      <div style={{marginRight:20}}>
-                        <ThisWeekFilter onFilterByThisWeek={filterCommandesByThisWeek} />
-                      </div>
-                     <CommandeFilter
+                  <div className="row justify-content-start">
+                    <div className="col-12 col-md-4 mb-3"> 
+                      {/* Content */}
+                    </div>
+                    <div className="col-12 col-md-2 mb-3"> 
+                      <ThisMonthFilter onFilterByThisMonth={handleFilterByThisMonth} />
+                    </div>
+                    <div className="col-12 col-md-2 mb-3">
+                      <ThisWeekFilter onFilterByThisWeek={filterCommandesByThisWeek} />
+                    </div>
+                    <div className="col-12 col-md-4 text-md-right mb-3">
+                      <CommandeFilter
                         onFilter={(startDate, endDate) => filterCommandesByDate(startDate, endDate)}
-                      />  
+                      />
+                    </div>
                   </div>
+
+
               </div>
               <div id="pdf-template" style={{overflow:"auto"}} className="card-body">
                 <table
@@ -279,7 +310,7 @@ const Commandes = () => {
                       filteredCommandes.map((commande) => {
                         return (
                           <tr>
-                            <td>{commande.clientId}</td>
+                            <td style={{whiteSpace:'nowrap'}}>{getClientFirstName(commande.clientId)}</td>
                             <td>
                               <a
                                 style={{

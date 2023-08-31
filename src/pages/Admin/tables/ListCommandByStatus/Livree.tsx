@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import "../users.css";
 import { deleteCommandeById, fetchCommandes, getCommandeOfTodayByStatus, updateCommandeLivreur, updateCommandeStatus, updatePaymentStatus } from "../../tables/CommandesService.js";
-import { fetchAllLivreurs, getUserById, updateUserById } from "../UsersService";
+import { fetchAllClients, fetchAllLivreurs, getUserById, updateUserById } from "../UsersService";
 import { ContentHeader } from "@app/components";
 import { Button, Dialog, DialogTitle, DialogContent, DialogActions } from '@material-ui/core';
 import UpdateCommande from "../../forms/UpdateCommande";
@@ -38,8 +38,7 @@ const Annulee = () => {
   const [currentDate, setCurrentDate] = useState<string>(new Date().toISOString().split("T")[0]);
   const [valueOfTheCommandeStatus, setValueOfTheCommandeStatus] = useState<string[]>(['en préparation','en attente pickup','en dépot','en cours de livraison','livré','annulé']);
   const [valueOfThePaymentStatus, setValueOfThePaymentStatus] = useState<string[]>(['payé','nonPayé']);
-
-
+  const [clients,setClients]=useState<Livreur[]>([])
 
   const downloadPDF = (depart:string,dest:string,dateLiv:string,dateCre:string,nomDest:string,phone:string) => {
     const pdf = new jsPDF();
@@ -94,10 +93,15 @@ const Annulee = () => {
   }
 
   useEffect(() => {
-    
     getCommandelivreeOfToday()
     getAllLivreur()
+    getAllClient()
   }, [currentDate]);
+
+  const getAllClient=async()=>{
+    const data=await fetchAllClients()
+    setClients(data)
+  }
 
   const updateStatusCommande=async (
     commande: Commande,
@@ -144,6 +148,10 @@ const Annulee = () => {
   const getLivreurFirstName = (livreurId:number) => {
     const livreur = livreurs.find((livreur) => livreur.idUser === livreurId);
     return livreur ? livreur.firstName + " " +livreur.lastName : "Unknown Livreur";
+  };
+  const getClientFirstName = (clientId:number) => {
+    const client = clients.find((client) => client.idUser === clientId);
+    return client ? client.firstName + " " +client.lastName : "client inconnu";
   };
   return (
     <>
@@ -196,7 +204,7 @@ const Annulee = () => {
                       filteredCommandes.map((commande)=>{
                         return(
                           <tr>
-                            <td>{commande.clientId}</td>
+                            <td style={{whiteSpace:'nowrap'}}>{getClientFirstName(commande.clientId)}</td>
                             <td>
                               <a
                                 style={{
