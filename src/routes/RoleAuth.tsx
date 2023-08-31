@@ -25,7 +25,7 @@ const RoleAuth = ({ allowedRole }: { allowedRole: string[] }) => {
     
     if(currentRole == "client")
     {
-      return allowedRole.includes(currentRole) ?  <Outlet /> : <Navigate to="/clientProfile" />;
+      return allowedRole.includes(currentRole) ?  <Outlet /> : <Navigate to="/clientDashboard" />;
     }
     else if(currentRole == "livreur")
     {

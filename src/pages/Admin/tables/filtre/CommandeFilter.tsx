@@ -23,7 +23,7 @@ const CommandeFilter: React.FC<CommandeFilterProps> = ({ onFilter }) => {
 
   return (
     <>
-      <RangePicker onChange={handleDateChange} />
+      <RangePicker className='mb-3' onChange={handleDateChange} />
       <Button style={{marginLeft:10}} type="primary" onClick={handleFilterClick}>
         Filter
       </Button>
