@@ -288,7 +288,7 @@ const PaymentExpediteur = () => {
         <div className="modal-dialog modal-lg">
           <div className="modal-content">
             <div className="modal-header">
-              <h4 className="modal-title">Large Modal</h4>
+              <h4 className="modal-title">Information Collis</h4>
               <button
                 type="button"
                 className="close"
@@ -298,7 +298,7 @@ const PaymentExpediteur = () => {
                 <span style={{color:"black"}} aria-hidden="true">×</span>
               </button>
             </div>
-            <div className="modal-body">
+            <div style={{overflow:"auto"}} className="modal-body">
               <table className="table table-striped">
                 <thead>
                   <tr>
