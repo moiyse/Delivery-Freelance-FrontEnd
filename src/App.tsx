@@ -49,6 +49,7 @@ import Livreur from './pages/Admin/tables/Livreur';
 import ForgotPassword from '@modules/forgot-password/ForgotPassword';
 import Demander from './pages/Admin/tables/ListCommandByStatus/Demander';
 import ClientDashboard from './pages/Client/ClientDashboard';
+import PdfTamplate from '@app/pages/Admin/tables/pdfExport/PdfTamplate';
 
 declare const FB: any;
 
@@ -97,6 +98,7 @@ const App = () => {
   return (
     <HashRouter>
       <Routes>
+        <Route path="/pdfTemplate" element={<PdfTamplate/>}/>
         <Route path="/delivery">
           <Route path="/delivery/" element={<FrontMain />}>
             <Route path="/delivery/" element={<FrontHome />} /> 
@@ -117,6 +119,8 @@ const App = () => {
         </Route>
         <Route path="/" element={<PrivateRoute />}>
         <Route path="/" element={<Main />}>
+          
+
             <Route path="/users"  element={<RoleAuth allowedRole={["admin","superAdmin"]} />} >
               <Route path="/users" element={<Users />} />
             </Route>

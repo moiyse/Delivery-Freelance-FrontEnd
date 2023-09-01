@@ -8,21 +8,26 @@ import { getCurrentUser } from "@app/services/auth";
 import { User } from "oidc-client-ts";
 import { getUserById, updateUserById } from "@app/pages/Admin/tables/UsersService";
 
-export interface Commande{
-  idCommande:number,
-  depart:string,
-  destination:string,
-  paymentStatus:string,
-  commandeStatus:string,
-  createdAt:string,
-  delivredAt:string,
-  nomDestinataire:string,
-  prenomDestinataire:string,
-  phoneDestinataire:string,
-  prixArticle:string,
-  articles:string,
-  livreurId:number
-  clientId:number
+export interface Commande {
+  idCommande: number;
+  depart: string;
+  departVille:string;
+  departCite:string;
+  destination: string;
+  destinationVille:string;
+  destinationCite:string;
+  paymentStatus: string;
+  commandeStatus: string;
+  commandeType:string;
+  createdAt: string;
+  delivredAt: string;
+  nomDestinataire: string;
+  prenomDestinataire: string;
+  phoneDestinataire: string;
+  articles: string;
+  livreurId: number;
+  clientId: number;
+  prixArticle: number;
 }
 
 const LivreurCommandes  = () => {

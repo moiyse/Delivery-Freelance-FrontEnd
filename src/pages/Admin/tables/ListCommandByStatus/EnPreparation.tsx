@@ -6,7 +6,7 @@ import { ContentHeader } from "@app/components";
 import { Button, Dialog, DialogTitle, DialogContent, DialogActions } from '@material-ui/core';
 import UpdateCommande from "../../forms/UpdateCommande";
 import jsPDF from "jspdf";
-import { template } from "../pdfExport/PdfTamplate";
+//import { template } from "../pdfExport/PdfTamplate";
 import Swal from "sweetalert2";
 export interface Commande{
   idCommande:number,
@@ -43,11 +43,11 @@ const Annulee = () => {
 
   const downloadPDF = (depart:string,dest:string,dateLiv:string,dateCre:string,nomDest:string,phone:string) => {
     const pdf = new jsPDF();
-    pdf.html(template(depart,dest,dateLiv,dateCre,nomDest,phone), {
+    /*pdf.html(template(depart,dest,dateLiv,dateCre,nomDest,phone), {
       callback: () => {
         pdf.save('facture.pdf');
       }
-    });
+    });*/
   }
 
   const handleUpdateClick = (commandeId:number) => {

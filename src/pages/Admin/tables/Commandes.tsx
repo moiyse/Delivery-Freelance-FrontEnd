@@ -18,21 +18,27 @@ import {
 } from "@material-ui/core";
 import UpdateCommande from "../forms/UpdateCommande";
 import CommandeFilter from "@app/pages/Admin/tables/filtre/CommandeFilter";
-import {FloatButton} from 'antd'
+import { FloatButton } from 'antd'
 import ThisWeekFilter from "@app/pages/Admin/tables/filtre/ThisWeekFilter";
 import ThisMonthFilter from "@app/pages/Admin/tables/filtre/ThisMonthFilter";
 import Swal from 'sweetalert2';
 import jsPDF from 'jspdf';
-import { template } from "./pdfExport/PdfTamplate";
-import { startOfMonth, endOfMonth,startOfWeek, endOfWeek, isWithinInterval } from 'date-fns';
+import html2canvas from 'html2canvas';
+import { startOfMonth, endOfMonth, startOfWeek, endOfWeek, isWithinInterval } from 'date-fns';
+import { useNavigate } from "react-router-dom";
+
 
 export interface Commande {
   idCommande: number;
   depart: string;
+  departVille:string;
+  departCite:string;
   destination: string;
+  destinationVille:string;
+  destinationCite:string;
   paymentStatus: string;
   commandeStatus: string;
-  demandeStatus: string;
+  commandeType:string;
   createdAt: string;
   delivredAt: string;
   nomDestinataire: string;
@@ -43,6 +49,7 @@ export interface Commande {
   clientId: number;
   prixArticle: number;
 }
+
 interface Livreur {
   idUser: number;
   firstName: string;
@@ -57,21 +64,16 @@ const Commandes = () => {
   const [openDialog, setOpenDialog] = useState(false);
   const [filteredCommandes, setFilteredCommandes] = useState<Commande[]>([]); // State for filtered commandes
   const [currentDate, setCurrentDate] = useState<string>(new Date().toISOString().split("T")[0]);
-  const [valueOfTheCommandeStatus, setValueOfTheCommandeStatus] = useState<string[]>(['en préparation','en attente pickup','en dépot','en cours de livraison','livré','annulé']);
-  const [valueOfThePaymentStatus, setValueOfThePaymentStatus] = useState<string[]>(['payé','nonPayé']);
-  const [tableInit,setTableInit] = useState(false);
-  const [filterState,setFilterState] = useState(false);
-  
-  const downloadPDF = (depart:string,dest:string,dateLiv:string,dateCre:string,nomDest:string,phone:string) => {
-      const pdf = new jsPDF();
-      pdf.html(template(depart,dest,dateLiv,dateCre,nomDest,phone), {
-        callback: () => {
-          pdf.save('facture.pdf');
-        }
-      });
-  }
+  const [valueOfTheCommandeStatus, setValueOfTheCommandeStatus] = useState<string[]>(['en préparation', 'en attente pickup', 'en dépot', 'en cours de livraison', 'livré', 'annulé']);
+  const [valueOfThePaymentStatus, setValueOfThePaymentStatus] = useState<string[]>(['payé', 'nonPayé']);
+  const [tableInit, setTableInit] = useState(false);
+  const [filterState, setFilterState] = useState(false);
 
-  const handleUpdateClick = (commandeId:number) => {
+  const navigate = useNavigate();
+
+
+
+  const handleUpdateClick = (commandeId: number) => {
     setSelectedCommandeId(commandeId);
     setOpenDialog(true);
   };
@@ -93,7 +95,7 @@ const Commandes = () => {
   }, [filteredCommandes]);
 
   useEffect(() => {
-    
+
     getAllCommande();
     getAllLivreur();
   }, [currentDate]);
@@ -111,7 +113,7 @@ const Commandes = () => {
       }
       updateUserById(commande.livreurId, livreur);
     }
-    await updateCommandeStatus(idCommande,value)
+    await updateCommandeStatus(idCommande, value)
     getAllCommande();
     getAllLivreur();
     //window.location.reload()
@@ -131,16 +133,16 @@ const Commandes = () => {
     idCommande: number,
     value: string
   ) => {
-    await updatePaymentStatus(idCommande,value)
+    await updatePaymentStatus(idCommande, value)
     getAllCommande();
     getAllLivreur();
   }
 
-  const updateLivreurOfTheCommande=async(livreurId:number,commadeId:number)=>{
-      console.log("livId : ",livreurId,"cmd ID : ",commadeId)
-      await updateCommandeLivreur(livreurId,commadeId)
-      getAllCommande();
-      getAllLivreur();
+  const updateLivreurOfTheCommande = async (livreurId: number, commadeId: number) => {
+    console.log("livId : ", livreurId, "cmd ID : ", commadeId)
+    await updateCommandeLivreur(livreurId, commadeId)
+    getAllCommande();
+    getAllLivreur();
   }
 
   const filterCommandesByDate = (startDate: string, endDate: string) => {
@@ -178,7 +180,7 @@ const Commandes = () => {
     setFilteredCommandes(filtered);
   };
 
-  const deleteCommande = (idCommande:number) => {
+  const deleteCommande = (idCommande: number) => {
     Swal.fire({
       title: 'Supprimer Une Commande',
       text: `Etes vous sûr de supprimer la commande avec l'ID : ${idCommande} " ?`,
@@ -195,7 +197,7 @@ const Commandes = () => {
     });
   }
 
-  const handleRetourFilter = ()=> {
+  const handleRetourFilter = () => {
     const getAllCommande = async () => {
       const data = await fetchCommandes();
       setCommandes(data);
@@ -204,16 +206,42 @@ const Commandes = () => {
     setFilterState(false)
     getAllCommande();
   }
-  const getLivreurFirstName = (livreurId:number) => {
+  const getLivreurFirstName = (livreurId: number) => {
     const livreur = livreurs.find((livreur) => livreur.idUser === livreurId);
-    return livreur ? livreur.firstName + " " +livreur.lastName : "Livreur inconnu";
+    return livreur ? livreur.firstName + " " + livreur.lastName : "Livreur inconnu";
+  };
+
+  const generatePDF = () => {
+    const DATA = document.getElementById('htmlData');
+
+    if (DATA) {
+      html2canvas(DATA).then((canvas) => {
+        const fileWidth = 500; // A4 width in mm
+        const fileHeight = 670;
+        const FILEURI = canvas.toDataURL('image/png');
+        const PDF = new jsPDF('p', 'mm', 'a4');
+        let position = 0;
+        PDF.addImage(FILEURI, 'PNG', 0, position, fileWidth, fileHeight);
+        PDF.save('FENC-Plateform.pdf');
+      });
+    } else {
+      console.error("Element with id 'htmlData' not found.");
+    }
+  };
+
+  const redirectToPdfTemplate = (commande:Commande) => {
+    
+    // You can pass values as query parameters or state, for example:
+    
+    navigate("/pdfTemplate", { state: { data: commande } });
+
   };
 
 
   return (
     <>
       <ContentHeader title="List Commandes" />
-      <div className="container-fluid">
+      <div className="container-fluid" >
         <div className="row">
           <div className="col-12">
             {/* /.card */}
@@ -223,29 +251,29 @@ const Commandes = () => {
               </div>
               {/* /.card-header */}
               <div className="card-header">
-                  {filterState && (<div style={{cursor:"pointer"}} className="d-flex justify-content-start">
-                      <div style={{color:"grey"}} onClick={()=>{handleRetourFilter()}}><i className="fas fa-long-arrow-alt-left mr-1"></i>Retourner</div>
-                      
-                  </div>)}
-                  <div className="row justify-content-start">
-                      <div className="col">
+                {filterState && (<div style={{ cursor: "pointer" }} className="d-flex justify-content-start">
+                  <div style={{ color: "grey" }} onClick={() => { handleRetourFilter() }}><i className="fas fa-long-arrow-alt-left mr-1"></i>Retourner</div>
 
-                      </div>
-                      <div className="col-md-2 col" >
-                        <ThisMonthFilter onFilterByThisMonth={handleFilterByThisMonth}/>
-                      </div>
-                      <div className="col-md-2 col" >
-                        <ThisWeekFilter onFilterByThisWeek={filterCommandesByThisWeek} />
-                      </div>
-                      <div className="col-md-4 col text-right">
-                        <CommandeFilter
-                          onFilter={(startDate, endDate) => filterCommandesByDate(startDate, endDate)}
-                        />
-                      </div>
-                       
+                </div>)}
+                <div className="row justify-content-start">
+                  <div className="col">
+
                   </div>
+                  <div className="col-md-2 col" >
+                    <ThisMonthFilter onFilterByThisMonth={handleFilterByThisMonth} />
+                  </div>
+                  <div className="col-md-2 col" >
+                    <ThisWeekFilter onFilterByThisWeek={filterCommandesByThisWeek} />
+                  </div>
+                  <div className="col-md-4 col text-right">
+                    <CommandeFilter
+                      onFilter={(startDate, endDate) => filterCommandesByDate(startDate, endDate)}
+                    />
+                  </div>
+
+                </div>
               </div>
-              <div id="pdf-template" style={{overflow:"auto"}} className="card-body">
+              <div id="pdf-template" style={{ overflow: "auto" }} className="card-body">
                 <table
                   id="example1"
                   className="table table-bordered table-striped"
@@ -350,15 +378,15 @@ const Commandes = () => {
                             </td>
                             <td className="pill-td">
                               <a
-                                  className="dropdown-toggle dropdown-icon"
-                                  data-toggle="dropdown"
-                                  aria-expanded="true"
-                                >
-                                  {commande.paymentStatus != "demandé" ? (
+                                className="dropdown-toggle dropdown-icon"
+                                data-toggle="dropdown"
+                                aria-expanded="true"
+                              >
+                                {commande.paymentStatus != "demandé" ? (
                                   <span className="badge bg-warning">
                                     {commande.paymentStatus}
                                   </span>
-                                  ) : (
+                                ) : (
                                   <span
                                     style={{
                                       color: "white",
@@ -370,7 +398,7 @@ const Commandes = () => {
                                   >
                                     {commande.paymentStatus}
                                   </span>
-                                  )}
+                                )}
                               </a>
                               <div className="dropdown-overflow dropdown-menu commande-status-pill">
                                 {valueOfThePaymentStatus.map((val) => (
@@ -405,8 +433,8 @@ const Commandes = () => {
                               >
                                 {commande.livreurId
                                   ? (<span className="badge bg-secondary">
-                                       {getLivreurFirstName(commande.livreurId)}
-                                    </span> )
+                                    {getLivreurFirstName(commande.livreurId)}
+                                  </span>)
                                   : (<span
                                     style={{
                                       color: "white",
@@ -415,10 +443,10 @@ const Commandes = () => {
                                       textAlign: "center",
                                     }}
                                     className="badge blob red"
-                                    >
-                                      No Livreur
-                                    </span>)
-                                  }
+                                  >
+                                    No Livreur
+                                  </span>)
+                                }
                               </a>
                               <div className="dropdown-overflow dropdown-menu">
                                 {livreurs.length === 0 ? (
@@ -443,30 +471,30 @@ const Commandes = () => {
                                     >
                                       {liv.idUser === commande.livreurId
                                         ? "selected: " +
-                                          liv.firstName +
-                                          " " +
-                                          liv.lastName
+                                        liv.firstName +
+                                        " " +
+                                        liv.lastName
                                         : liv.firstName + " " + liv.lastName}
                                     </a>
                                   ))
                                 )}
                               </div>
-                            </td>  
-                          <td>
-                            <div className="btn-group">
-                              <button  onClick={() => handleUpdateClick(commande.idCommande)} className="btn btn-warning">
-                                <i className="fas fa-pen"></i>
-                              </button>
-                              <button onClick={()=>{downloadPDF(commande.depart,commande.destination,commande.delivredAt,commande.createdAt,commande.nomDestinataire,commande.phoneDestinataire)}} type="button" className="btn btn-info">
-                                <i className="fas fa-file-alt"></i>
-                              </button>
-                              <button type="button" className="btn btn-danger" onClick={()=>{deleteCommande(commande.idCommande)}}>
-                                <i className="fa fa-trash"></i>
-                              </button>
-                              
-                            </div>
-                          </td>
-                        </tr>
+                            </td>
+                            <td>
+                              <div className="btn-group">
+                                <button onClick={() => handleUpdateClick(commande.idCommande)} className="btn btn-warning">
+                                  <i className="fas fa-pen"></i>
+                                </button>
+                                <button onClick={() => { redirectToPdfTemplate(commande) }} type="button" className="btn btn-info">
+                                  <i className="fas fa-file-alt"></i>
+                                </button>
+                                <button type="button" className="btn btn-danger" onClick={() => { deleteCommande(commande.idCommande) }}>
+                                  <i className="fa fa-trash"></i>
+                                </button>
+
+                              </div>
+                            </td>
+                          </tr>
                         )
                       })
                     )}
@@ -492,6 +520,10 @@ const Commandes = () => {
           <Button onClick={handleCloseDialog}>Cancel</Button>
         </DialogActions>
       </Dialog>
+
+
+      
+
     </>
   );
 };

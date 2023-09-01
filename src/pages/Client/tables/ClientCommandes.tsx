@@ -8,22 +8,27 @@ import { getCurrentUser } from "@app/services/auth";
 import Swal from 'sweetalert2';
 import { toast } from "react-toastify";
 
-export interface Commande{
-  idCommande:number,
-  depart:string,
-  destination:string,
-  paymentStatus:string,
-  commandeStatus:string,
-  demandeStatus:string,
-  createdAt:string,
-  delivredAt:string,
-  nomDestinataire:string,
-  prenomDestinataire:string,
-  phoneDestinataire:string,
-  prixArticle:string,
-  articles:string,
-  livreurId:number
-  clientId:number
+
+export interface Commande {
+  idCommande: number;
+  depart: string;
+  departVille:string;
+  departCite:string;
+  destination: string;
+  destinationVille:string;
+  destinationCite:string;
+  paymentStatus: string;
+  commandeStatus: string;
+  commandeType:string;
+  createdAt: string;
+  delivredAt: string;
+  nomDestinataire: string;
+  prenomDestinataire: string;
+  phoneDestinataire: string;
+  articles: string;
+  livreurId: number;
+  clientId: number;
+  prixArticle: number;
 }
 interface Livreur {
   idUser:number

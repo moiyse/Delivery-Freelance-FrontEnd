@@ -6,23 +6,30 @@ import { ContentHeader } from "@app/components";
 import { Button, Dialog, DialogTitle, DialogContent, DialogActions } from '@material-ui/core';
 import UpdateCommande from "../../forms/UpdateCommande";
 import jsPDF from "jspdf";
-import { template } from "../pdfExport/PdfTamplate";
+
+//import { template } from "../pdfExport/PdfTamplate";
+
 import Swal from "sweetalert2";
-export interface Commande{
-  idCommande:number,
-  depart:string,
-  destination:string,
-  paymentStatus:string,
-  commandeStatus:string,
-  createdAt:string,
-  delivredAt:string,
-  nomDestinataire:string,
-  prenomDestinataire:string,
-  phoneDestinataire:string,
-  prixArticle:string,
-  articles:string,
-  livreurId:number
-  clientId:number
+export interface Commande {
+  idCommande: number;
+  depart: string;
+  departVille:string;
+  departCite:string;
+  destination: string;
+  destinationVille:string;
+  destinationCite:string;
+  paymentStatus: string;
+  commandeStatus: string;
+  commandeType:string;
+  createdAt: string;
+  delivredAt: string;
+  nomDestinataire: string;
+  prenomDestinataire: string;
+  phoneDestinataire: string;
+  articles: string;
+  livreurId: number;
+  clientId: number;
+  prixArticle: number;
 }
 interface Livreur {
   idUser:number
@@ -43,11 +50,11 @@ const Annulee = () => {
 
   const downloadPDF = (depart:string,dest:string,dateLiv:string,dateCre:string,nomDest:string,phone:string) => {
     const pdf = new jsPDF();
-    pdf.html(template(depart,dest,dateLiv,dateCre,nomDest,phone), {
+    /*pdf.html(template(depart,dest,dateLiv,dateCre,nomDest,phone), {
       callback: () => {
         pdf.save('facture.pdf');
       }
-    });
+    });*/
   }
 
   const handleUpdateClick = (commandeId:number) => {
