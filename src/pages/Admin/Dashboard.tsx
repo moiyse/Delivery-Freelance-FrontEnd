@@ -66,9 +66,7 @@ const Dashboard = () => {
     getAllUserClients()
   }, [commandes])
 
-  useEffect(() => {
-    getAllUserClients()
-  }, [clients])
+ 
 
   const getAllCommandes = async () => {
     const data = await fetchCommandes();

@@ -124,11 +124,6 @@ export const MENU_CLIENT: IMenuItem[] = [
     path: '/clientDashboard'
   },
   {
-    name: "Profile",
-    icon: 'fa fa-user nav-icon',
-    path: '/clientProfile'
-  },
-  {
     name: "Ajouter Commande",
     icon: 'fa fa-plus-circle nav-icon',
     path: '/clientAjoutCommande'

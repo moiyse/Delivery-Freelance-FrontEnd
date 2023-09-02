@@ -1,13 +1,16 @@
 import { useEffect, useState } from "react";
 import "../users.css";
 import { deleteCommandeById, fetchCommandes, getCommandeOfTodayByStatus, updateCommandeLivreur, updateCommandeStatus, updatePaymentStatus } from "../../tables/CommandesService.js";
-import { fetchAllLivreurs, getUserById, updateUserById } from "../UsersService";
+import { fetchAllClients, fetchAllLivreurs, getUserById, updateUserById } from "../UsersService";
 import { ContentHeader } from "@app/components";
 import { Button, Dialog, DialogTitle, DialogContent, DialogActions } from '@material-ui/core';
 import UpdateCommande from "../../forms/UpdateCommande";
 import jsPDF from "jspdf";
 //import { template } from "../pdfExport/PdfTamplate";
 import Swal from "sweetalert2";
+import Pdf from "../pdfExport/Pdf"
+import { renderToStaticMarkup } from 'react-dom/server';
+import { useNavigate } from "react-router-dom";
 export interface Commande{
   idCommande:number,
   depart:string,
@@ -38,7 +41,9 @@ const Annulee = () => {
   const [currentDate, setCurrentDate] = useState<string>(new Date().toISOString().split("T")[0]);
   const [valueOfTheCommandeStatus, setValueOfTheCommandeStatus] = useState<string[]>(['en préparation','en attente pickup','en dépot','en cours de livraison','livré','annulé']);
   const [valueOfThePaymentStatus, setValueOfThePaymentStatus] = useState<string[]>(['payé','nonPayé']);
+  const [clients,setClients]=useState<Livreur[]>([])
 
+  const navigate = useNavigate();
 
 
   const downloadPDF = (depart:string,dest:string,dateLiv:string,dateCre:string,nomDest:string,phone:string) => {
@@ -97,8 +102,13 @@ const Annulee = () => {
     
     getEnPreparationCommandeOfToday()
     getAllLivreur()
+    getAllClient()
   }, [currentDate]);
 
+  const getAllClient=async()=>{
+    const data=await fetchAllClients()
+    setClients(data)
+  }
   const updateStatusCommande=async (
     commande: Commande,
     idCommande: number,
@@ -141,9 +151,21 @@ const Annulee = () => {
     });
   }
 
+  const redirectToPdfTemplate = (commande:Commande) => {
+    
+    // You can pass values as query parameters or state, for example:
+    
+    navigate("/pdfTemplate", { state: { data: commande } });
+
+  };
+
   const getLivreurFirstName = (livreurId:number) => {
     const livreur = livreurs.find((livreur) => livreur.idUser === livreurId);
     return livreur ? livreur.firstName + " " +livreur.lastName : "Unknown Livreur";
+  };
+  const getClientFirstName = (clientId:number) => {
+    const client = clients.find((client) => client.idUser === clientId);
+    return client ? client.firstName + " " +client.lastName : "client inconnu";
   };
   return (
     <>
@@ -196,7 +218,7 @@ const Annulee = () => {
                       filteredCommandes.map((commande)=>{
                         return(
                           <tr>
-                            <td>{commande.clientId}</td>
+                            <td style={{whiteSpace:'nowrap'}}>{getClientFirstName(commande.clientId)}</td>
                             <td>
                               <a
                                 style={{
@@ -369,9 +391,9 @@ const Annulee = () => {
                               <button  onClick={() => handleUpdateClick(commande.idCommande)} className="btn btn-warning">
                                 <i className="fas fa-pen"></i>
                               </button>
-                              <button onClick={()=>{downloadPDF(commande.depart,commande.destination,commande.delivredAt,commande.createdAt,commande.nomDestinataire,commande.phoneDestinataire)}} type="button" className="btn btn-info">
-                                <i className="fas fa-file-alt"></i>
-                              </button>
+                              <button onClick={() => { redirectToPdfTemplate(commande) }} type="button" className="btn btn-info">
+                                  <i className="fas fa-file-alt"></i>
+                                </button>
                               <button type="button" className="btn btn-danger" onClick={()=>{deleteCommande(commande.idCommande)}}>
                                 <i className="fa fa-trash"></i>
                               </button>

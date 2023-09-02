@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState,useRef } from "react";
 import "./users.css";
 import {
   deleteCommandeById,
@@ -7,7 +7,7 @@ import {
   updateCommandeStatus,
   updatePaymentStatus,
 } from "../tables/CommandesService.js";
-import { fetchAllLivreurs, getUserById, updateUserById } from "./UsersService";
+import { fetchAllClients, fetchAllLivreurs, getUserById, updateUserById } from "./UsersService";
 import { ContentHeader } from "@app/components";
 import {
   Button,
@@ -68,6 +68,8 @@ const Commandes = () => {
   const [valueOfThePaymentStatus, setValueOfThePaymentStatus] = useState<string[]>(['payé', 'nonPayé']);
   const [tableInit, setTableInit] = useState(false);
   const [filterState, setFilterState] = useState(false);
+  const [prixTotale,setPrixTotale]=useState(0)
+  const [clients,setClients]=useState<Livreur[]>([])
 
   const navigate = useNavigate();
 
@@ -92,13 +94,28 @@ const Commandes = () => {
         document.body.removeChild(script);
       };
     }
+    
   }, [filteredCommandes]);
 
   useEffect(() => {
 
     getAllCommande();
     getAllLivreur();
+    getAllClient()
   }, [currentDate]);
+
+  useEffect(() => {
+    const calculePrixTotale=async()=>{
+      let prix=0
+      for(const filtered of filteredCommandes){
+        //setPrixTotale(prixTotale+(filtered.prixArticle))
+        prix=prix+filtered.prixArticle
+      }
+      setPrixTotale(prix)
+    }
+    calculePrixTotale()
+  
+  }, [filteredCommandes]);
 
   const updateStatusCommande = async (
     commande: Commande,
@@ -128,6 +145,10 @@ const Commandes = () => {
     const data = await fetchAllLivreurs();
     setLivreurs(data);
   };
+  const getAllClient=async()=>{
+    const data=await fetchAllClients()
+    setClients(data)
+  }
 
   const updateStatusPayment = async (
     idCommande: number,
@@ -229,6 +250,8 @@ const Commandes = () => {
     }
   };
 
+  
+
   const redirectToPdfTemplate = (commande:Commande) => {
     
     // You can pass values as query parameters or state, for example:
@@ -236,7 +259,10 @@ const Commandes = () => {
     navigate("/pdfTemplate", { state: { data: commande } });
 
   };
-
+  const getClientFirstName = (clientId:number) => {
+    const client = clients.find((client) => client.idUser === clientId);
+    return client ? client.firstName + " " +client.lastName : "client inconnu";
+  };
 
   return (
     <>
@@ -247,7 +273,8 @@ const Commandes = () => {
             {/* /.card */}
             <div className="card">
               <div className="card-header">
-                <h3 className="card-title">Tous les commandes</h3>
+                <h3 className="card-title">Tous les commandes</h3> <br/>
+                <h3 className="card-title"><p style={{color:'red'}}>Prix Totale : {prixTotale}</p></h3>
               </div>
               {/* /.card-header */}
               <div className="card-header">
@@ -312,7 +339,7 @@ const Commandes = () => {
                       filteredCommandes.map((commande) => {
                         return (
                           <tr>
-                            <td>{commande.clientId}</td>
+                            <td style={{whiteSpace:'nowrap'}}>{getClientFirstName(commande.clientId)}</td>
                             <td>
                               <a
                                 style={{

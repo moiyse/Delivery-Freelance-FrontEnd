@@ -38,7 +38,8 @@ const AjoutUser = () => {
   const [roleError, setRoleError] = useState("");
   const [retourError, setRetourError] = useState("");
   const [livraisonError, setLivraisonError] = useState("");
-
+  const [matriculeFiscaleError,setMatriculeFiscaleError]=useState("")
+  const [matriculeFiscale,setMatriculeFiscale]=useState("")
   const [currentUser, setCurrentUser] = useState<User>();
 
   const validateEmail = (email:any) => {
@@ -59,7 +60,6 @@ const AjoutUser = () => {
 
   const saveData = async (e: any) => {
     e.preventDefault();
-
     let isValid = true;
 
   if (firstName.trim() === "") {
@@ -107,12 +107,17 @@ const AjoutUser = () => {
     } else {
       setRetourError("");
     }
-
     if (livraison === "") {
       setLivraisonError("Veuillez entrer prix de livraison");
       isValid = false;
     } else {
       setLivraisonError("");
+    }
+    if(matriculeFiscale===""){
+      setMatriculeFiscaleError("Veuillez entrer le numéro fiscale")
+      isValid = false
+    }else{
+        setMatriculeFiscaleError("")
     }
   }
 
@@ -129,6 +134,7 @@ const AjoutUser = () => {
       phone:phone,
       livraison:livraison,
       retour:retour,
+      matriculeFiscale:matriculeFiscale,
       caisse:role == "livreur" ? 0 : null,
       currentUrl:currentUrl,
 
@@ -243,32 +249,43 @@ const AjoutUser = () => {
               </div>
             </div>
             <div className="form-group">
-            {role == "client" && (
+              {role == "client" && (
                   <div className="row">
-                  <div className="col-md-3">
-                    <label htmlFor="exampleInputEmail1">Retour</label>
-                    <input
-                      onChange={(e) => setRetour(e.currentTarget.value)}
-                      type="number"
-                      className="form-control"
-                      id="exampleInputEmail1"
-                      placeholder="Entrer le prix de retour en DT"
-                    />
-                    {retourError && <div className="error">{retourError}<i style={{fontSize:"14px"}} className="fas fa-exclamation ml-2"></i></div>}
+                      <div className="col-md-3">
+                        <label htmlFor="exampleInputEmail1">Retour</label>
+                        <input
+                          onChange={(e) => setRetour(e.currentTarget.value)}
+                          type="number"
+                          className="form-control"
+                          id="exampleInputEmail1"
+                          placeholder="Entrer le prix de retour en DT"
+                        />
+                        {retourError && <div className="error">{retourError}<i style={{fontSize:"14px"}} className="fas fa-exclamation ml-2"></i></div>}
+                      </div>
+                      <div className="col-md-3">
+                        <label htmlFor="exampleInputEmail1">Livraison</label>
+                        <input
+                          onChange={(e) => setLivraison(e.currentTarget.value)}
+                          type="number"
+                          className="form-control"
+                          id="exampleInputEmail1"
+                          placeholder="Entrer le prix de livraison en DT"
+                        />
+                        {livraisonError && <div className="error">{livraisonError}<i style={{fontSize:"14px"}} className="fas fa-exclamation ml-2"></i></div>}
+                      </div>
+                      <div className="col-md-3">
+                        <label htmlFor="exampleInputEmail1">Matricule Fiscale</label>
+                        <input
+                          onChange={(e) => setMatriculeFiscale(e.currentTarget.value)}
+                          type="text"
+                          className="form-control"
+                          id="exampleInputEmail1"
+                          placeholder="Matricule Fiscale"
+                        />
+                        {matriculeFiscaleError && <div className="error">{matriculeFiscaleError}<i style={{fontSize:"14px"}} className="fas fa-exclamation ml-2"></i></div>}
+                      </div>
                   </div>
-                  <div className="col-md-3">
-                    <label htmlFor="exampleInputEmail1">Livraison</label>
-                    <input
-                      onChange={(e) => setLivraison(e.currentTarget.value)}
-                      type="number"
-                      className="form-control"
-                      id="exampleInputEmail1"
-                      placeholder="Entrer le prix de livraison en DT"
-                    />
-                    {livraisonError && <div className="error">{livraisonError}<i style={{fontSize:"14px"}} className="fas fa-exclamation ml-2"></i></div>}
-                  </div>
-                </div>
-                )}
+                  )}
             </div>
           </div>
           {/* /.card-body */}

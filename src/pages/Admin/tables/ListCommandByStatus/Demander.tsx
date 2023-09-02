@@ -9,6 +9,7 @@ import jsPDF from "jspdf";
 //import { template } from "../pdfExport/PdfTamplate";
 import Swal from "sweetalert2";
 import ClientCommandes from "@app/pages/Client/tables/ClientCommandes";
+import { useNavigate } from "react-router-dom";
 export interface Commande {
   idCommande: number;
   depart: string;
@@ -60,9 +61,10 @@ const Demander = () => {
   const [clientCommandesDemander, setClientCommandesDemander] = useState<Commande[]>([]); // State for filtered commandes
   const [CommandesClient, setCommandesClient] = useState<Commande[]>([]); // State for filtered commandes
   const [currentDate, setCurrentDate] = useState<string>(new Date().toISOString().split("T")[0]);
-  const [valueOfTheCommandeStatus, setValueOfTheCommandeStatus] = useState<string[]>(['en préparation', 'en attente pickup', 'en dépot', 'en cours de livraison', 'livré', 'annulé']);
-  const [valueOfThePaymentStatus, setValueOfThePaymentStatus] = useState<string[]>(['payé', 'nonPayé']);
+  const [valueOfTheCommandeStatus, setValueOfTheCommandeStatus] = useState<string[]>(['en préparation','en attente pickup','en dépot','en cours de livraison','livré','annulé']);
+  const [valueOfThePaymentStatus, setValueOfThePaymentStatus] = useState<string[]>(['payé','nonPayé']);
 
+  const navigate = useNavigate();
 
 
   const downloadPDF = (depart: string, dest: string, dateLiv: string, dateCre: string, nomDest: string, phone: string) => {
@@ -173,7 +175,10 @@ const Demander = () => {
   useEffect(() => {
     getCommandesDemander()
     getAllLivreur()
+    getAllClient()
   }, [currentDate]);
+
+  
 
   const updateStatusCommande = async (
     commande: Commande,
@@ -216,6 +221,14 @@ const Demander = () => {
       }
     });
   }
+
+  const redirectToPdfTemplate = (commande:Commande) => {
+    
+    // You can pass values as query parameters or state, for example:
+    
+    navigate("/pdfTemplate", { state: { data: commande } });
+
+  };
 
   const getLivreurFirstName = (livreurId: number) => {
     const livreur = livreurs.find((livreur) => livreur.idUser === livreurId);
@@ -505,9 +518,9 @@ const Demander = () => {
                           <button onClick={() => handleUpdateClick(commande.idCommande)} className="btn btn-warning">
                             <i className="fas fa-pen"></i>
                           </button>
-                          <button onClick={() => { downloadPDF(commande.depart, commande.destination, commande.delivredAt, commande.createdAt, commande.nomDestinataire, commande.phoneDestinataire) }} type="button" className="btn btn-info">
-                            <i className="fas fa-file-alt"></i>
-                          </button>
+                          <button onClick={() => { redirectToPdfTemplate(commande) }} type="button" className="btn btn-info">
+                                  <i className="fas fa-file-alt"></i>
+                                </button>
                           <button type="button" className="btn btn-danger" onClick={() => { deleteCommande(commande.idCommande) }}>
                             <i className="fa fa-trash"></i>
                           </button>
