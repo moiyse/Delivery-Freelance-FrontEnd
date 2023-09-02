@@ -127,7 +127,7 @@ const Header = () => {
       </div>
       <div style={{ display: 'flex', listStyle: 'none', padding: 0 }}>
         <li style={{ marginRight: '10px',display:'flex',alignItems:'center' }}>
-          {user.role === 'admin' && <NotificationsDropdown />}
+          {user.role === 'admin' || user.role === 'superAdmin' && <NotificationsDropdown />}
         </li>
         <li style={{ marginRight: '10px',display:'flex',alignItems:'center'}}>
           <UserDropdown />

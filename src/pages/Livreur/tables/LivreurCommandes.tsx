@@ -6,22 +6,28 @@ import { Button, Dialog, DialogTitle, DialogContent, DialogActions } from '@mate
 import UpdateCommande from "../../Admin/forms/UpdateCommande";
 import { getCurrentUser } from "@app/services/auth";
 import { User } from "oidc-client-ts";
+import { getUserById, updateUserById } from "@app/pages/Admin/tables/UsersService";
 
-export interface Commande{
-  idCommande:number,
-  depart:string,
-  destination:string,
-  paymentStatus:string,
-  commandeStatus:string,
-  createdAt:string,
-  delivredAt:string,
-  nomDestinataire:string,
-  prenomDestinataire:string,
-  phoneDestinataire:string,
-  prixArticle:string,
-  articles:string,
-  livreurId:number
-  clientId:number
+export interface Commande {
+  idCommande: number;
+  depart: string;
+  departVille:string;
+  departCite:string;
+  destination: string;
+  destinationVille:string;
+  destinationCite:string;
+  paymentStatus: string;
+  commandeStatus: string;
+  commandeType:string;
+  createdAt: string;
+  delivredAt: string;
+  nomDestinataire: string;
+  prenomDestinataire: string;
+  phoneDestinataire: string;
+  articles: string;
+  livreurId: number;
+  clientId: number;
+  prixArticle: number;
 }
 
 const LivreurCommandes  = () => {
@@ -70,7 +76,19 @@ const LivreurCommandes  = () => {
     setFilteredCommandes(data);
   }
 
-  const updateStatusCommande=async(idCommande:number,value:string)=>{
+  const updateStatusCommande= async (
+    commande: Commande,
+    idCommande: number,
+    value: string
+  ) => {
+    if (commande.livreurId) {
+      let user = await getUserById(commande.clientId);
+      let livreur = await getUserById(commande.clientId);
+      if (commande.commandeStatus == "livré") {
+        livreur.caisse = livreur.caisse + commande.prixArticle;
+      }
+      updateUserById(commande.livreurId, livreur);
+    }
     await updateCommandeStatus(idCommande,value)
     getMyOwnCommande();
   }
@@ -156,7 +174,12 @@ const LivreurCommandes  = () => {
                                   {valueOfTheCommandeStatus.map((val)=>(
                                     <a className={val===commande.commandeStatus? 'badge bg-warning' : 'dropdown-item'} 
                                       style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }} href="#"
-                                      onClick={()=>{updateStatusCommande(commande.idCommande,val)}}>
+                                      onClick={()=>{
+                                        updateStatusCommande(
+                                          commande,
+                                          commande.idCommande,
+                                          val);
+                                        }}>
                                       {val}
                                     </a>
                                   ))

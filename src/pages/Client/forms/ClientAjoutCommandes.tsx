@@ -6,34 +6,39 @@ import { addCommande } from "../../../pages/Admin/tables/CommandesService.js";
 import { fetchAllLivreurs } from "../../../pages/Admin/tables/UsersService";
 import { ContentHeader } from "@app/components";
 import { getCurrentUser } from "@app/services/auth";
-import { ville } from "@app/pages/Admin/forms/ville";
+import { ville, villes } from "@app/pages/Admin/forms/ville";
 
 interface Livreur {
-  idUser:number
+  idUser: number
   firstName: string;
   lastName: string;
 }
 const ClientAjoutCommande = () => {
   const [selectedDateTime, setSelectedDateTime] = useState<Date | null>(null);
   const [selectedDateTimeError, setSelectedDateTimeError] = useState("");
-  const [livreurs,setLivreurs]=useState<Livreur[]>([]);
-  const [articles,setArticles]=useState('')
-  const [destination,setDestination]=useState('')
-  const [depart,setDepart]=useState('')
-  const [nomDest,setNomDest]=useState('')
-  const [prenomDest,setPrenomDest]=useState('')
-  const [phoneDest,setPhoneDest]=useState('');
-  const [prixArticle,setPrixArticle]=useState<number>(0)
+  const [livreurs, setLivreurs] = useState<Livreur[]>([]);
+  const [articles, setArticles] = useState('')
+  const [destination, setDestination] = useState('')
+  const [depart, setDepart] = useState('')
+  const [nomDest, setNomDest] = useState('')
+  const [prenomDest, setPrenomDest] = useState('')
+  const [phoneDest, setPhoneDest] = useState('');
+  const [prixArticle, setPrixArticle] = useState<number>(0)
   const [departVille, setDepartVille] = useState("");
   const [destinationVille, setDestinationVille] = useState("");
-
+  const [departCiteList, setDepartCiteList] = useState<string[]>([]);
+  const [destinationCiteList, setDestinationCiteList] = useState<string[]>([]);
+  const [departCite, setDepartCite] = useState("");
+  const [destinationCite, setDestinationCite] = useState("");
+  const [commandeType, setCommandeType] = useState("Commande normale");
+  const [selectedOption, setSelectedOption] = useState('');
 
   const [phoneDestError, setPhoneDestError] = useState("");
   const [articlesError, setArticlesError] = useState("");
   const [destinationError, setDestinationError] = useState("");
   const [villeDestinationError, setVilleDestinationError] = useState("");
   const [departError, setDepartError] = useState("");
-  const [villeDepartError, setVilleDepartError] = useState("");  const [nomDestError, setNomDestError] = useState("");
+  const [villeDepartError, setVilleDepartError] = useState(""); const [nomDestError, setNomDestError] = useState("");
   const [prenomDestError, setPrenomDestError] = useState("");
   const [prixArticleError, setPrixArticleError] = useState("");
 
@@ -42,15 +47,82 @@ const ClientAjoutCommande = () => {
     const fetchLivreurs = async () => {
       const data = await fetchAllLivreurs();
       setLivreurs(data);
-    }; 
+    };
     fetchLivreurs()
   }, []);
 
-  const handleSubmitButton=async()=>{
+  const departVilleHandler = (ville: string) => {
+    console.log("ville depart : ", ville)
+
+    switch (ville) {
+      case "Tunis": setDepartCiteList(villes.tunis); break;
+      case "Ariana": setDepartCiteList(villes.ariana); break;
+      case "Béja": setDepartCiteList(villes.Beja); break;
+      case "Ben Arous": setDepartCiteList(villes.Ben_Arous); break;
+      case "Bizerte": setDepartCiteList(villes.Bizerte); break;
+      case "Gabès": setDepartCiteList(villes.Gabes); break;
+      case "Gafsa": setDepartCiteList(villes.Gafsa); break;
+      case "Jendouba": setDepartCiteList(villes.Jendouba); break;
+      case "Kairouan": setDepartCiteList(villes.Kairouan); break;
+      case "Kasserine": setDepartCiteList(villes.Kasserine); break;
+      case "Kébili": setDepartCiteList(villes.Kebili); break;
+      case "Kef": setDepartCiteList(villes.Kef); break;
+      case "Mahdia": setDepartCiteList(villes.Mahdia); break;
+      case "Manouba": setDepartCiteList(villes.Manouba); break;
+      case "Médenine": setDepartCiteList(villes.Mednine); break;
+      case "Monastir": setDepartCiteList(villes.monastir); break;
+      case "Nabeul": setDepartCiteList(villes.nabeul); break;
+      case "Sfax": setDepartCiteList(villes.Sfax); break;
+      case "Sidi Bouzid": setDepartCiteList(villes.Sidi_Bouzid); break;
+      case "Siliana": setDepartCiteList(villes.Siliana); break;
+      case "Sousse": setDepartCiteList(villes.Sousse); break;
+      case "Tataouine": setDepartCiteList(villes.Tataouine); break;
+      case "Tozeur": setDepartCiteList(villes.Tozeur); break;
+      case "Zaghouan": setDepartCiteList(villes.Zaghouan); break;
+    }
+  }
+
+  const destinationVilleHandler = (ville: string) => {
+
+    switch (ville) {
+      case "Tunis": setDestinationCiteList(villes.tunis); break;
+      case "Ariana": setDestinationCiteList(villes.ariana); break;
+      case "Béja": setDestinationCiteList(villes.Beja); break;
+      case "Ben Arous": setDestinationCiteList(villes.Ben_Arous); break;
+      case "Bizerte": setDestinationCiteList(villes.Bizerte); break;
+      case "Gabès": setDestinationCiteList(villes.Gabes); break;
+      case "Gafsa": setDestinationCiteList(villes.Gafsa); break;
+      case "Jendouba": setDestinationCiteList(villes.Jendouba); break;
+      case "Kairouan": setDestinationCiteList(villes.Kairouan); break;
+      case "Kasserine": setDestinationCiteList(villes.Kasserine); break;
+      case "Kébili": setDestinationCiteList(villes.Kebili); break;
+      case "Kef": setDestinationCiteList(villes.Kef); break;
+      case "Mahdia": setDestinationCiteList(villes.Mahdia); break;
+      case "Manouba": setDestinationCiteList(villes.Manouba); break;
+      case "Médenine": setDestinationCiteList(villes.Mednine); break;
+      case "Monastir": setDestinationCiteList(villes.monastir); break;
+      case "Nabeul": setDestinationCiteList(villes.nabeul); break;
+      case "Sfax": setDestinationCiteList(villes.Sfax); break;
+      case "Sidi Bouzid": setDestinationCiteList(villes.Sidi_Bouzid); break;
+      case "Siliana": setDestinationCiteList(villes.Siliana); break;
+      case "Sousse": setDestinationCiteList(villes.Sousse); break;
+      case "Tataouine": setDestinationCiteList(villes.Tataouine); break;
+      case "Tozeur": setDestinationCiteList(villes.Tozeur); break;
+      case "Zaghouan": setDestinationCiteList(villes.Zaghouan); break;
+    }
+  }
+
+  const handleOptionChange = (event: any) => {
+    setSelectedOption(event.target.value);
+    setCommandeType(event.target.value)
+  };
+
+
+  const handleSubmitButton = async () => {
 
     let isValid = true;
 
-    if (articles =="") {
+    if (articles == "") {
       setArticlesError("Please enter articles");
       isValid = false;
     } else {
@@ -72,14 +144,28 @@ const ClientAjoutCommande = () => {
     }
 
     if (departVille == "") {
-      setDepartError("Veuillez entrer la ville de depart");
+      setVilleDepartError("Veuillez entrer la ville de depart");
       isValid = false;
     } else {
       setDepartError("");
     }
 
     if (destinationVille == "") {
-      setDepartError("Veuillez entrer la ville de destination");
+      setVilleDestinationError("Veuillez entrer la ville de destination");
+      isValid = false;
+    } else {
+      setDepartError("");
+    }
+
+    if (departCite == "") {
+      setVilleDepartError("Veuillez entrer le cité de depart");
+      isValid = false;
+    } else {
+      setDepartError("");
+    }
+
+    if (destinationCite == "") {
+      setVilleDestinationError("Veuillez entrer le cité de destination");
       isValid = false;
     } else {
       setDepartError("");
@@ -117,25 +203,27 @@ const ClientAjoutCommande = () => {
       return; // Don't proceed if there are validation errors
     }
 
-    const commandeToSend={
+    const commandeToSend = {
       depart: depart,
-      departVille:departVille,
+      departVille: departVille,
+      departCite: departCite,
       destination: destination,
-      destinationVille:destinationVille,
-      delivredAt:selectedDateTime,
+      destinationVille: destinationVille,
+      destinationCite: destinationCite,
+      delivredAt: selectedDateTime,
       clientId: getCurrentUser().idUser,
-      nomDestinataire:nomDest,
-      prenomDestinataire:prenomDest,
-      phoneDestinataire:phoneDest,
-      prixArticle:prixArticle,
-      articles:articles
+      nomDestinataire: nomDest,
+      prenomDestinataire: prenomDest,
+      phoneDestinataire: phoneDest,
+      prixArticle: prixArticle,
+      articles: articles
     }
     addCommande(commandeToSend)
   }
-  
+
   return (
     <>
-    <ContentHeader title="Ajouter Commande" />
+      <ContentHeader title="Ajouter Commande" />
       <div className="card card-primary form-card">
         <div className="card-header">
           <h3 className="card-title">Ajouter Commandes</h3>
@@ -144,17 +232,17 @@ const ClientAjoutCommande = () => {
         {/* form start */}
         <form>
           <div className="card-body">
-          <div className="form-group">
+            <div className="form-group">
               <div className="row">
-                  <label htmlFor="exampleInputEmail1">Articles</label>
-                  <textarea
-                    onChange={(e)=>{setArticles(e.target.value)}}
-                    style={{height: "90px"}}
-                    className="form-control"
-                    id="exampleInputEmail1"
-                    placeholder="Merci De Séparer Les Articles Avec -"
-                  />
-                  {articlesError && <div className="error">{articlesError}<i style={{fontSize:"14px"}} className="fas fa-exclamation ml-2"></i></div>}
+                <label htmlFor="exampleInputEmail1">Articles</label>
+                <textarea
+                  onChange={(e) => { setArticles(e.target.value) }}
+                  style={{ height: "90px" }}
+                  className="form-control"
+                  id="exampleInputEmail1"
+                  placeholder="Merci De Séparer Les Articles Avec -"
+                />
+                {articlesError && <div className="error">{articlesError}<i style={{ fontSize: "14px" }} className="fas fa-exclamation ml-2"></i></div>}
               </div>
             </div>
             <div className="form-group">
@@ -163,6 +251,7 @@ const ClientAjoutCommande = () => {
                   <label htmlFor="exampleInputEmail1">Adresse De Départ</label>
                   <input
                     onChange={(e) => {
+
                       setDepart(e.target.value);
                     }}
                     type="text"
@@ -186,6 +275,7 @@ const ClientAjoutCommande = () => {
                   </label>
                   <input
                     onChange={(e) => {
+
                       setDestination(e.target.value);
                     }}
                     type="text"
@@ -213,11 +303,12 @@ const ClientAjoutCommande = () => {
                     className="form-control"
                     onChange={(e) => {
                       setDepartVille(e.target.value);
+                      departVilleHandler(e.target.value);
                       console.log(departVille);
                     }}
                   >
                     <option disabled selected>Selectinner Ville</option>
-                    {ville.map(ville=>(<option value={ville}>{ville}</option>))}
+                    {ville.map(ville => (<option value={ville}>{ville}</option>))}
                   </select>
                   {villeDepartError && (
                     <div className="error">
@@ -234,12 +325,13 @@ const ClientAjoutCommande = () => {
                   <select
                     className="form-control"
                     onChange={(e) => {
+                      destinationVilleHandler(e.target.value)
                       setDestinationVille(e.target.value);
                       console.log(destinationVille);
                     }}
                   >
                     <option disabled selected>Selectionner Ville</option>
-                    {ville.map(ville=>(<option value={ville}>{ville}</option>))}
+                    {ville.map(ville => (<option value={ville}>{ville}</option>))}
                   </select>
                   {villeDestinationError && (
                     <div className="error">
@@ -252,10 +344,56 @@ const ClientAjoutCommande = () => {
                   )}
                 </div>
               </div>
+              {(departVille != "" && destinationVille != "") && <div className="row">
+                <div className="col-md-6">
+                  <label>Cité de départ</label>
+                  <select
+                    className="form-control"
+                    onChange={(e) => {
+                      setDepartCite(e.target.value);
+                      console.log(departVille);
+                    }}
+                  >
+                    <option disabled selected>Selectinner Cité</option>
+                    {departCiteList.map(cite => (<option value={cite}>{cite}</option>))}
+                  </select>
+                  {villeDepartError && (
+                    <div className="error">
+                      {villeDepartError}
+                      <i
+                        style={{ fontSize: "14px" }}
+                        className="fas fa-exclamation ml-2"
+                      ></i>
+                    </div>
+                  )}
+                </div>
+                <div className="col-md-6">
+                  <label>Cité de déstinateur</label>
+                  <select
+                    className="form-control"
+                    onChange={(e) => {
+                      setDestinationCite(e.target.value);
+                      console.log(destinationVille);
+                    }}
+                  >
+                    <option disabled selected>Selectionner Cite</option>
+                    {destinationCiteList.map(cite => (<option value={cite}>{cite}</option>))}
+                  </select>
+                  {villeDestinationError && (
+                    <div className="error">
+                      {villeDestinationError}
+                      <i
+                        style={{ fontSize: "14px" }}
+                        className="fas fa-exclamation ml-2"
+                      ></i>
+                    </div>
+                  )}
+                </div>
+              </div>}
             </div>
             <div className="form-group">
               <div className="row">
-              <div className="col-md-6">
+                <div className="col-md-6">
                   <div>
                     <label>Date et temps pour la livraison</label>
                     <div
@@ -283,7 +421,7 @@ const ClientAjoutCommande = () => {
                         shouldCloseOnSelect={false}
                         withPortal
                       />
-                      {selectedDateTimeError && <div className="error">{selectedDateTimeError}<i style={{fontSize:"14px"}} className="fas fa-exclamation ml-2"></i></div>}
+                      {selectedDateTimeError && <div className="error">{selectedDateTimeError}<i style={{ fontSize: "14px" }} className="fas fa-exclamation ml-2"></i></div>}
                       <div
                         className="input-group-append"
                         data-target="#reservationdatetime"
@@ -297,16 +435,17 @@ const ClientAjoutCommande = () => {
                   </div>
                 </div>
                 <div className="col-md-6">
-                  <label htmlFor="exampleInputEmail1">Prix De La Collis</label>
+                  <label htmlFor="exampleInputEmail1">Téléphone Du Distinateur</label>
                   <input
-                    onChange={(e)=>{setPrixArticle(Number(e.target.value))}}
-                    type="number"
+                    onChange={(e) => { setPhoneDest(e.target.value) }}
+                    type="text"
                     className="form-control"
                     id="exampleInputEmail1"
-                    placeholder="Prix De La Collis"
+                    placeholder="Téléphone Du Distinateur"
                   />
-                  {prixArticleError && <div className="error">{prixArticleError}<i style={{fontSize:"14px"}} className="fas fa-exclamation ml-2"></i></div>}
+                  {phoneDestError && <div className="error">{phoneDestError}<i style={{ fontSize: "14px" }} className="fas fa-exclamation ml-2"></i></div>}
                 </div>
+
               </div>
             </div>
             <div className="form-group">
@@ -314,40 +453,70 @@ const ClientAjoutCommande = () => {
                 <div className="col-md-6">
                   <label htmlFor="exampleInputEmail1">Nom Du Destinateur</label>
                   <input
-                    onChange={(e)=>{setNomDest(e.target.value)}}
+                    onChange={(e) => { setNomDest(e.target.value) }}
                     type="text"
                     className="form-control"
                     id="exampleInputEmail1"
                     placeholder="Nom Du Distinateur"
                   />
-                  {nomDestError && <div className="error">{nomDestError}<i style={{fontSize:"14px"}} className="fas fa-exclamation ml-2"></i></div>}
+                  {nomDestError && <div className="error">{nomDestError}<i style={{ fontSize: "14px" }} className="fas fa-exclamation ml-2"></i></div>}
                 </div>
                 <div className="col-md-6">
                   <label htmlFor="exampleInputEmail1">Prenom Du Destinateur</label>
                   <input
-                    onChange={(e)=>{setPrenomDest(e.target.value)}}
+                    onChange={(e) => { setPrenomDest(e.target.value) }}
                     type="text"
                     className="form-control"
                     id="exampleInputEmail1"
                     placeholder="Prenom Du Distinateur"
                   />
-                  {prenomDestError && <div className="error">{prenomDestError}<i style={{fontSize:"14px"}} className="fas fa-exclamation ml-2"></i></div>}
+                  {prenomDestError && <div className="error">{prenomDestError}<i style={{ fontSize: "14px" }} className="fas fa-exclamation ml-2"></i></div>}
                 </div>
               </div>
             </div>
             <div className="form-group">
               <div className="row">
-                <div className="col-md-6">
-                  <label htmlFor="exampleInputEmail1">Téléphone Du Distinateur</label>
+              <div style={{display:"inline-flex"}} className="col-md-6 align-items-center">
                   <input
-                    onChange={(e)=>{setPhoneDest(e.target.value)}}
-                    type="text"
+                    type="radio"
+                    id="contactChoice1"
+                    name="contact"
+                    value="Commande normale"
+                    checked={selectedOption === 'Commande normale'}
+                    onChange={handleOptionChange}
+                  />
+                  <label>Commande normale</label>
+
+                  <input
+                    type="radio"
+                    name="contact"
+                    value="Echange payant"
+                    checked={selectedOption === 'Echange payant'}
+                    onChange={handleOptionChange}
+                  />
+                  <label>Echange payant</label>
+
+                  <input
+                    type="radio"
+                    id="contactChoice3"
+                    name="contact"
+                    value="Echange non payant"
+                    checked={selectedOption === 'Echange non payant'}
+                    onChange={handleOptionChange}
+                  />
+                  <label>Echange non payant</label>
+                </div>
+                {commandeType != "Echange non payant" && <div className="col-md-6">
+                  <label htmlFor="exampleInputEmail1">Prix De La Collis</label>
+                  <input
+                    onChange={(e) => { setPrixArticle(Number(e.target.value)) }}
+                    type="number"
                     className="form-control"
                     id="exampleInputEmail1"
-                    placeholder="Téléphone Du Distinateur"
+                    placeholder="Prix De La Collis"
                   />
-                  {phoneDestError && <div className="error">{phoneDestError}<i style={{fontSize:"14px"}} className="fas fa-exclamation ml-2"></i></div>}
-                </div>
+                  {prixArticleError && <div className="error">{prixArticleError}<i style={{ fontSize: "14px" }} className="fas fa-exclamation ml-2"></i></div>}
+                </div>}
               </div>
             </div>
           </div>

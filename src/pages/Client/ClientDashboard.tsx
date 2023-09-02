@@ -8,10 +8,14 @@ import { getCurrentUser } from '@app/services/auth';
 export interface Commande {
   idCommande: number;
   depart: string;
+  departVille:string;
+  departCite:string;
   destination: string;
+  destinationVille:string;
+  destinationCite:string;
   paymentStatus: string;
   commandeStatus: string;
-  demandeStatus: string;
+  commandeType:string;
   createdAt: string;
   delivredAt: string;
   nomDestinataire: string;

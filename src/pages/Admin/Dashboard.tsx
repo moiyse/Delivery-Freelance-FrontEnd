@@ -7,10 +7,14 @@ import { fetchAllClients } from './tables/UsersService';
 export interface Commande {
   idCommande: number;
   depart: string;
+  departVille:string;
+  departCite:string;
   destination: string;
+  destinationVille:string;
+  destinationCite:string;
   paymentStatus: string;
   commandeStatus: string;
-  demandeStatus: string;
+  commandeType:string;
   createdAt: string;
   delivredAt: string;
   nomDestinataire: string;
@@ -62,9 +66,7 @@ const Dashboard = () => {
     getAllUserClients()
   }, [commandes])
 
-  useEffect(() => {
-    getAllUserClients()
-  }, [clients])
+ 
 
   const getAllCommandes = async () => {
     const data = await fetchCommandes();

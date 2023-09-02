@@ -5,10 +5,12 @@ import { fetchAllClients, fetchAllLivreurs, getUserById, updateUserById } from "
 import { ContentHeader } from "@app/components";
 import { Button, Dialog, DialogTitle, DialogContent, DialogActions } from '@material-ui/core';
 import UpdateCommande from "../../forms/UpdateCommande";
-import Swal from "sweetalert2";
 import jsPDF from "jspdf";
+//import { template } from "../pdfExport/PdfTamplate";
+import Swal from "sweetalert2";
 import Pdf from "../pdfExport/Pdf"
 import { renderToStaticMarkup } from 'react-dom/server';
+import { useNavigate } from "react-router-dom";
 export interface Commande{
   idCommande:number,
   depart:string,
@@ -41,28 +43,17 @@ const Annulee = () => {
   const [valueOfThePaymentStatus, setValueOfThePaymentStatus] = useState<string[]>(['payé','nonPayé']);
   const [clients,setClients]=useState<Livreur[]>([])
 
-  const downloadPDF = (depart:string,dest:string,dateLiv:string,dateCre:string,nomDest:string,phone:string,clientName:string,livreurName:string) => {
-    const pdf = new jsPDF({
-      format: 'a4',
-      unit: 'px',
-    });
-    const data = {
-      depart,
-      dest,
-      dateLiv,
-      dateCre,
-      nomDest,
-      phone,
-      clientName,
-      livreurName,
-    };
-    const invoiceContent = renderToStaticMarkup(<Pdf {...data} />);
-    pdf.html(invoiceContent, {
+  const navigate = useNavigate();
+
+
+  const downloadPDF = (depart:string,dest:string,dateLiv:string,dateCre:string,nomDest:string,phone:string) => {
+    const pdf = new jsPDF();
+    /*pdf.html(template(depart,dest,dateLiv,dateCre,nomDest,phone), {
       callback: () => {
         pdf.save('facture.pdf');
-      },
-    });
-  };
+      }
+    });*/
+  }
 
   const handleUpdateClick = (commandeId:number) => {
     setSelectedCommandeId(commandeId);
@@ -159,6 +150,14 @@ const Annulee = () => {
       }
     });
   }
+
+  const redirectToPdfTemplate = (commande:Commande) => {
+    
+    // You can pass values as query parameters or state, for example:
+    
+    navigate("/pdfTemplate", { state: { data: commande } });
+
+  };
 
   const getLivreurFirstName = (livreurId:number) => {
     const livreur = livreurs.find((livreur) => livreur.idUser === livreurId);
@@ -392,9 +391,9 @@ const Annulee = () => {
                               <button  onClick={() => handleUpdateClick(commande.idCommande)} className="btn btn-warning">
                                 <i className="fas fa-pen"></i>
                               </button>
-                              <button onClick={()=>{downloadPDF(commande.depart,commande.destination,commande.delivredAt,commande.createdAt,commande.nomDestinataire,commande.phoneDestinataire,getClientFirstName(commande.clientId),getLivreurFirstName(commande.livreurId))}} type="button" className="btn btn-info">
-                                <i className="fas fa-file-alt"></i>
-                              </button>
+                              <button onClick={() => { redirectToPdfTemplate(commande) }} type="button" className="btn btn-info">
+                                  <i className="fas fa-file-alt"></i>
+                                </button>
                               <button type="button" className="btn btn-danger" onClick={()=>{deleteCommande(commande.idCommande)}}>
                                 <i className="fa fa-trash"></i>
                               </button>

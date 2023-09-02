@@ -57,5 +57,22 @@ $(function () {
       ],
     });
     $("#commandeTableLivreur_wrapper").css("min-width", "700px");
+
+    $("#commandeDemander").DataTable({
+      responsive: true,
+      lengthChange: false,
+      autoWidth: false,
+      bDestroy: true,
+      columnDefs: [
+        { responsivePriority: 1, targets: 0 },
+        { responsivePriority: 1, targets: 1 },
+        { responsivePriority: 1, targets: 3 },
+        {
+          targets: [-1] /* column index */,
+          orderable: false /* true or false */,
+        },
+      ],
+    });
+    $("#commandeDemander_wrapper").css("min-width", "700px");
 });
   
