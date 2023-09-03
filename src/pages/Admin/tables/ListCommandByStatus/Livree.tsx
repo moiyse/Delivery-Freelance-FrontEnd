@@ -190,7 +190,7 @@ const Annulee = () => {
                 >
                   <thead>
                     <tr>
-                      <th>Client Id</th>
+                      <th>Client</th>
                       <th>Collis</th>
                       <th>Deliver At</th>
                       <th>Déstinateur</th>
@@ -354,7 +354,7 @@ const Annulee = () => {
                                     }}
                                     className="badge blob red"
                                     >
-                                      No Livreur
+                                      Pas de livreur
                                     </span>)
                                   }
                               </a>
@@ -362,7 +362,24 @@ const Annulee = () => {
                                 {livreurs.length === 0 ? (
                                   <a className="dropdown-item">Vide</a>
                                 ) : (
-                                  livreurs.map((liv) => (
+                                  livreurs.map((liv,index) => (
+                                    <>
+                                    {index==0 && <a
+                                      style={{
+                                        color:
+                                          "grey"
+                                      }}
+                                      onClick={() => {
+                                        updateLivreurOfTheCommande(
+                                          -1,
+                                          commande.idCommande
+                                        );
+                                      }}
+                                      className="dropdown-item"
+                                      href=""
+                                    >
+                                      Par défaut
+                                    </a>}
                                     <a
                                       style={{
                                         backgroundColor:
@@ -381,12 +398,16 @@ const Annulee = () => {
                                     >
                                       {liv.idUser === commande.livreurId
                                         ? "selected: " +
-                                          liv.firstName +
-                                          " " +
-                                          liv.lastName
+                                        liv.firstName +
+                                        " " +
+                                        liv.lastName
                                         : liv.firstName + " " + liv.lastName}
                                     </a>
+                                    </>
+                                    
                                   ))
+                                  
+                                  
                                 )}
                               </div>
                             </td>

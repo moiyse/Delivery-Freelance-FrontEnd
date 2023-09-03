@@ -156,7 +156,7 @@ const LivreurPaymentExpediteur = () => {
             {/* /.card */}
             <div className="card">
               <div className="card-header">
-                <h3 className="card-title">Status commandes et payments</h3>
+                <h3 className="card-title">Expéditeur Payment</h3>
               </div>
               {/* /.card-header */}
               <div style={{overflow:"auto"}} className="card-body">

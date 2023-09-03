@@ -16,6 +16,7 @@ type User = {
   email: string;
   phone: string;
   role: string;
+  matriculeFiscale:string;
   retour:number;
   livraison:number;
   caisse:number
@@ -145,6 +146,7 @@ const Users = () => {
                       <th>Email</th>
                       <th>Telephone</th>
                       <th>Role</th>
+                      <th>Matricule</th>
                       <th>Prix Livraison</th>
                       <th>Prix Retour</th>
                       <th>Caisse</th>
@@ -175,6 +177,7 @@ const Users = () => {
                             <td>{user.email}</td>
                             <td>{user.phone}</td>
                             <td>{user.role}</td>
+                            <td>{user.matriculeFiscale}</td>
                             <td>
                               {user.role == "client" ? (user.livraison + " DT") : "-.-.-.-"}
                             

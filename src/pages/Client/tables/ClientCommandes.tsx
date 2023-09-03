@@ -42,6 +42,8 @@ const ClientCommandes = () => {
   const [filteredCommandes, setFilteredCommandes] = useState<Commande[]>([]); // State for filtered commandes
   const [tableInit,setTableInit] = useState(false);
   const [valueOfTheCommandeStatus, setValueOfTheCommandeStatus] = useState<string[]>(['en attente pickup']);
+  const [filterCheck, setFilterCheck] = useState(false);
+  const [prixTotale,setPrixTotale]=useState(0)
 
 
 
@@ -59,6 +61,15 @@ const ClientCommandes = () => {
 
 
   useEffect(() => {
+    const calculePrixTotale=async()=>{
+      let prix=0
+      for(const filtered of filteredCommandes){
+        //setPrixTotale(prixTotale+(filtered.prixArticle))
+        prix=prix+filtered.prixArticle
+      }
+      setPrixTotale(prix)
+    }
+    calculePrixTotale()
     if(filteredCommandes.length != 0 && tableInit === false)
     {
       console.log("here")
@@ -126,9 +137,11 @@ const ClientCommandes = () => {
       toast.error("Pas de commande Payé")
     }else{
       setFilteredCommandes(filteredData)
+      setFilterCheck(true)
+
       console.log("payer :",filteredData)
     }
-    
+
   }
 
   const handleFiltreNonPayerClick = async () => {
@@ -140,9 +153,12 @@ const ClientCommandes = () => {
 
     }else{
       setFilteredCommandes(filteredData)
+      setFilterCheck(true)
+
       console.log("nonPayer :",filteredData)
     }
     
+    setFilterCheck(true)
 
   }
 
@@ -156,8 +172,11 @@ const ClientCommandes = () => {
 
     }else{
       setFilteredCommandes(filteredData)
+      setFilterCheck(true)
+
       console.log("demander :",filteredData)
     }
+    setFilterCheck(true)
     
 
   }
@@ -182,6 +201,8 @@ const ClientCommandes = () => {
                   <i className="fas fa-money-bill-wave"></i> Demandé pour être payé 
                   </button>
                   <div className="d-flex align-items-center float-right mt-sm-5">
+                  {filterCheck && <h3 style={{color:'red'}} className="card-title mr-2 my-auto">Prix Totale : {prixTotale}</h3>}
+
                     <button onClick={() => handleFiltrePayerClick()} type="button" title="payer" className="btn btn-primary float-right mr-2">
                     Payé
                     </button>

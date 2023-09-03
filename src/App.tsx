@@ -50,6 +50,7 @@ import ForgotPassword from '@modules/forgot-password/ForgotPassword';
 import Demander from './pages/Admin/tables/ListCommandByStatus/Demander';
 import ClientDashboard from './pages/Client/ClientDashboard';
 import PdfTamplate from '@app/pages/Admin/tables/pdfExport/PdfTamplate';
+import Reporter from '@app/pages/Admin/tables/ListCommandByStatus/Reporter';
 
 declare const FB: any;
 
@@ -156,6 +157,9 @@ const App = () => {
             </Route>
             <Route path="/livree"  element={<RoleAuth allowedRole={["admin","superAdmin"]} />} >
               <Route path="/livree" element={<Livree />} />
+            </Route>
+            <Route path="/reporter"  element={<RoleAuth allowedRole={["admin","superAdmin"]} />} >
+              <Route path="/reporter" element={<Reporter />} />
             </Route>
             <Route path="/annulee"  element={<RoleAuth allowedRole={["admin","superAdmin"]} />} >
               <Route path="/annulee" element={<Annulee />} />

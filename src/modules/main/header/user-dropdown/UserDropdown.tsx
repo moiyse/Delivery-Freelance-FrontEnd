@@ -6,6 +6,8 @@ import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
 import { PfDropdown, PfImage } from '@profabric/react-components';
 import { setAuthentication } from '@app/store/reducers/auth';
+import { getCurrentUser } from '@app/services/auth';
+import { getUserById } from '@app/pages/Admin/tables/UsersService';
 
 const StyledSmallUserImage = styled(PfImage)`
   margin-top: 3px;
@@ -103,12 +105,39 @@ export const StyledDropdown = styled(PfDropdown)`
 
 declare const FB: any;
 
+type User = {
+  idUser: number;
+  firstName: string;
+  lastName: String;
+  email: string;
+  phone: string;
+  role: string;
+  retour: number;
+  livraison: number;
+  caisse: number
+  status: string;
+  createdAt: string;
+};
+
+
 const UserDropdown = () => {
   const navigate = useNavigate();
   const [t] = useTranslation();
   const dispatch = useDispatch();
   const authentication = useSelector((state: any) => state.auth.authentication);
   const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [currentUser,setCurrentUser] = useState<User>();
+  const user = getCurrentUser();
+
+
+  useEffect(() => {
+    getUser()
+  }, [])
+
+  const getUser = async ()=>{
+    const data = await getUserById(user.idUser)
+    setCurrentUser(data)
+  } 
 
   const logOut = async (event: any) => {
     event.preventDefault();
@@ -156,8 +185,12 @@ const UserDropdown = () => {
       <div slot="menu">
         <UserHeader style={{backgroundColor:"#2b3467",border:"3px solid #e93f47",borderBottom:"none",color:"white"}}>
           <p>
-            {authentication.profile.email}
+            {authentication.profile.email} <br/>
+            {user.role === 'livreur' &&
+              <a className='p-0'>Caisse: {currentUser?.caisse || undefined}</a>
+            }
           </p>
+          
         </UserHeader>
         <UserFooter style={{border:"3px solid #e93f47",borderTop:"none",color:"#e93f47"}}>
             {userRole() && (

@@ -187,6 +187,8 @@ const UpdateCommande: React.FC<UpdateCommandeProps>  = ({commandeId}) => {
                   <label htmlFor="exampleInputEmail1">Statut Du Commande</label>
                   <select className="form-control" onChange={(e)=>{setStatusCommande(e.target.value)}} >
                     <option>en préparation</option>
+                    <option>reporté</option>
+                    <option>annulé</option>
                     <option>en attente pickup</option>
                     <option>en dépot</option>
                     <option>en cours de livraison</option>

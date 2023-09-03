@@ -75,10 +75,16 @@ export const MENU_ADMIN: IMenuItem[] = [
         path: '/enCours'
       },
       {
+        name: "Reporter",
+        icon: 'fas fa-undo',
+        path: '/reporter'
+      },
+      {
         name: "Livrer",
         icon: 'far fa-check-circle',
         path: '/livree'
       },
+      
       {
         name: "Annuler",
         icon: 'fas fa-chevron-circle-left',
