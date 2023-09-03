@@ -32,6 +32,8 @@ const ClientAjoutCommande = () => {
   const [destinationCite, setDestinationCite] = useState("");
   const [commandeType, setCommandeType] = useState("Commande normale");
   const [selectedOption, setSelectedOption] = useState('');
+  const [commentaire, setCommentaire] = useState('');
+
 
   const [phoneDestError, setPhoneDestError] = useState("");
   const [articlesError, setArticlesError] = useState("");
@@ -214,6 +216,7 @@ const ClientAjoutCommande = () => {
       clientId: getCurrentUser().idUser,
       nomDestinataire: nomDest,
       prenomDestinataire: prenomDest,
+      commentaire: commentaire,
       phoneDestinataire: phoneDest,
       prixArticle: prixArticle,
       articles: articles
@@ -477,6 +480,7 @@ const ClientAjoutCommande = () => {
             <div className="form-group">
               <div className="row">
               <div style={{display:"inline-flex"}} className="col-md-6 align-items-center">
+                  <div className="mx-lg-1">
                   <input
                     type="radio"
                     id="contactChoice1"
@@ -486,7 +490,10 @@ const ClientAjoutCommande = () => {
                     onChange={handleOptionChange}
                   />
                   <label>Commande normale</label>
+                  </div>
+                  
 
+                  <div className="mx-lg-1">
                   <input
                     type="radio"
                     name="contact"
@@ -495,7 +502,10 @@ const ClientAjoutCommande = () => {
                     onChange={handleOptionChange}
                   />
                   <label>Echange payant</label>
+                  </div>
+                  
 
+                  <div className="mx-lg-1">
                   <input
                     type="radio"
                     id="contactChoice3"
@@ -505,6 +515,8 @@ const ClientAjoutCommande = () => {
                     onChange={handleOptionChange}
                   />
                   <label>Echange non payant</label>
+                  </div>
+                  
                 </div>
                 {commandeType != "Echange non payant" && <div className="col-md-6">
                   <label htmlFor="exampleInputEmail1">Prix De La Collis</label>
@@ -517,6 +529,21 @@ const ClientAjoutCommande = () => {
                   />
                   {prixArticleError && <div className="error">{prixArticleError}<i style={{ fontSize: "14px" }} className="fas fa-exclamation ml-2"></i></div>}
                 </div>}
+              </div>
+            </div>
+            <div className="form-group">
+              <div className="row">
+                <div className="col">
+
+                  <label htmlFor="exampleInputEmail1">Commentaire</label>
+                  <textarea
+                    onChange={(e) => { setCommentaire(e.target.value) }}
+                    style={{ height: "90px" }}
+                    className="form-control"
+                    id="exampleInputEmail1"
+                    placeholder="Ecrire commentaire"
+                  />
+                </div>
               </div>
             </div>
           </div>

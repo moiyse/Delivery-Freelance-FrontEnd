@@ -35,7 +35,7 @@ const LivreurCommandes  = () => {
   const [openDialog, setOpenDialog] = useState(false);
   const [filteredCommandes, setFilteredCommandes] = useState<Commande[]>([]); // State for filtered commandes
   const [currentDate, setCurrentDate] = useState<string>(new Date().toISOString().split("T")[0]);
-  const [valueOfTheCommandeStatus, setValueOfTheCommandeStatus] = useState<string[]>(['en préparation','en attente pickup','en dépot','en cours de livraison','livré','annulé']);
+  const [valueOfTheCommandeStatus, setValueOfTheCommandeStatus] = useState<string[]>(['en préparation','en attente pickup','en dépot','en cours de livraison','reporté','livré','annulé']);
   const [selectedClient, setSelectedClient] = useState<User>();
   const [stateClient, setStateClient] = useState(false);
   const script = document.createElement("script");
@@ -101,7 +101,7 @@ const LivreurCommandes  = () => {
             {/* /.card */}
             <div className="card">
               <div className="card-header">
-                <h3 className="card-title">Tous Les Commandes D'aujourd'hui</h3>
+                <h3 className="card-title">Tous Mes Commandes</h3>
               </div>
               {/* /.card-header */}
               <div style={{overflow:"auto"}} className="card-body">

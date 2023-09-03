@@ -53,7 +53,7 @@ const PdfTamplate = () => {
   const [openDialog, setOpenDialog] = useState(false);
   const [filteredCommandes, setFilteredCommandes] = useState<Commande[]>([]); // State for filtered commandes
   const [currentDate, setCurrentDate] = useState<string>(new Date().toISOString().split("T")[0]);
-  const [valueOfTheCommandeStatus, setValueOfTheCommandeStatus] = useState<string[]>(['en préparation', 'en attente pickup', 'en dépot', 'en cours de livraison', 'livré', 'annulé']);
+  const [valueOfTheCommandeStatus, setValueOfTheCommandeStatus] = useState<string[]>(['en préparation', 'en attente pickup', 'en dépot', 'en cours de livraison', 'reporté','livré', 'annulé']);
   const [valueOfThePaymentStatus, setValueOfThePaymentStatus] = useState<string[]>(['payé', 'nonPayé']);
   const [tableInit, setTableInit] = useState(false);
   const [filterState, setFilterState] = useState(false);
@@ -140,7 +140,7 @@ const PdfTamplate = () => {
             <table className="pdfTable">
               <tr>
                 <th>FASTO</th>
-                <th>Lastname</th>
+                <th><img src="./barcode.png" alt="Logo" style={{ width: '30px',height:'30px' }} /></th>
               </tr>
               <tr>
                 <td><strong>Destinateur</strong><br />{commande?.nomDestinataire + " " + commande?.prenomDestinataire}</td>

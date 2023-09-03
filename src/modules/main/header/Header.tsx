@@ -12,6 +12,23 @@ import LanguagesDropdown from "@app/modules/main/header/languages-dropdown/Langu
 import UserDropdown from "@app/modules/main/header/user-dropdown/UserDropdown";
 import "./header.css";
 import { getCurrentUser } from "@app/services/auth";
+import { getUserById } from "@app/pages/Admin/tables/UsersService";
+
+
+type User = {
+  idUser: number;
+  firstName: string;
+  lastName: String;
+  email: string;
+  phone: string;
+  role: string;
+  retour: number;
+  livraison: number;
+  caisse: number
+  status: string;
+  createdAt: string;
+};
+
 
 const Header = () => {
   const [t] = useTranslation();
@@ -19,6 +36,9 @@ const Header = () => {
   const navbarVariant = useSelector((state: any) => state.ui.navbarVariant);
   const headerBorder = useSelector((state: any) => state.ui.headerBorder);
   const [userConnected,setUserConnected]=useState()
+  const [currentUser,setCurrentUser] = useState<User>();
+  const user = getCurrentUser();
+
 
   const handleToggleMenuSidebar = () => {
     dispatch(toggleSidebarMenu());
@@ -35,6 +55,8 @@ const Header = () => {
     }
     return classes;
   }, [navbarVariant, headerBorder]);
+
+  
 /*
   const headerInitialization = () => {
     const authenticationData: any = localStorage.getItem("authentication");
@@ -109,7 +131,7 @@ const Header = () => {
       );
     }
   };*/
-  const user = getCurrentUser();
+   
 
   return (
     <nav style={{ padding: "0.5rem 0.5rem",display:"block" }} className={getContainerClasses()}>
@@ -126,9 +148,9 @@ const Header = () => {
         </li>
       </div>
       <div style={{ display: 'flex', listStyle: 'none', padding: 0 }}>
-        <li style={{ marginRight: '10px',display:'flex',alignItems:'center' }}>
-          {user.role === 'admin' || user.role === 'superAdmin' && <NotificationsDropdown />}
-        </li>
+        {user.role === 'admin' || user.role === 'superAdmin' &&<li style={{ marginRight: '10px',display:'flex',alignItems:'center' }}>
+           <NotificationsDropdown />
+        </li>}
         <li style={{ marginRight: '10px',display:'flex',alignItems:'center'}}>
           <UserDropdown />
         </li>

@@ -49,6 +49,7 @@ const AjoutCommandes = () => {
   const [destinationCite, setDestinationCite] = useState("");
   const [commandeType, setCommandeType] = useState("Commande normale");
   const [selectedOption, setSelectedOption] = useState('');
+  const [commentaire, setCommentaire] = useState('');
 
 
 
@@ -257,6 +258,7 @@ const AjoutCommandes = () => {
       nomDestinataire: nomDest,
       prenomDestinataire: prenomDest,
       phoneDestinataire: phoneDest,
+      commentaire: commentaire,
       prixArticle: prixArticle,
       articles: articles,
       commandeType: commandeType,
@@ -584,8 +586,10 @@ const AjoutCommandes = () => {
                     {clients.map(client => <option value={client.idUser}>{client.firstName + " " + client.lastName}</option>)}
                   </select>
                 </div>
-                <div style={{display:"inline-flex"}} className="col-md-6 align-items-center">
-                  <input
+                <div style={{ display: "inline-flex" }} className="col-md-6 align-items-center">
+                  
+                <div className="mx-lg-1">
+                <input
                     type="radio"
                     id="contactChoice1"
                     name="contact"
@@ -594,7 +598,9 @@ const AjoutCommandes = () => {
                     onChange={handleOptionChange}
                   />
                   <label>Commande normale</label>
+                </div>
 
+                  <div className="mx-lg-1">
                   <input
                     type="radio"
                     name="contact"
@@ -604,6 +610,10 @@ const AjoutCommandes = () => {
                   />
                   <label>Echange payant</label>
 
+                  </div>
+
+                  
+                  <div className="mx-lg-1">
                   <input
                     type="radio"
                     id="contactChoice3"
@@ -613,6 +623,7 @@ const AjoutCommandes = () => {
                     onChange={handleOptionChange}
                   />
                   <label>Echange non payant</label>
+                  </div>
                 </div>
               </div>
             </div>
@@ -641,6 +652,21 @@ const AjoutCommandes = () => {
                 </div>
               </div>
             </div>}
+            <div className="form-group">
+              <div className="row">
+                <div className="col">
+
+                  <label htmlFor="exampleInputEmail1">Commentaire</label>
+                  <textarea
+                    onChange={(e) => { setCommentaire(e.target.value) }}
+                    style={{ height: "90px" }}
+                    className="form-control"
+                    id="exampleInputEmail1"
+                    placeholder="Ecrire commentaire"
+                  />
+                </div>
+              </div>
+            </div>
           </div>
           {/* /.card-body */}
           <div className="card-footer">

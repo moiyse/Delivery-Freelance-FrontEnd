@@ -64,7 +64,7 @@ const Commandes = () => {
   const [openDialog, setOpenDialog] = useState(false);
   const [filteredCommandes, setFilteredCommandes] = useState<Commande[]>([]); // State for filtered commandes
   const [currentDate, setCurrentDate] = useState<string>(new Date().toISOString().split("T")[0]);
-  const [valueOfTheCommandeStatus, setValueOfTheCommandeStatus] = useState<string[]>(['en préparation', 'en attente pickup', 'en dépot', 'en cours de livraison', 'livré', 'annulé']);
+  const [valueOfTheCommandeStatus, setValueOfTheCommandeStatus] = useState<string[]>(['en préparation', 'en attente pickup', 'en dépot', 'en cours de livraison','reporté' ,'livré', 'annulé']);
   const [valueOfThePaymentStatus, setValueOfThePaymentStatus] = useState<string[]>(['payé', 'nonPayé']);
   const [tableInit, setTableInit] = useState(false);
   const [filterState, setFilterState] = useState(false);
@@ -84,6 +84,15 @@ const Commandes = () => {
   };
 
   useEffect(() => {
+    const calculePrixTotale=async()=>{
+      let prix=0
+      for(const filtered of filteredCommandes){
+        //setPrixTotale(prixTotale+(filtered.prixArticle))
+        prix=prix+filtered.prixArticle
+      }
+      setPrixTotale(prix)
+    }
+    calculePrixTotale()
     if (filteredCommandes.length != 0 && tableInit === false) {
       const script = document.createElement("script");
       script.src = "js/tableCommande.js";
@@ -95,6 +104,7 @@ const Commandes = () => {
       };
     }
     
+    
   }, [filteredCommandes]);
 
   useEffect(() => {
@@ -104,18 +114,6 @@ const Commandes = () => {
     getAllClient()
   }, [currentDate]);
 
-  useEffect(() => {
-    const calculePrixTotale=async()=>{
-      let prix=0
-      for(const filtered of filteredCommandes){
-        //setPrixTotale(prixTotale+(filtered.prixArticle))
-        prix=prix+filtered.prixArticle
-      }
-      setPrixTotale(prix)
-    }
-    calculePrixTotale()
-  
-  }, [filteredCommandes]);
 
   const updateStatusCommande = async (
     commande: Commande,
@@ -274,8 +272,8 @@ const Commandes = () => {
             <div className="card">
               <div className="card-header">
                 <h3 className="card-title">Tous les commandes</h3> <br/>
-                <h3 className="card-title"><p style={{color:'red'}}>Prix Totale : {prixTotale}</p></h3>
-              </div>
+{/*                <h3 className="card-title"><p style={{color:'red'}}>Prix Totale : {prixTotale}</p></h3>
+*/}              </div>
               {/* /.card-header */}
               <div className="card-header">
                 {filterState && (<div style={{ cursor: "pointer" }} className="d-flex justify-content-start">
@@ -307,7 +305,7 @@ const Commandes = () => {
                 >
                   <thead>
                     <tr>
-                      <th>Client Id</th>
+                      <th>Client</th>
                       <th>Collis</th>
                       <th>Deliver At</th>
                       <th>Déstinateur</th>
@@ -471,7 +469,7 @@ const Commandes = () => {
                                     }}
                                     className="badge blob red"
                                   >
-                                    No Livreur
+                                    Pas de livreur
                                   </span>)
                                 }
                               </a>
@@ -479,7 +477,24 @@ const Commandes = () => {
                                 {livreurs.length === 0 ? (
                                   <a className="dropdown-item">Vide</a>
                                 ) : (
-                                  livreurs.map((liv) => (
+                                  livreurs.map((liv,index) => (
+                                    <>
+                                    {index==0 && <a
+                                      style={{
+                                        color:
+                                          "grey"
+                                      }}
+                                      onClick={() => {
+                                        updateLivreurOfTheCommande(
+                                          -1,
+                                          commande.idCommande
+                                        );
+                                      }}
+                                      className="dropdown-item"
+                                      href=""
+                                    >
+                                      Par défaut
+                                    </a>}
                                     <a
                                       style={{
                                         backgroundColor:
@@ -503,7 +518,11 @@ const Commandes = () => {
                                         liv.lastName
                                         : liv.firstName + " " + liv.lastName}
                                     </a>
+                                    </>
+                                    
                                   ))
+                                  
+                                  
                                 )}
                               </div>
                             </td>

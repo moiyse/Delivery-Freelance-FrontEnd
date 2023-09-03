@@ -6,11 +6,10 @@ import { ContentHeader } from "@app/components";
 import { Button, Dialog, DialogTitle, DialogContent, DialogActions } from '@material-ui/core';
 import UpdateCommande from "../../forms/UpdateCommande";
 import jsPDF from "jspdf";
-
 //import { template } from "../pdfExport/PdfTamplate";
-
 import Swal from "sweetalert2";
 import { useNavigate } from "react-router-dom";
+
 export interface Commande {
   idCommande: number;
   depart: string;
@@ -37,14 +36,14 @@ interface Livreur {
   firstName: string;
   lastName: string;
 }
-const Annulee = () => {
+const Reporter = () => {
   const [commandes,setCommandes]=useState<Commande[]>([])
   const [livreurs,setLivreurs]=useState<Livreur[]>([])
   const [selectedCommandeId, setSelectedCommandeId] = useState<number | null>(null);
   const [openDialog, setOpenDialog] = useState(false);
   const [filteredCommandes, setFilteredCommandes] = useState<Commande[]>([]); // State for filtered commandes
   const [currentDate, setCurrentDate] = useState<string>(new Date().toISOString().split("T")[0]);
-  const [valueOfTheCommandeStatus, setValueOfTheCommandeStatus] = useState<string[]>(['en préparation','en attente pickup','reporté','en dépot','en cours de livraison','livré','annulé']);
+  const [valueOfTheCommandeStatus, setValueOfTheCommandeStatus] = useState<string[]>(['en préparation','reporté','en attente pickup','en dépot','en cours de livraison','livré','annulé']);
   const [valueOfThePaymentStatus, setValueOfThePaymentStatus] = useState<string[]>(['payé','nonPayé']);
   const [clients,setClients]=useState<Livreur[]>([])
 
@@ -89,12 +88,12 @@ const Annulee = () => {
     value: string
   ) => {
     await updatePaymentStatus(idCommande,value)
-    getCommandeAnnulerOfToday()
+    getAnnulerCommandeOfToday()
     getAllLivreur()
   }
 
-  const getCommandeAnnulerOfToday=async()=>{
-    const data = await getCommandeOfTodayByStatus('annulé')
+  const getAnnulerCommandeOfToday=async()=>{
+    const data = await getCommandeOfTodayByStatus('reporté')
     setCommandes(data)
     setFilteredCommandes(data);
   }
@@ -105,7 +104,7 @@ const Annulee = () => {
 
   useEffect(() => {
     
-    getCommandeAnnulerOfToday()
+    getAnnulerCommandeOfToday()
     getAllLivreur()
     getAllClient()
   }, [currentDate]);
@@ -114,7 +113,6 @@ const Annulee = () => {
     const data=await fetchAllClients()
     setClients(data)
   }
-
   const updateStatusCommande=async (
     commande: Commande,
     idCommande: number,
@@ -129,12 +127,12 @@ const Annulee = () => {
       updateUserById(commande.livreurId, livreur);
     }
     await updateCommandeStatus(idCommande,value)
-    getCommandeAnnulerOfToday()
+    getAnnulerCommandeOfToday()
     getAllLivreur()
   }
   const updateLivreurOfTheCommande=async(livreurId:number,commadeId:number)=>{
     await updateCommandeLivreur(livreurId,commadeId)
-    getCommandeAnnulerOfToday()
+    getAnnulerCommandeOfToday()
     getAllLivreur()
   }
   const removeCommande = (commandeId:number) => {
@@ -168,21 +166,21 @@ const Annulee = () => {
   const getLivreurFirstName = (livreurId:number) => {
     const livreur = livreurs.find((livreur) => livreur.idUser === livreurId);
     return livreur ? livreur.firstName + " " +livreur.lastName : "Unknown Livreur";
-  };
+  };  
   const getClientFirstName = (clientId:number) => {
     const client = clients.find((client) => client.idUser === clientId);
     return client ? client.firstName + " " +client.lastName : "client inconnu";
   };
   return (
     <>
-    <ContentHeader title="List Commandes Annulées" />
+    <ContentHeader title="List Commandes Reportés" />
       <div className="container-fluid">
         <div className="row">
           <div className="col-12">
             {/* /.card */}
             <div className="card">
               <div className="card-header">
-                <h3 className="card-title">Commandes Annulées</h3>
+                <h3 className="card-title">Commandes Reportés</h3>
               </div>
               {/* /.card-header */}
               <div style={{overflow:"auto"}} className="card-body">
@@ -460,4 +458,4 @@ const Annulee = () => {
   );
 };
 
-export default Annulee;
+export default Reporter;

@@ -39,7 +39,7 @@ const Annulee = () => {
   const [openDialog, setOpenDialog] = useState(false);
   const [filteredCommandes, setFilteredCommandes] = useState<Commande[]>([]); // State for filtered commandes
   const [currentDate, setCurrentDate] = useState<string>(new Date().toISOString().split("T")[0]);
-  const [valueOfTheCommandeStatus, setValueOfTheCommandeStatus] = useState<string[]>(['en préparation','en attente pickup','en dépot','en cours de livraison','livré','annulé']);
+  const [valueOfTheCommandeStatus, setValueOfTheCommandeStatus] = useState<string[]>(['en préparation','en attente pickup','en dépot','en cours de livraison','reporté','livré','annulé']);
   const [valueOfThePaymentStatus, setValueOfThePaymentStatus] = useState<string[]>(['payé','nonPayé']);
   const [clients,setClients]=useState<Livreur[]>([])
 
@@ -186,7 +186,7 @@ const Annulee = () => {
                 >
                   <thead>
                     <tr>
-                      <th>Client Id</th>
+                      <th>Client</th>
                       <th>Collis</th>
                       <th>Deliver At</th>
                       <th>Déstinateur</th>
@@ -350,40 +350,61 @@ const Annulee = () => {
                                     }}
                                     className="badge blob red"
                                     >
-                                      No Livreur
+                                      Pas de livreur
                                     </span>)
                                   }
                               </a>
                               <div className="dropdown-overflow dropdown-menu">
                                 {livreurs.length === 0 ? (
                                   <a className="dropdown-item">Vide</a>
-                                ) : (
-                                  livreurs.map((liv) => (
-                                    <a
-                                      style={{
-                                        backgroundColor:
-                                          liv.idUser === commande.livreurId
-                                            ? "lightblue"
-                                            : "",
-                                      }}
-                                      onClick={() => {
-                                        updateLivreurOfTheCommande(
-                                          liv.idUser,
-                                          commande.idCommande
-                                        );
-                                      }}
-                                      className="dropdown-item"
-                                      href=""
-                                    >
-                                      {liv.idUser === commande.livreurId
-                                        ? "selected: " +
+                                  ) : (
+                                    livreurs.map((liv,index) => (
+                                      <>
+                                      {index==0 && <a
+                                        style={{
+                                          color:
+                                            "grey"
+                                        }}
+                                        onClick={() => {
+                                          updateLivreurOfTheCommande(
+                                            -1,
+                                            commande.idCommande
+                                          );
+                                        }}
+                                        className="dropdown-item"
+                                        href=""
+                                      >
+                                        Par défaut
+                                      </a>}
+                                      <a
+                                        style={{
+                                          backgroundColor:
+                                            liv.idUser === commande.livreurId
+                                              ? "lightblue"
+                                              : "",
+                                        }}
+                                        onClick={() => {
+                                          updateLivreurOfTheCommande(
+                                            liv.idUser,
+                                            commande.idCommande
+                                          );
+                                        }}
+                                        className="dropdown-item"
+                                        href=""
+                                      >
+                                        {liv.idUser === commande.livreurId
+                                          ? "selected: " +
                                           liv.firstName +
                                           " " +
                                           liv.lastName
-                                        : liv.firstName + " " + liv.lastName}
-                                    </a>
-                                  ))
-                                )}
+                                          : liv.firstName + " " + liv.lastName}
+                                      </a>
+                                      </>
+                                      
+                                    ))
+                                    
+                                    
+                                  )}
                               </div>
                             </td>
                           <td>
