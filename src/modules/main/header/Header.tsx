@@ -28,6 +28,16 @@ type User = {
   status: string;
   createdAt: string;
 };
+type tokenUser={
+  caisse:number;
+  email:string;
+  exp:string;
+  firstName:string;
+  iat:string ;
+  idUser:number;
+  lastName:string;
+  role:string
+}
 
 
 const Header = () => {
@@ -37,8 +47,13 @@ const Header = () => {
   const headerBorder = useSelector((state: any) => state.ui.headerBorder);
   const [userConnected,setUserConnected]=useState()
   const [currentUser,setCurrentUser] = useState<User>();
-  const user = getCurrentUser();
+  const [user,setUser]=useState<tokenUser>();
 
+  useEffect(() => {
+    setUser(getCurrentUser())
+    console.log('user authen',user)
+
+  }, []);
 
   const handleToggleMenuSidebar = () => {
     dispatch(toggleSidebarMenu());
@@ -148,7 +163,7 @@ const Header = () => {
         </li>
       </div>
       <div style={{ display: 'flex', listStyle: 'none', padding: 0 }}>
-        {user.role === 'admin' || user.role === 'superAdmin' &&<li style={{ marginRight: '10px',display:'flex',alignItems:'center' }}>
+          {user && (user.role === 'admin' || user.role === 'superAdmin') &&<li style={{ marginRight: '10px',display:'flex',alignItems:'center' }}>
            <NotificationsDropdown />
         </li>}
         <li style={{ marginRight: '10px',display:'flex',alignItems:'center'}}>

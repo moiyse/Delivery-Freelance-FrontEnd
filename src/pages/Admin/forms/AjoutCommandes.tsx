@@ -8,7 +8,7 @@ import { fetchAllLivreurs } from "../tables/UsersService";
 import { ContentHeader } from "@app/components";
 import { getCurrentUser } from "@app/services/auth";
 import { ville, villes } from "@app/pages/Admin/forms/ville";
-
+import { useNotification } from "@app/modules/main/header/notifications-dropdown/NotificationContext";
 interface Livreur {
   idUser: number;
   firstName: string;
@@ -63,6 +63,9 @@ const AjoutCommandes = () => {
   const [prenomDestError, setPrenomDestError] = useState("");
   const [prixArticleError, setPrixArticleError] = useState("");
   const [selectedDateTimeError, setSelectedDateTimeError] = useState("");
+
+
+  const { addNotification } = useNotification();
 
   useEffect(() => {
     const fetchLivreurs = async () => {
@@ -264,6 +267,10 @@ const AjoutCommandes = () => {
       commandeType: commandeType,
     };
     addCommande(commandeToSend);
+    addNotification({
+      message: 'New command added!',
+      type: 'success',
+    });
   };
 
   return (

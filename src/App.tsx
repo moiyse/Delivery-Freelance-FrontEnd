@@ -51,7 +51,7 @@ import Demander from './pages/Admin/tables/ListCommandByStatus/Demander';
 import ClientDashboard from './pages/Client/ClientDashboard';
 import PdfTamplate from '@app/pages/Admin/tables/pdfExport/PdfTamplate';
 import Reporter from '@app/pages/Admin/tables/ListCommandByStatus/Reporter';
-
+import { NotificationProvider } from './modules/main/header/notifications-dropdown/NotificationContext';
 declare const FB: any;
 
 const App = () => {
@@ -97,6 +97,7 @@ const App = () => {
   }
 
   return (
+    <NotificationProvider>
     <HashRouter>
       <Routes>
         <Route path="/pdfTemplate" element={<PdfTamplate/>}/>
@@ -211,6 +212,7 @@ const App = () => {
         pauseOnHover
       />
     </HashRouter>
+    </NotificationProvider>
   );
 };
 
