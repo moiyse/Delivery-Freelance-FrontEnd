@@ -3,9 +3,9 @@ import {Link} from 'react-router-dom';
 import {useTranslation} from 'react-i18next';
 import styled from 'styled-components';
 import {PfDropdown} from '@profabric/react-components';
-import { getNumberOfCommandeNotViewed, getNumberOfCommandeNotViewedAndDemende, updateCommandsToViewed } from './NotificationService';
+import { getNumberOfCommandeNewUpdated, getNumberOfCommandeNotViewed, getNumberOfCommandeNotViewedAndDemende, updateCommandsToViewed } from './NotificationService';
 import { FaPlus, FaBell } from 'react-icons/fa';
-
+import { useNotification } from './NotificationContext';
 export const StyledDropdown = styled(PfDropdown)`
   border: none;
   width: 3rem;
@@ -31,20 +31,31 @@ const NotificationsDropdown = () => {
   const [numberOfNotif,setNumberOfNotif]=useState('')
   const [numberOfDemanderNotif,setNumberOfDemanderNotif]=useState('')
   const [totaleNotif,setTotaleNotif]=useState(0)
+  const [newUpdatedCommande,setNewUpdatedCommande]=useState('')
+  const { notifications } = useNotification()
 
   useEffect(() => {
     const getNumberOfNotif=async()=>{
-      const numberNotViewed=await getNumberOfCommandeNotViewed()
-      setNumberOfNotif(numberNotViewed)
-      const notViewedAndDemende=await getNumberOfCommandeNotViewedAndDemende()
-      setNumberOfDemanderNotif(notViewedAndDemende)
+      const numberNotViewed = await getNumberOfCommandeNotViewed();
+      const notViewedAndDemende = await getNumberOfCommandeNotViewedAndDemende();
+      const updatedCommande = await getNumberOfCommandeNewUpdated();
+      
+      // Parse the fetched values
+      const numberOfNotifInt = parseInt(numberNotViewed);
+      const numberOfDemanderNotifInt = parseInt(notViewedAndDemende);
+      const numberOfNewUpdatedNotifInt = parseInt(updatedCommande);
+      
+      // Calculate the total
+      const total = numberOfNotifInt + numberOfDemanderNotifInt + numberOfNewUpdatedNotifInt;
+      
+      // Set all the state values
+      setNumberOfNotif(numberNotViewed);
+      setNumberOfDemanderNotif(notViewedAndDemende);
+      setNewUpdatedCommande(updatedCommande);
+      setTotaleNotif(total);
     }
     getNumberOfNotif()
-    const numberOfNotifInt = parseInt(numberOfNotif);
-    const numberOfDemanderNotifInt = parseInt(numberOfDemanderNotif);
-    const total = numberOfNotifInt + numberOfDemanderNotifInt;
-    setTotaleNotif(total);
-  }, [numberOfNotif, numberOfDemanderNotif]);
+  }, [numberOfNotif, numberOfDemanderNotif,notifications]);
 
   const updateAllCommandeToViewed=async()=>{
     await updateCommandsToViewed() 
@@ -76,6 +87,16 @@ const NotificationsDropdown = () => {
           <span>
             {t<string>('header.notifications.reportsCount', {
               quantity: numberOfDemanderNotif
+            })}
+          </span>
+        </Link>
+        <div className="dropdown-divider " />
+
+        <Link to="/#/" className="dropdown-item header-notification-style">
+          <FaPlus style={{ color: 'red' }} />
+          <span>
+            {t<string>('header.notifications.updatedCount', {
+              quantity: newUpdatedCommande
             })}
           </span>
         </Link>

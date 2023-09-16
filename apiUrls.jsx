@@ -45,4 +45,5 @@ export const UPDATE_PASSWORD=(id)=>`${BASE_URL}/user/changePassword/${id}`
 ///////////notification//////////////
 export const COUNT_NOT_VIEWED_COMMANDE=`${BASE_URL}/commande/countCommandeNotViewed`
 export const COUNT_NOT_VIEWED_AND_DEMANDE_COMMANDE=`${BASE_URL}/commande/countNotViewedAndDemmandeCommande`
+export const COUNT_NOT_VIEWED_AND_NEW_UPDATED_COMMANDE=`${BASE_URL}/commande/countNotViewedAndNewUpdated`
 export const UPDATE_ALL_COMMANDE_TO_VIEWED=`${BASE_URL}/commande/updateAllCommandsToViewed`

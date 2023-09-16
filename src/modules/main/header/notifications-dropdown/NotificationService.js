@@ -1,5 +1,5 @@
 import { toast } from "react-toastify";
-import { COUNT_NOT_VIEWED_AND_DEMANDE_COMMANDE, COUNT_NOT_VIEWED_COMMANDE, UPDATE_ALL_COMMANDE_TO_VIEWED } from "../../../../../apiUrls";
+import { COUNT_NOT_VIEWED_AND_DEMANDE_COMMANDE, COUNT_NOT_VIEWED_AND_NEW_UPDATED_COMMANDE, COUNT_NOT_VIEWED_COMMANDE, UPDATE_ALL_COMMANDE_TO_VIEWED } from "../../../../../apiUrls";
 
 const getNumberOfCommandeNotViewed = async () => {
     try {
@@ -47,8 +47,22 @@ const getNumberOfCommandeNotViewed = async () => {
     }
   };
 
+  const getNumberOfCommandeNewUpdated = async () => {
+    try {
+      const response = await fetch(COUNT_NOT_VIEWED_AND_NEW_UPDATED_COMMANDE);
+      if (response.ok) {
+        const data = await response.json();
+        return data;
+      } else {
+        console.error('Failed to fetch commande');
+      }
+    } catch (error) {
+      console.error('Error:', error);
+    }
+  };
   export{
     updateCommandsToViewed,
     getNumberOfCommandeNotViewedAndDemende,
-    getNumberOfCommandeNotViewed
+    getNumberOfCommandeNotViewed,
+    getNumberOfCommandeNewUpdated
   }

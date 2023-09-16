@@ -4,6 +4,8 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { getCommandeById, updateCommandeById } from "../tables/CommandesService";
 import { fetchAllLivreurs } from "../tables/UsersService";
+import { useNotification } from "@app/modules/main/header/notifications-dropdown/NotificationContext";
+
 interface Livreur {
   idUser:number
   firstName: string;
@@ -42,6 +44,8 @@ const UpdateCommande: React.FC<UpdateCommandeProps>  = ({commandeId}) => {
   const [phoneDest,setPhoneDest]=useState('');
   const [prixArticle,setPrixArticle]=useState<number>(0)
 
+  const { addNotification } = useNotification();
+
   useEffect(() => {
     const fetchCommandeById = async () => {
       const data = await getCommandeById(commandeId);
@@ -69,9 +73,16 @@ const UpdateCommande: React.FC<UpdateCommandeProps>  = ({commandeId}) => {
       prixArticle:prixArticle||commande.prixArticle,
       articles:articles||commande.articles,
       livreurId:livreur||commande.livreurId,
+      vue:false,
+      originOfVue:'fromAdminUpdate'
+
     }
     try{
       updateCommandeById(commandeId,commandeUpdated)
+      addNotification({
+        message: 'New command added!',
+        type: 'success',
+      });
     }catch(error){
       throw(error)
     }
