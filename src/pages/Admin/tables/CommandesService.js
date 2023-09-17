@@ -34,7 +34,9 @@ const fetchCommandes = async () => {
 const updateCommandeLivreur=async(livreurId,commandeId)=>{
   try {
     const updatedCommande={
-      livreurId:livreurId
+      livreurId:livreurId,
+      vue:false,
+      originOfVue:'fromAdminUpdate'
     }
     const response = await fetch(UPDATE_COMMANDE_BY_ID(commandeId), {
       method: 'PUT',
@@ -57,7 +59,9 @@ const updateCommandeLivreur=async(livreurId,commandeId)=>{
 const updateCommandeStatus=async(commandeId,statusValue)=>{
   try {
     const updatedCommande={
-      commandeStatus:statusValue
+      commandeStatus:statusValue,
+      originOfVue:'fromAdminUpdate',
+      vue:false
     }
     const response = await fetch(UPDATE_COMMANDE_BY_ID(commandeId), {
       method: 'PUT',
@@ -124,7 +128,9 @@ const updateDemandevue=async(commandeId,vueValue)=>{
 const updatePaymentStatus=async(commandeId,statusValue)=>{
   try {
     const updatedCommande={
-      paymentStatus:statusValue
+      paymentStatus:statusValue,
+      vue :false,
+      originOfVue:'fromAdminUpdate'
     }
     const response = await fetch(UPDATE_COMMANDE_BY_ID(commandeId), {
       method: 'PUT',
