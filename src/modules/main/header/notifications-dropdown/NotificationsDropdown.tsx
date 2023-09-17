@@ -70,38 +70,33 @@ const NotificationsDropdown = () => {
         </span>
         <div className="dropdown-divider " />
         <div className="dropdown-divider" />
-        <Link to="/#/" className="dropdown-item header-notification-style">
+        <div className="dropdown-item header-notification-style">
           <FaBell style={{ color: 'red' }} />
-          <span>
+          <span className='ml-2'>
             {t<string>('header.notifications.friendRequestsCount', {
               quantity: numberOfNotif
             })}
           </span>
-        </Link>
+        </div>
         <div className="dropdown-divider " />
-        <Link to="/#/" className="dropdown-item header-notification-style">
+        <div className="dropdown-item header-notification-style">
           <FaPlus style={{ color: 'red' }} />
-          <span>
+          <span className='ml-2'>
             {t<string>('header.notifications.reportsCount', {
               quantity: numberOfDemanderNotif
             })}
           </span>
-        </Link>
+        </div>
         <div className="dropdown-divider " />
 
-        <Link to="/#/" className="dropdown-item header-notification-style">
+        <div className="dropdown-item header-notification-style">
           <FaPlus style={{ color: 'red' }} />
-          <span>
+          <span className='ml-2'>
             {t<string>('header.notifications.updatedCount', {
               quantity: newUpdatedCommande
             })}
           </span>
-        </Link>
-
-        <div className="dropdown-divider " />
-        <Link to="/#/" className="dropdown-item dropdown-footer header-notification-style">
-          {t<string>('header.notifications.seeAll')}
-        </Link>
+        </div>
       </div>
     </StyledDropdown>
   );

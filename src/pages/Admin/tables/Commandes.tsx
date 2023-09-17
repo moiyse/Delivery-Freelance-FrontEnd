@@ -260,6 +260,9 @@ const Commandes = () => {
     }
   };
 
+  const handleFileImpression = () => {
+    navigate("/pdfCommande")
+  }
   
 
   const redirectToPdfTemplate = (commande:Commande) => {
@@ -288,6 +291,11 @@ const Commandes = () => {
 */}              </div>
               {/* /.card-header */}
               <div className="card-header">
+                <div className="d-flex justify-content-start">
+                  <button onClick={() => handleFileImpression()} type="button" title="Demande d'être payer" className="btn btn-success">
+                    <i className="fas fa-file-alt"></i> Imprimer list commandes
+                  </button>
+                </div>
                 {filterState && (<div style={{ cursor: "pointer" }} className="d-flex justify-content-start">
                   <div style={{ color: "grey" }} onClick={() => { handleRetourFilter() }}><i className="fas fa-long-arrow-alt-left mr-1"></i>Retourner</div>
 

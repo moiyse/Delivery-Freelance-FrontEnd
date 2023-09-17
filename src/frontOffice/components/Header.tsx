@@ -1,8 +1,13 @@
-import { useEffect } from "react";
+import { RefObject, useEffect } from "react";
 import { Link } from "react-router-dom";
 
+interface HeaderProps {
+  aboutRef: RefObject<HTMLElement>;
+  servicesRef: RefObject<HTMLElement>;
+  contactRef: RefObject<HTMLElement>;
+}
 
-const Header = () => {
+const Header: React.FC<HeaderProps> = ({ aboutRef, servicesRef, contactRef }) => {
 
   useEffect(() => {
     const handleHeaderScroll = () => {
@@ -71,39 +76,48 @@ const Header = () => {
     };
   }, []);
 
+  const handleScroll = (ref:any) => {
+    if (ref && ref.current) {
+      ref.current.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
 
   return (
     <>
       <header id="header" className="fixed-top ">
         <div className="container d-flex align-items-center">
           <h1 className="logo me-auto">
-            <a href="index.html">FASTO</a>
+            <a href="/#/delivery">FASTO</a>
           </h1>
           {/* Uncomment below if you prefer to use an image logo */}
           {/* <a href="index.html" class="logo me-auto"><img src="assets/img/logo.png" alt="" class="img-fluid"></a>*/}
           <nav style={{padding:"0"}} id="navbar" className="navbar">
             <ul>
-              <li>
-                <a className="nav-link scrollto active" href="#hero">
+              {/*<li>
+                <a className="nav-link scrollto" style={{cursor:"pointer"}} href="/#/delivery">
                   Accueil
                 </a>
-              </li>
+              </li>*/}
               <li>
-                <a className="nav-link scrollto" href="#about">
+                <a className="nav-link scrollto" style={{cursor:"pointer"}} onClick={() => handleScroll(aboutRef)}>
                   Qui Somme Nous
                 </a>
               </li>
               <li>
-                <a className="nav-link scrollto" href="#services">
+                <a className="nav-link scrollto" style={{cursor:"pointer"}} onClick={() => handleScroll(servicesRef)}>
                   Nos Services
                 </a>
               </li>
               <li>
-                  <a className="nav-link scrollto">
+                <a className="nav-link scrollto" style={{cursor:"pointer"}} onClick={() => handleScroll(contactRef)}>
+                  Devenir Client
+                </a>
+                  {/*<a className="nav-link scrollto">
                     <Link style={{padding:"0"}} to="register">
                     Devenir Client
                     </Link>
-                  </a>
+                  </a>*/}
               </li>
               <li>
                 <a className="getstarted scrollto">
@@ -135,7 +149,7 @@ const Header = () => {
                 Nous nous spécialisons dans une livraison sécurisée et rapide de vos colis, en veillant au succès de votre entreprise.
               </h2>
               <div className="d-flex justify-content-center justify-content-lg-start">
-                <a href="#about" className="btn-get-started scrollto">
+                <a onClick={() => handleScroll(contactRef)} className="btn-get-started scrollto">
                   Commencer
                 </a>
               </div>

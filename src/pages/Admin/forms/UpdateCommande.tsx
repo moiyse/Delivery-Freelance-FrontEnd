@@ -5,6 +5,8 @@ import "react-datepicker/dist/react-datepicker.css";
 import { getCommandeById, updateCommandeById } from "../tables/CommandesService";
 import { fetchAllLivreurs } from "../tables/UsersService";
 import { useNotification } from "@app/modules/main/header/notifications-dropdown/NotificationContext";
+import { ville, villes } from "@app/pages/Admin/forms/ville";
+
 
 interface Livreur {
   idUser:number
@@ -18,7 +20,11 @@ const UpdateCommande: React.FC<UpdateCommandeProps>  = ({commandeId}) => {
   const [commande,setCommande]=useState({
     idCommande: 0,
     depart: '',
+    departVille : '',
+    departCite : '',
     destination: '',
+    destinationVille: '',
+    destinationCite: '',
     paymentStatus: '',
     commandeStatus: '',
     createdAt: '',
@@ -43,6 +49,12 @@ const UpdateCommande: React.FC<UpdateCommandeProps>  = ({commandeId}) => {
   const [prenomDest,setPrenomDest]=useState('')
   const [phoneDest,setPhoneDest]=useState('');
   const [prixArticle,setPrixArticle]=useState<number>(0)
+  const [departCite, setDepartCite] = useState("");
+  const [destinationCite, setDestinationCite] = useState("");
+  const [departVille, setDepartVille] = useState("");
+  const [destinationVille, setDestinationVille] = useState("");
+  const [departCiteList, setDepartCiteList] = useState<string[]>([]);
+  const [destinationCiteList, setDestinationCiteList] = useState<string[]>([]);
 
   const { addNotification } = useNotification();
 
@@ -60,10 +72,74 @@ const UpdateCommande: React.FC<UpdateCommandeProps>  = ({commandeId}) => {
     fetchLivreus()
   }, [commandeId]);
 
+  const departVilleHandler = (ville: string) => {
+
+    switch (ville) {
+      case "Tunis": setDepartCiteList(villes.tunis); break;
+      case "Ariana": setDepartCiteList(villes.ariana); break;
+      case "Béja": setDepartCiteList(villes.Beja); break;
+      case "Ben Arous": setDepartCiteList(villes.Ben_Arous); break;
+      case "Bizerte": setDepartCiteList(villes.Bizerte); break;
+      case "Gabès": setDepartCiteList(villes.Gabes); break;
+      case "Gafsa": setDepartCiteList(villes.Gafsa); break;
+      case "Jendouba": setDepartCiteList(villes.Jendouba); break;
+      case "Kairouan": setDepartCiteList(villes.Kairouan); break;
+      case "Kasserine": setDepartCiteList(villes.Kasserine); break;
+      case "Kébili": setDepartCiteList(villes.Kebili); break;
+      case "Kef": setDepartCiteList(villes.Kef); break;
+      case "Mahdia": setDepartCiteList(villes.Mahdia); break;
+      case "Manouba": setDepartCiteList(villes.Manouba); break;
+      case "Médenine": setDepartCiteList(villes.Mednine); break;
+      case "Monastir": setDepartCiteList(villes.monastir); break;
+      case "Nabeul": setDepartCiteList(villes.nabeul); break;
+      case "Sfax": setDepartCiteList(villes.Sfax); break;
+      case "Sidi Bouzid": setDepartCiteList(villes.Sidi_Bouzid); break;
+      case "Siliana": setDepartCiteList(villes.Siliana); break;
+      case "Sousse": setDepartCiteList(villes.Sousse); break;
+      case "Tataouine": setDepartCiteList(villes.Tataouine); break;
+      case "Tozeur": setDepartCiteList(villes.Tozeur); break;
+      case "Zaghouan": setDepartCiteList(villes.Zaghouan); break;
+    }
+  }
+
+  const destinationVilleHandler = (ville: string) => {
+
+    switch (ville) {
+      case "Tunis": setDestinationCiteList(villes.tunis); break;
+      case "Ariana": setDestinationCiteList(villes.ariana); break;
+      case "Béja": setDestinationCiteList(villes.Beja); break;
+      case "Ben Arous": setDestinationCiteList(villes.Ben_Arous); break;
+      case "Bizerte": setDestinationCiteList(villes.Bizerte); break;
+      case "Gabès": setDestinationCiteList(villes.Gabes); break;
+      case "Gafsa": setDestinationCiteList(villes.Gafsa); break;
+      case "Jendouba": setDestinationCiteList(villes.Jendouba); break;
+      case "Kairouan": setDestinationCiteList(villes.Kairouan); break;
+      case "Kasserine": setDestinationCiteList(villes.Kasserine); break;
+      case "Kébili": setDestinationCiteList(villes.Kebili); break;
+      case "Kef": setDestinationCiteList(villes.Kef); break;
+      case "Mahdia": setDestinationCiteList(villes.Mahdia); break;
+      case "Manouba": setDestinationCiteList(villes.Manouba); break;
+      case "Médenine": setDestinationCiteList(villes.Mednine); break;
+      case "Monastir": setDestinationCiteList(villes.monastir); break;
+      case "Nabeul": setDestinationCiteList(villes.nabeul); break;
+      case "Sfax": setDestinationCiteList(villes.Sfax); break;
+      case "Sidi Bouzid": setDestinationCiteList(villes.Sidi_Bouzid); break;
+      case "Siliana": setDestinationCiteList(villes.Siliana); break;
+      case "Sousse": setDestinationCiteList(villes.Sousse); break;
+      case "Tataouine": setDestinationCiteList(villes.Tataouine); break;
+      case "Tozeur": setDestinationCiteList(villes.Tozeur); break;
+      case "Zaghouan": setDestinationCiteList(villes.Zaghouan); break;
+    }
+  }
+
   const handleUpdateButton=async()=>{
     const commandeUpdated={
       depart:depart ||commande.depart,
+      departVille: departVille || commande.departVille,
+      departCite: departCite || commande.departCite,
       destination:destination || commande.destination ,
+      destinationVille: destinationVille || commande.destinationVille,
+      destinationCite: destinationCite || commande.destinationCite,
       paymentStatus:statusPayment || commande.paymentStatus ,
       commandeStatus:statusCommande || commande.commandeStatus ,
       delivredAt:selectedDateTime||commande.delivredAt,
@@ -136,6 +212,41 @@ const UpdateCommande: React.FC<UpdateCommandeProps>  = ({commandeId}) => {
                     placeholder={commande.destination}
                   />
                 </div>
+              </div>
+            </div>
+            <div className="form-group">
+              <div className="row">
+                <div className="col-md-6">
+                  <label>Ville de déstinateur</label>
+                  <select
+                    className="form-control"
+                    onChange={(e) => {
+                      destinationVilleHandler(e.target.value)
+
+                      setDestinationVille(e.target.value);
+                      console.log(destinationVille);
+                    }}
+                  >
+                    <option disabled selected>{commande.destinationVille}</option>
+                    {ville.map(ville => (<option value={ville}>{ville}</option>))}
+                  </select>
+                  
+                </div>
+                  <div className="col-md-6">
+                  <label>Cité de déstinateur</label>
+                  <select
+                    className="form-control"
+                    onChange={(e) => {
+                      setDestinationCite(e.target.value);
+                      console.log(destinationVille);
+                    }}
+                  >
+                    <option disabled selected>{commande.destinationCite}</option>
+                    {destinationCiteList.map(cite => (<option value={cite}>{cite}</option>))}
+                  </select>
+                  
+                </div>
+                
               </div>
             </div>
             <div className="form-group">

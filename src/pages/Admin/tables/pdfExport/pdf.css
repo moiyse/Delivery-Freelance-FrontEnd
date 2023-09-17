@@ -1,9 +1,13 @@
 .pdfTable table,.pdfTable th,.pdfTable td {
-    border: 1px solid;
+    border: 3px double;
   }
 
   .pdfTable th,.pdfTable td{
-    padding:10px 16px;
+    padding:5px 16px;
     text-align: center;
     width: 300px;
+  }
+
+  .pdfTable{
+    border: 6px black ridge;
   }

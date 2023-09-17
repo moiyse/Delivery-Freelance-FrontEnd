@@ -4,6 +4,9 @@ import {GET_USER_BY_ID_URL} from '../../../../apiUrls'
 import { getUserById, updateUserById } from "../tables/UsersService";
 import { toast } from 'react-toastify';
 import { User } from "oidc-client-ts";
+import { ville, villes } from "@app/pages/Admin/forms/ville";
+
+
 interface UpdateUserProps {
     userId: number | null;
 }
@@ -20,7 +23,12 @@ const UpdateUser: React.FC<UpdateUserProps> = ({userId}) => {
     livraison:'',
     retour:'',
     caisse:'',
-    createdAt: ''})
+    createdAt: '',
+    matriculeFiscale:'',
+    address:'',
+    ville:'',
+    cite:'',
+  })
   const [firstName,setFirstName]=useState('')
   const [lastName,setLastName]=useState('')
   const [email,setEmail]=useState('')
@@ -31,7 +39,42 @@ const UpdateUser: React.FC<UpdateUserProps> = ({userId}) => {
   const [livraison, setLivraison] = useState("");
   const [caisse, setCaisse] = useState("");
   const [currentUser, setCurrentUser] = useState<User>();
+  const [matriculeFiscale,setMatriculeFiscale]=useState("")
+  const [depart, setDepart] = useState("");
+  const [departVille, setDepartVille] = useState("");
+  const [departCite, setDepartCite] = useState("");
+  const [departCiteList, setDepartCiteList] = useState<string[]>([]);
 
+
+  const departVilleHandler = (ville: string) => {
+
+    switch (ville) {
+      case "Tunis": setDepartCiteList(villes.tunis); break;
+      case "Ariana": setDepartCiteList(villes.ariana); break;
+      case "Béja": setDepartCiteList(villes.Beja); break;
+      case "Ben Arous": setDepartCiteList(villes.Ben_Arous); break;
+      case "Bizerte": setDepartCiteList(villes.Bizerte); break;
+      case "Gabès": setDepartCiteList(villes.Gabes); break;
+      case "Gafsa": setDepartCiteList(villes.Gafsa); break;
+      case "Jendouba": setDepartCiteList(villes.Jendouba); break;
+      case "Kairouan": setDepartCiteList(villes.Kairouan); break;
+      case "Kasserine": setDepartCiteList(villes.Kasserine); break;
+      case "Kébili": setDepartCiteList(villes.Kebili); break;
+      case "Kef": setDepartCiteList(villes.Kef); break;
+      case "Mahdia": setDepartCiteList(villes.Mahdia); break;
+      case "Manouba": setDepartCiteList(villes.Manouba); break;
+      case "Médenine": setDepartCiteList(villes.Mednine); break;
+      case "Monastir": setDepartCiteList(villes.monastir); break;
+      case "Nabeul": setDepartCiteList(villes.nabeul); break;
+      case "Sfax": setDepartCiteList(villes.Sfax); break;
+      case "Sidi Bouzid": setDepartCiteList(villes.Sidi_Bouzid); break;
+      case "Siliana": setDepartCiteList(villes.Siliana); break;
+      case "Sousse": setDepartCiteList(villes.Sousse); break;
+      case "Tataouine": setDepartCiteList(villes.Tataouine); break;
+      case "Tozeur": setDepartCiteList(villes.Tozeur); break;
+      case "Zaghouan": setDepartCiteList(villes.Zaghouan); break;
+    }
+  }
 
   useEffect(() => {
     getCurrentUser()
@@ -171,8 +214,69 @@ const UpdateUser: React.FC<UpdateUserProps> = ({userId}) => {
                       placeholder={user.livraison}
                     />
                   </div>
+                  <div className="col-md-3">
+                        <label htmlFor="exampleInputEmail1">Matricule Fiscale</label>
+                        <input
+                          onChange={(e) => setMatriculeFiscale(e.currentTarget.value)}
+                          type="text"
+                          className="form-control"
+                          id="exampleInputEmail1"
+                          placeholder={user.matriculeFiscale}
+                        />
+                      </div>
                 </div>
                 )}
+                {role == "client" && (
+              <div className="form-group">
+              <div className="row">
+                <div className="col-md-6">
+                  <label htmlFor="exampleInputEmail1">Adresse De Départ</label>
+                  <input
+                    onChange={(e) => {
+                      setDepart(e.target.value);
+                    }}
+                    type="text"
+                    className="form-control"
+                    id="exampleInputEmail1"
+                    placeholder={user.address}
+                  />
+                  
+                </div>
+                <div className="col-md-6">
+                  <label>Ville de départ</label>
+                  <select
+                    className="form-control"
+                    onChange={(e) => {
+                      setDepartVille(e.target.value);
+                      departVilleHandler(e.target.value);
+
+                      console.log(departVille);
+                    }}
+                  >
+                    <option disabled selected>{user.ville}</option>
+                    {ville.map(ville => (<option value={ville}>{ville}</option>))}
+                  </select>
+                  
+                </div>
+              </div>
+              <div className="row">
+                <div className="col-md-6">
+                  <label>Cité de départ</label>
+                  <select
+                    className="form-control"
+                    onChange={(e) => {
+                      setDepartCite(e.target.value);
+                      console.log(departVille);
+                    }}
+                  >
+                    <option disabled selected>{user.cite}</option>
+                    {departCiteList.map(cite => (<option value={cite}>{cite}</option>))}
+                  </select>
+                  
+                </div>
+              </div>
+            </div>
+            )}
                 {(role == "livreur" || (user.role == "livreur" && role!="client"))  && (
                   <div className="row">
                   <div className="col-md-3">
