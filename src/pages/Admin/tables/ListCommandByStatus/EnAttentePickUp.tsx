@@ -9,6 +9,7 @@ import jsPDF from "jspdf";
 //import { template } from "../pdfExport/PdfTamplate";
 import Swal from "sweetalert2";
 import { useNavigate } from "react-router-dom";
+import { useNotification } from "@app/modules/main/header/notifications-dropdown/NotificationContext";
 
 export interface Commande {
   idCommande: number;
@@ -48,6 +49,7 @@ const Annulee = () => {
   const [clients,setClients]=useState<Livreur[]>([])
 
   const navigate = useNavigate();
+  const { addNotification } = useNotification();
 
 
   const downloadPDF = (depart:string,dest:string,dateLiv:string,dateCre:string,nomDest:string,phone:string) => {
@@ -87,6 +89,10 @@ const Annulee = () => {
     idCommande: number,
     value: string
   ) => {
+    addNotification({
+      message: 'New command added!',
+      type: 'success',
+    });
     await updatePaymentStatus(idCommande,value)
     getAttentePickUpCommandeOfToday()
     getAllLivreur()
@@ -126,11 +132,19 @@ const Annulee = () => {
       }
       updateUserById(commande.livreurId, livreur);
     }
+    addNotification({
+      message: 'New command added!',
+      type: 'success',
+    });
     await updateCommandeStatus(idCommande,value)
     getAttentePickUpCommandeOfToday()
     getAllLivreur()
   }
   const updateLivreurOfTheCommande=async(livreurId:number,commadeId:number)=>{
+    addNotification({
+      message: 'New command added!',
+      type: 'success',
+    });
     await updateCommandeLivreur(livreurId,commadeId)
     getAttentePickUpCommandeOfToday()
     getAllLivreur()
@@ -173,14 +187,14 @@ const Annulee = () => {
   };
   return (
     <>
-    <ContentHeader title="List Commandes Annulées" />
+    <ContentHeader title="List Commandes En Attente Pick Up" />
       <div className="container-fluid">
         <div className="row">
           <div className="col-12">
             {/* /.card */}
             <div className="card">
               <div className="card-header">
-                <h3 className="card-title">Commandes Annulées</h3>
+                <h3 className="card-title">Commandes En Attente Pick Up</h3>
               </div>
               {/* /.card-header */}
               <div style={{overflow:"auto"}} className="card-body">

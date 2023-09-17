@@ -9,6 +9,7 @@ import jsPDF from "jspdf";
 //import { template } from "../pdfExport/PdfTamplate";
 import Swal from "sweetalert2";
 import { useNavigate } from "react-router-dom";
+import { useNotification } from "@app/modules/main/header/notifications-dropdown/NotificationContext";
 
 export interface Commande {
   idCommande: number;
@@ -48,6 +49,7 @@ const Reporter = () => {
   const [clients,setClients]=useState<Livreur[]>([])
 
   const navigate = useNavigate();
+  const { addNotification } = useNotification();
 
 
   const downloadPDF = (depart:string,dest:string,dateLiv:string,dateCre:string,nomDest:string,phone:string) => {
@@ -87,6 +89,10 @@ const Reporter = () => {
     idCommande: number,
     value: string
   ) => {
+    addNotification({
+      message: 'New command added!',
+      type: 'success',
+    });
     await updatePaymentStatus(idCommande,value)
     getAnnulerCommandeOfToday()
     getAllLivreur()
@@ -126,11 +132,19 @@ const Reporter = () => {
       }
       updateUserById(commande.livreurId, livreur);
     }
+    addNotification({
+      message: 'New command added!',
+      type: 'success',
+    });
     await updateCommandeStatus(idCommande,value)
     getAnnulerCommandeOfToday()
     getAllLivreur()
   }
   const updateLivreurOfTheCommande=async(livreurId:number,commadeId:number)=>{
+    addNotification({
+      message: 'New command added!',
+      type: 'success',
+    });
     await updateCommandeLivreur(livreurId,commadeId)
     getAnnulerCommandeOfToday()
     getAllLivreur()
