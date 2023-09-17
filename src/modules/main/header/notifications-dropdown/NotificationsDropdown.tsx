@@ -39,15 +39,12 @@ const NotificationsDropdown = () => {
       const numberNotViewed = await getNumberOfCommandeNotViewed();
       const notViewedAndDemende = await getNumberOfCommandeNotViewedAndDemende();
       const updatedCommande = await getNumberOfCommandeNewUpdated();
-      
       // Parse the fetched values
       const numberOfNotifInt = parseInt(numberNotViewed);
       const numberOfDemanderNotifInt = parseInt(notViewedAndDemende);
       const numberOfNewUpdatedNotifInt = parseInt(updatedCommande);
-      
       // Calculate the total
       const total = numberOfNotifInt + numberOfDemanderNotifInt + numberOfNewUpdatedNotifInt;
-      
       // Set all the state values
       setNumberOfNotif(numberNotViewed);
       setNumberOfDemanderNotif(notViewedAndDemende);

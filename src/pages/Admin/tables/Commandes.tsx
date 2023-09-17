@@ -26,7 +26,7 @@ import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
 import { startOfMonth, endOfMonth, startOfWeek, endOfWeek, isWithinInterval } from 'date-fns';
 import { useNavigate } from "react-router-dom";
-
+import { useNotification } from "@app/modules/main/header/notifications-dropdown/NotificationContext";
 
 export interface Commande {
   idCommande: number;
@@ -72,6 +72,7 @@ const Commandes = () => {
   const [clients,setClients]=useState<Livreur[]>([])
 
   const navigate = useNavigate();
+  const { addNotification } = useNotification();
 
 
 
@@ -128,6 +129,10 @@ const Commandes = () => {
       }
       updateUserById(commande.livreurId, livreur);
     }
+    addNotification({
+      message: 'New command added!',
+      type: 'success',
+    });
     await updateCommandeStatus(idCommande, value)
     getAllCommande();
     getAllLivreur();
@@ -152,13 +157,20 @@ const Commandes = () => {
     idCommande: number,
     value: string
   ) => {
+    addNotification({
+      message: 'New command added!',
+      type: 'success',
+    });
     await updatePaymentStatus(idCommande, value)
     getAllCommande();
     getAllLivreur();
   }
 
   const updateLivreurOfTheCommande = async (livreurId: number, commadeId: number) => {
-    console.log("livId : ", livreurId, "cmd ID : ", commadeId)
+    addNotification({
+      message: 'New command added!',
+      type: 'success',
+    });
     await updateCommandeLivreur(livreurId, commadeId)
     getAllCommande();
     getAllLivreur();

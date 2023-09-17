@@ -6,6 +6,7 @@ import { ContentHeader } from "@app/components";
 import { Button, Dialog, DialogTitle, DialogContent, DialogActions } from '@material-ui/core';
 import UpdateCommande from "../../forms/UpdateCommande";
 import jsPDF from "jspdf";
+import { useNotification } from "@app/modules/main/header/notifications-dropdown/NotificationContext";
 
 //import { template } from "../pdfExport/PdfTamplate";
 
@@ -49,6 +50,7 @@ const Annulee = () => {
   const [clients,setClients]=useState<Livreur[]>([])
 
   const navigate = useNavigate();
+  const { addNotification } = useNotification();
 
 
   const downloadPDF = (depart:string,dest:string,dateLiv:string,dateCre:string,nomDest:string,phone:string) => {
@@ -88,6 +90,10 @@ const Annulee = () => {
     idCommande: number,
     value: string
   ) => {
+    addNotification({
+      message: 'New command added!',
+      type: 'success',
+    });
     await updatePaymentStatus(idCommande,value)
     getCommandeAnnulerOfToday()
     getAllLivreur()
@@ -128,11 +134,19 @@ const Annulee = () => {
       }
       updateUserById(commande.livreurId, livreur);
     }
+    addNotification({
+      message: 'New command added!',
+      type: 'success',
+    });
     await updateCommandeStatus(idCommande,value)
     getCommandeAnnulerOfToday()
     getAllLivreur()
   }
   const updateLivreurOfTheCommande=async(livreurId:number,commadeId:number)=>{
+    addNotification({
+      message: 'New command added!',
+      type: 'success',
+    });
     await updateCommandeLivreur(livreurId,commadeId)
     getCommandeAnnulerOfToday()
     getAllLivreur()
