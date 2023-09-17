@@ -57,6 +57,7 @@ const deleteUserById = async (userId) => {
   };
 
   const getUserById=async(idUser)=>{
+    console.log(idUser)
     try {
       const response = await fetch(GET_USER_BY_ID_URL(idUser));
       if (response.ok) {

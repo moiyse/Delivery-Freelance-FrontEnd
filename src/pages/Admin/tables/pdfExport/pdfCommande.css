@@ -1,0 +1,28 @@
+.tablePdfCommande
+	th {
+		border: 1px solid black;
+		border-collapse: collapse;
+        font-weight: 600;
+        word-break: break-word;
+        max-width: 150px;
+        min-width: 150px;
+        font-size: 18px;
+        padding: 20px 7px;
+	}
+
+    .tablePdfCommande td{
+        border: 1px solid black;
+		border-collapse: collapse;
+        font-weight: 600;
+        word-break: break-word;
+        max-width: 150px;
+        min-width: 150px;
+        font-size: 18px;
+        padding: 20px 7px;
+    }
+	
+.tablePdfCommande	th {
+		text-align: center;
+        font-weight: 900;
+        font-size: 20px;
+	}

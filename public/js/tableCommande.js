@@ -17,7 +17,7 @@ $(function () {
         },
       ],
     });
-    $("#example1_wrapper").css("min-width", "700px");
+    $("#example1_wrapper").css("min-width", "1000px");
 
     $("#commandeTableClient").DataTable({
       responsive: true,

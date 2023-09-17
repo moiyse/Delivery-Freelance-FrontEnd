@@ -19,7 +19,7 @@ export const MENU_ADMIN: IMenuItem[] = [
   
   {
     name: "Dashboard",
-    icon: 'fa fa-user nav-icon',
+    icon: 'fas fa-chart-pie',
     path: '/dashboard'
   },
   {
@@ -125,8 +125,8 @@ export const MENU_ADMIN: IMenuItem[] = [
 export const MENU_CLIENT: IMenuItem[] = [
 
   {
-    name: "Dashboard",
-    icon: 'fa fa-user nav-icon',
+    name: " Dashboard",
+    icon: 'fas fa-chart-pie',
     path: '/clientDashboard'
   },
   {

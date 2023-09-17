@@ -6,6 +6,8 @@ import {CREATE_USER_URL} from '../../../../apiUrls.jsx'
 import { Link } from "react-router-dom";
 import axios from "axios";
 import { getUserById } from "../tables/UsersService";
+import { ville, villes } from "@app/pages/Admin/forms/ville";
+
 
 
 type User = {
@@ -41,6 +43,17 @@ const AjoutUser = () => {
   const [matriculeFiscaleError,setMatriculeFiscaleError]=useState("")
   const [matriculeFiscale,setMatriculeFiscale]=useState("")
   const [currentUser, setCurrentUser] = useState<User>();
+  const [depart, setDepart] = useState("");
+  const [departError, setDepartError] = useState("");
+  const [departVille, setDepartVille] = useState("");
+  const [villeDepartError, setVilleDepartError] = useState("");
+  const [departCiteList, setDepartCiteList] = useState<string[]>([]);
+  const [departCite, setDepartCite] = useState("");
+
+
+
+
+
 
   const validateEmail = (email:any) => {
     const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -100,6 +113,20 @@ const AjoutUser = () => {
     setRoleError("");
   }
 
+  if (depart == "") {
+    setDepartError("Veuillez entrer depart");
+    isValid = false;
+  } else {
+    setDepartError("");
+  }
+
+  if (departVille == "") {
+    setDepartError("Veuillez entrer la ville de depart");
+    isValid = false;
+  } else {
+    setDepartError("");
+  }
+
   if (role === "client") {
     if (retour === "") {
       setRetourError("Veuillez entrer prix de retour");
@@ -135,6 +162,9 @@ const AjoutUser = () => {
       livraison:livraison,
       retour:retour,
       matriculeFiscale:matriculeFiscale,
+      address:depart,
+      cite:departCite,
+      ville:departVille,
       caisse:role == "livreur" ? 0 : null,
       currentUrl:currentUrl,
 
@@ -163,6 +193,36 @@ const AjoutUser = () => {
 
   const getCurrentUser = async() => {
     setCurrentUser(await getUserById())
+  }
+
+  const departVilleHandler = (ville: string) => {
+
+    switch (ville) {
+      case "Tunis": setDepartCiteList(villes.tunis); break;
+      case "Ariana": setDepartCiteList(villes.ariana); break;
+      case "Béja": setDepartCiteList(villes.Beja); break;
+      case "Ben Arous": setDepartCiteList(villes.Ben_Arous); break;
+      case "Bizerte": setDepartCiteList(villes.Bizerte); break;
+      case "Gabès": setDepartCiteList(villes.Gabes); break;
+      case "Gafsa": setDepartCiteList(villes.Gafsa); break;
+      case "Jendouba": setDepartCiteList(villes.Jendouba); break;
+      case "Kairouan": setDepartCiteList(villes.Kairouan); break;
+      case "Kasserine": setDepartCiteList(villes.Kasserine); break;
+      case "Kébili": setDepartCiteList(villes.Kebili); break;
+      case "Kef": setDepartCiteList(villes.Kef); break;
+      case "Mahdia": setDepartCiteList(villes.Mahdia); break;
+      case "Manouba": setDepartCiteList(villes.Manouba); break;
+      case "Médenine": setDepartCiteList(villes.Mednine); break;
+      case "Monastir": setDepartCiteList(villes.monastir); break;
+      case "Nabeul": setDepartCiteList(villes.nabeul); break;
+      case "Sfax": setDepartCiteList(villes.Sfax); break;
+      case "Sidi Bouzid": setDepartCiteList(villes.Sidi_Bouzid); break;
+      case "Siliana": setDepartCiteList(villes.Siliana); break;
+      case "Sousse": setDepartCiteList(villes.Sousse); break;
+      case "Tataouine": setDepartCiteList(villes.Tataouine); break;
+      case "Tozeur": setDepartCiteList(villes.Tozeur); break;
+      case "Zaghouan": setDepartCiteList(villes.Zaghouan); break;
+    }
   }
 
   return (
@@ -287,6 +347,81 @@ const AjoutUser = () => {
                   </div>
                   )}
             </div>
+            {role == "client" && (
+              <div className="form-group">
+              <div className="row">
+                <div className="col-md-6">
+                  <label htmlFor="exampleInputEmail1">Adresse De Départ</label>
+                  <input
+                    onChange={(e) => {
+                      setDepart(e.target.value);
+                    }}
+                    type="text"
+                    className="form-control"
+                    id="exampleInputEmail1"
+                    placeholder="Choisir votre depart"
+                  />
+                  {departError && (
+                    <div className="error">
+                      {departError}
+                      <i
+                        style={{ fontSize: "14px" }}
+                        className="fas fa-exclamation ml-2"
+                      ></i>
+                    </div>
+                  )}
+                </div>
+                <div className="col-md-6">
+                  <label>Ville de départ</label>
+                  <select
+                    className="form-control"
+                    onChange={(e) => {
+                      setDepartVille(e.target.value);
+                      departVilleHandler(e.target.value);
+
+                      console.log(departVille);
+                    }}
+                  >
+                    <option disabled selected>Selectinner Ville</option>
+                    {ville.map(ville => (<option value={ville}>{ville}</option>))}
+                  </select>
+                  {villeDepartError && (
+                    <div className="error">
+                      {villeDepartError}
+                      <i
+                        style={{ fontSize: "14px" }}
+                        className="fas fa-exclamation ml-2"
+                      ></i>
+                    </div>
+                  )}
+                </div>
+              </div>
+              {(departVille != "") && <div className="row">
+                <div className="col-md-6">
+                  <label>Cité de départ</label>
+                  <select
+                    className="form-control"
+                    onChange={(e) => {
+                      setDepartCite(e.target.value);
+                      console.log(departVille);
+                    }}
+                  >
+                    <option disabled selected>Selectinner Cité</option>
+                    {departCiteList.map(cite => (<option value={cite}>{cite}</option>))}
+                  </select>
+                  {villeDepartError && (
+                    <div className="error">
+                      {villeDepartError}
+                      <i
+                        style={{ fontSize: "14px" }}
+                        className="fas fa-exclamation ml-2"
+                      ></i>
+                    </div>
+                  )}
+                </div>
+              </div>}
+            </div>
+            )}
           </div>
           {/* /.card-body */}
           <div className="card-footer">

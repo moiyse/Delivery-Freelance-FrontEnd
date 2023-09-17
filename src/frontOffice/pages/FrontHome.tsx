@@ -1,11 +1,17 @@
+import { useRef } from "react";
 import Header from "../components/Header";
 
 const FrontHome = () => {
+  const aboutRef = useRef(null);
+  const servicesRef = useRef(null);
+  const contactRef = useRef(null);
+
+
   return (
     <>
-      <Header />
+      <Header aboutRef={aboutRef} servicesRef={servicesRef} contactRef={contactRef} />
       <main id="main">
-        <section id="about" className="about">
+        <section id="about" ref={aboutRef} className="about">
           <div className="container">
             <div className="section-title">
               <h2>Qui Somme Nous</h2>
@@ -27,7 +33,6 @@ const FrontHome = () => {
                     <i className="ri-check-double-line" /> Notre priorité est de vous offrir un service client exceptionnel
                   </li>
                 </ul>
-                <a className="btn-learn-more">Learn More</a>
               </div>
               <div className="col-lg-5 pt-4 pt-lg-0 d-flex justify-content-center">
                 <img
@@ -40,7 +45,7 @@ const FrontHome = () => {
           </div>
         </section>
         {/* End About Us Section */}
-        <section id="cta" className="cta cta-service">
+        <section id="services" ref={servicesRef} className="cta cta-service">
           <div className="container">
             <div className="section-title">
               <h2>Nos Services</h2>
@@ -226,7 +231,7 @@ const FrontHome = () => {
         </section>
         {/* End Frequently Asked Questions Section */}
         {/* ======= Contact Section ======= */}
-        <section id="contact" className="contact">
+        <section id="contact" ref={contactRef} className="contact">
           <div className="container">
             <div className="section-title">
               <h2>Contact</h2>
@@ -337,7 +342,7 @@ const FrontHome = () => {
                 </p>
               </div>
               <div className="col-lg-3 cta-btn-container text-center">
-                <a className="cta-btn align-middle" href="#">Devenir Client</a>
+                <a className="cta-btn align-middle" ref={contactRef}>Devenir Client</a>
               </div>
             </div>
           </div>

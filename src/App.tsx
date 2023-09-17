@@ -52,6 +52,7 @@ import ClientDashboard from './pages/Client/ClientDashboard';
 import PdfTamplate from '@app/pages/Admin/tables/pdfExport/PdfTamplate';
 import Reporter from '@app/pages/Admin/tables/ListCommandByStatus/Reporter';
 import { NotificationProvider } from './modules/main/header/notifications-dropdown/NotificationContext';
+import PdfListCommande from './pages/Admin/tables/pdfExport/PdfListCommande';
 declare const FB: any;
 
 const App = () => {
@@ -101,6 +102,8 @@ const App = () => {
     <HashRouter>
       <Routes>
         <Route path="/pdfTemplate" element={<PdfTamplate/>}/>
+        <Route path="/pdfCommande" element={<PdfListCommande/>}/>
+
         <Route path="/delivery">
           <Route path="/delivery/" element={<FrontMain />}>
             <Route path="/delivery/" element={<FrontHome />} /> 

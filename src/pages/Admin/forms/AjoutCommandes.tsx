@@ -4,7 +4,7 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { GET_ALL_CLIENTS, GET_ALL_LIVREUR } from "../../../../apiUrls";
 import { addCommande } from "../tables/CommandesService";
-import { fetchAllLivreurs } from "../tables/UsersService";
+import { fetchAllLivreurs, getUserById } from "../tables/UsersService";
 import { ContentHeader } from "@app/components";
 import { getCurrentUser } from "@app/services/auth";
 import { ville, villes } from "@app/pages/Admin/forms/ville";
@@ -26,6 +26,9 @@ type User = {
   livraison: number;
   caisse: number;
   status: string;
+  address:string;
+  ville:string;
+  cite:string;
   createdAt: string;
 };
 
@@ -50,7 +53,7 @@ const AjoutCommandes = () => {
   const [commandeType, setCommandeType] = useState("Commande normale");
   const [selectedOption, setSelectedOption] = useState('');
   const [commentaire, setCommentaire] = useState('');
-
+  const [client,setClient] = useState<User>();
 
 
   const [phoneDestError, setPhoneDestError] = useState("");
@@ -161,6 +164,7 @@ const AjoutCommandes = () => {
   const handleSubmitButton = async () => {
     let isValid = true;
 
+
     if (articles == "") {
       setArticlesError("Veuillez entrer articles");
       isValid = false;
@@ -175,29 +179,8 @@ const AjoutCommandes = () => {
       setDestinationError("");
     }
 
-    if (depart == "") {
-      setDepartError("Veuillez entrer depart");
-      isValid = false;
-    } else {
-      setDepartError("");
-    }
-
-    if (departVille == "") {
-      setDepartError("Veuillez entrer la ville de depart");
-      isValid = false;
-    } else {
-      setDepartError("");
-    }
-
     if (destinationVille == "") {
       setDestinationError("Veuillez entrer la ville de destination");
-      isValid = false;
-    } else {
-      setDepartError("");
-    }
-
-    if (departCite == "") {
-      setDepartError("Veuillez entrer le cité de depart");
       isValid = false;
     } else {
       setDepartError("");
@@ -249,10 +232,16 @@ const AjoutCommandes = () => {
       return; // Don't proceed if there are validation errors
     }
 
+    const clientOfCommand = await getUserById(selectedClientId)
+    setClient(clientOfCommand)
+
+
+    console.log(clientOfCommand?.ville)
+
     const commandeToSend = {
-      depart: depart,
-      departVille: departVille,
-      departCite: departCite,
+      depart: clientOfCommand?.address,
+      departVille: clientOfCommand?.ville,
+      departCite: clientOfCommand?.cite,
       destination: destination,
       destinationVille: destinationVille,
       destinationCite: destinationCite,
@@ -307,28 +296,7 @@ const AjoutCommandes = () => {
             </div>
             <div className="form-group">
               <div className="row">
-                <div className="col-md-6">
-                  <label htmlFor="exampleInputEmail1">Adresse De Départ</label>
-                  <input
-                    onChange={(e) => {
-                      setDepart(e.target.value);
-                    }}
-                    type="text"
-                    className="form-control"
-                    id="exampleInputEmail1"
-                    placeholder="Choisir votre depart"
-                  />
-                  {departError && (
-                    <div className="error">
-                      {departError}
-                      <i
-                        style={{ fontSize: "14px" }}
-                        className="fas fa-exclamation ml-2"
-                      ></i>
-                    </div>
-                  )}
-                </div>
-                <div className="col-md-6">
+              <div className="col-md-6">
                   <label htmlFor="exampleInputEmail1">
                     Adresse De Destination
                   </label>
@@ -344,34 +312,6 @@ const AjoutCommandes = () => {
                   {destinationError && (
                     <div className="error">
                       {destinationError}
-                      <i
-                        style={{ fontSize: "14px" }}
-                        className="fas fa-exclamation ml-2"
-                      ></i>
-                    </div>
-                  )}
-                </div>
-              </div>
-            </div>
-            <div className="form-group">
-              <div className="row">
-                <div className="col-md-6">
-                  <label>Ville de départ</label>
-                  <select
-                    className="form-control"
-                    onChange={(e) => {
-                      setDepartVille(e.target.value);
-                      departVilleHandler(e.target.value);
-
-                      console.log(departVille);
-                    }}
-                  >
-                    <option disabled selected>Selectinner Ville</option>
-                    {ville.map(ville => (<option value={ville}>{ville}</option>))}
-                  </select>
-                  {villeDepartError && (
-                    <div className="error">
-                      {villeDepartError}
                       <i
                         style={{ fontSize: "14px" }}
                         className="fas fa-exclamation ml-2"
@@ -404,29 +344,8 @@ const AjoutCommandes = () => {
                   )}
                 </div>
               </div>
-              {(departVille != "" && destinationVille != "") && <div className="row">
-                <div className="col-md-6">
-                  <label>Cité de départ</label>
-                  <select
-                    className="form-control"
-                    onChange={(e) => {
-                      setDepartCite(e.target.value);
-                      console.log(departVille);
-                    }}
-                  >
-                    <option disabled selected>Selectinner Cité</option>
-                    {departCiteList.map(cite => (<option value={cite}>{cite}</option>))}
-                  </select>
-                  {villeDepartError && (
-                    <div className="error">
-                      {villeDepartError}
-                      <i
-                        style={{ fontSize: "14px" }}
-                        className="fas fa-exclamation ml-2"
-                      ></i>
-                    </div>
-                  )}
-                </div>
+              {(destinationVille != "") && <div className="row">
+                
                 <div className="col-md-6">
                   <label>Cité de déstinateur</label>
                   <select

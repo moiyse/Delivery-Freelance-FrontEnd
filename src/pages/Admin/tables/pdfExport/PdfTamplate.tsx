@@ -82,8 +82,8 @@ const PdfTamplate = () => {
     setCommande(data)
     getClient()
     setTimeout(() => {
-      generatePDF()
-    }, 1000);
+      generatePDF(565.4, 448.5);    
+    }, 1500);
 
 
   }, [])
@@ -94,13 +94,14 @@ const PdfTamplate = () => {
   }
 
 
-  const generatePDF = () => {
+  const generatePDF = (pdfWidth:any, pdfHeight:any) => {
     const DATA = document.getElementById('htmlData');
     const pdf = new jsPDF({
-      orientation: 'landscape',
-      format: 'a4',
+      orientation: pdfWidth > pdfHeight ? 'landscape' : 'portrait',
       unit: 'px',
+      format: [pdfWidth, pdfHeight], // Specify the dimensions here
     });
+  
     if (DATA) {
       pdf.html(DATA, {
         callback: () => {
@@ -110,7 +111,6 @@ const PdfTamplate = () => {
     } else {
       console.error("Element with id 'htmlData' not found.");
     }
-
   };
 
   const back = () => {
@@ -136,7 +136,17 @@ const PdfTamplate = () => {
           margin: "50px auto",
 
         }}>
-          <div className="m-2" id="htmlData">
+          <div className="mx-2" id="htmlData">
+            <div className="d-flex justify-content-between mx-4">
+              <div className="justify-content-left">
+                <h1>FASTO</h1>
+              </div>
+              <div className="justify-content-right mt-2">
+              <div className="d-flex align-items-center"><h6>Date de creation : {commande?.createdAt}</h6></div>
+              <div className="d-flex align-items-center"><h6>Date de livraison : {commande?.delivredAt}</h6></div>
+                <h6>client :{client?.lastName + " " + client?.firstName}</h6>
+              </div>
+            </div>
             <table className="pdfTable">
               <tr>
                 <th>FASTO</th>
@@ -152,7 +162,7 @@ const PdfTamplate = () => {
               </tr>
               <tr>
                 <td><strong>Destination ville / localité</strong> <br /> {commande?.destinationVille + " / " + commande?.destinationCite}</td>
-                <td><strong>Déstination addressDéstination address</strong> <br /> {commande?.destination}</td>
+                <td><strong>Déstination address</strong> <br /> {commande?.destination}</td>
               </tr>
               <tr>
                 <td><strong>Date de création</strong> <br /> {commande?.createdAt}</td>
